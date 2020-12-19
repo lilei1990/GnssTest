@@ -61,3 +61,4 @@ gradle-app.setting
 /base_core/build/classes/java/main/
 /test_tools/build/
 /test_tools/build/classes/java/main/
+/.idea/

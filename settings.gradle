@@ -1,0 +1,3 @@
+include 'base_core'
+include 'test_tools'
+rootProject.name = 'Test'

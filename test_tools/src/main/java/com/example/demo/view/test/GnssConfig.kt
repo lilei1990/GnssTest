@@ -1,0 +1,124 @@
+package com.example.demo.view.test
+
+import com.example.demo.utils.LoggerUtil
+import com.example.demo.view.Ini4jUtils
+import tornadofx.intProperty
+import tornadofx.longProperty
+import tornadofx.stringProperty
+import java.io.File
+import java.util.*
+
+/**
+ * 作者 : lei
+ * 时间 : 2020/12/17.
+ * 邮箱 :416587959@qq.com
+ * 描述 :
+ */
+object GnssConfig {
+    //常规配置
+    var config_path = System.getProperty("user.dir") + "\\config\\"
+    var defaut_timeOut = longProperty(1000)
+
+    //测试设备的ip
+    var eth_test_ip = stringProperty("192.168.1.252")
+    //udp
+
+    var udp_broadcast_port = intProperty(50250)
+
+    //wifi
+    var wifi_test_ip = stringProperty("172.30.3.1")
+    var wifi_test_pwd = stringProperty("1234567890")
+
+    //lora测试间隔频率
+    var lora_test_Intervals = longProperty(5000)
+
+    //lora 信道
+    var lora_test_chen = intProperty(20)
+
+    //lora 信号强度
+    var lora_test_strength = intProperty(20)
+
+    //lora测试次数
+    var lora_test_count = intProperty(10)
+
+
+    //gps
+    //信噪测试最低阈值
+    var gps_test_min_noise = intProperty(40)
+
+    //达标的最少卫星数量
+    var gps_test_min_satellite_Count = intProperty(20)
+
+    //达标的最少数值,出现满足信噪合格的次数
+    var gps_test_min_num = intProperty(20)
+
+    //按键测试最多测试多少次
+    var test_key_num = intProperty(5)
+
+    fun save() {
+        val list = listOf(
+            IniFileEntity("ldap", "defaut_timeOut", "${defaut_timeOut.value}"),
+            IniFileEntity("ldap", "eth_test_ip", "${eth_test_ip.value}"),
+            IniFileEntity("ldap", "udp_broadcast_port", "${udp_broadcast_port.value}"),
+            IniFileEntity("ldap", "wifi_test_ip", "${wifi_test_ip.value}"),
+            IniFileEntity("ldap", "wifi_test_pwd", "${wifi_test_pwd.value}"),
+            IniFileEntity("ldap", "lora_test_Intervals", "${lora_test_Intervals.value}"),
+            IniFileEntity("ldap", "lora_test_chen", "${lora_test_chen.value}"),
+            IniFileEntity("ldap", "lora_test_strength", "${lora_test_strength.value}"),
+            IniFileEntity("ldap", "lora_test_count", "${lora_test_count.value}"),
+            IniFileEntity("ldap", "gps_test_min_noise", "${gps_test_min_noise.value}"),
+            IniFileEntity("ldap", "gps_test_min_satellite_Count", "${gps_test_min_satellite_Count.value}"),
+            IniFileEntity("ldap", "gps_test_min_num", "${gps_test_min_num.value}"),
+            IniFileEntity("ldap", "test_key_num", "${test_key_num.value}")
+
+        )
+        Ini4jUtils.updateIniFile("${config_path}config.ini", list)
+    }
+
+    init {
+        try {
+
+            read()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            LoggerUtil.LOGGER.debug("读取配置错误")
+        }
+    }
+
+    fun read() {
+
+        val fileContent: MutableMap<String, List<String>> = HashMap()
+        fileContent["ldap"] = listOf(
+            "defaut_timeOut",
+            "eth_test_ip",
+            "udp_broadcast_port",
+            "wifi_test_ip",
+            "wifi_test_pwd",
+            "lora_test_Intervals",
+            "lora_test_chen",
+            "lora_test_strength",
+            "lora_test_count",
+            "gps_test_min_noise",
+            "gps_test_min_satellite_Count",
+            "gps_test_min_num",
+            "test_key_num"
+        )
+        val file = File("${config_path}config.ini")
+        val readIniFile = Ini4jUtils.readIniFile(file, fileContent)
+        val getldap = readIniFile.get("ldap")
+        defaut_timeOut.value = getldap!!.get("defaut_timeOut")!!.toLong()
+        eth_test_ip.value = getldap!!.get("eth_test_ip")
+        udp_broadcast_port.value = getldap!!.get("udp_broadcast_port")!!.toInt()
+        wifi_test_ip.value = getldap!!.get("wifi_test_ip")
+        wifi_test_pwd.value = getldap!!.get("wifi_test_pwd")
+        lora_test_Intervals.value = getldap!!.get("lora_test_Intervals")!!.toLong()
+        lora_test_chen.value = getldap!!.get("lora_test_chen")!!.toInt()
+        lora_test_strength.value = getldap!!.get("lora_test_strength")!!.toInt()
+        lora_test_count.value = getldap!!.get("lora_test_count")!!.toInt()
+        gps_test_min_noise.value = getldap!!.get("gps_test_min_noise")!!.toInt()
+        gps_test_min_satellite_Count.value = getldap!!.get("gps_test_min_satellite_Count")!!.toInt()
+        gps_test_min_num.value = getldap!!.get("gps_test_min_num")!!.toInt()
+        test_key_num.value = getldap!!.get("test_key_num")!!.toInt()
+
+    }
+}

@@ -1,0 +1,24 @@
+.button {
+    /*-fx-padding: 0.7em 0.57em;*/
+    -fx-font-size: 14px;
+    -jfx-button-type: RAISED;
+    -fx-text-fill: WHITE;
+    -fx-background-color: rgb(77, 102, 204);
+}
+/*移动上去的效果*/
+/*.button:hover{*/
+/*    -fx-background-color: rgb(125, 147, 245);*/
+/*}*/
+
+.button:pressed{
+    -fx-background-color: rgb(125, 147, 245);
+}
+
+.button-raised {
+    /*-fx-padding: 0.7em 0.57em;*/
+    -fx-font-size: 14px;
+    -jfx-button-type: RAISED;
+    -fx-background-color: rgb(77, 102, 204);
+    /*-fx-pref-width: 200;*/
+    -fx-text-fill: WHITE;
+}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+
+    <center>
+        <AnchorPane fx:id="apane">
+            <SplitPane orientation="VERTICAL" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
+                       AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+                <VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <padding>
+                            <Insets bottom="10" left="10" top="10"/>
+                        </padding>
+                        <Button fx:id="btRefresh" onAction="#btRefreshAction" text="刷新串口列表"/>
+                        <ComboBox fx:id="cbox1"/>
+                        <Button fx:id="btOpenPort1" onAction="#btOpenPortAction1" text="打开串口"/>
+                        <ComboBox fx:id="cbox2"/>
+                        <Button fx:id="btOpenPort2" onAction="#btOpenPortAction2" text="打开串口"/>
+                        <Text text="UDP监听"/>
+                        <Circle fx:id="udpStaus" fill="red" radius="5.0" stroke="BLACK" strokeType="INSIDE"/>
+                    </HBox>
+                    <VBox spacing="10">
+                        <TableView fx:id="tview" prefWidth="420">
+                            <columns>
+                                <TableColumn fx:id="tview_id" prefWidth="40.0" text="ID"/>
+                                <TableColumn fx:id="tview_case" prefWidth="140.0" text="测试项"/>
+                                <TableColumn fx:id="tview_case_info" prefWidth="140.0" text="测试明细"/>
+                                <TableColumn fx:id="tview_case_result" prefWidth="70.0" text="测试结果"/>
+                            </columns>
+
+                        </TableView>
+                    </VBox>
+                    <!--日志-->
+                    <AnchorPane prefHeight="150">
+                        <TextArea fx:id="ta_log" style="-fx-font-family: 'FangSong';-fx-font-size: 14;"
+                                  AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10"
+                                  AnchorPane.topAnchor="10"/>
+                        <Button onAction="#btClearLog" text="清除日志" AnchorPane.rightAnchor="30"
+                                AnchorPane.topAnchor="20"/>
+                    </AnchorPane>
+
+                </VBox>
+            </SplitPane>
+        </AnchorPane>
+
+    </center>
+    <right>
+        <VBox alignment="TOP_CENTER" prefWidth="250" spacing="10">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10"/>
+            </padding>
+            <VBox spacing="2">
+                <Button fx:id="btJobNum" alignment="TOP_LEFT" disable="true" opacity="0.9" prefWidth="250" text="工号:">
+                    <font>
+                        <Font name="System Bold Italic" size="18.0"/>
+                    </font>
+                </Button>
+                <Text fx:id="textinfo" text="详细信息:"/>
+            </VBox>
+
+            <Button fx:id="btStartTest" onAction="#btStartTest" text="开始测试"/>
+            <FlowPane hgap="10" prefWidth="280" vgap="10">
+                <Button onAction="#setSingleCard" text="打开屏幕测试"/>
+                <Button onAction="#btTestLcd" text="测试lcd"/>
+                <Button onAction="#btStartTest" text="获取USB"/>
+                <Button onAction="#btStartTest" text="获取调试串口"/>
+                <Button onAction="#update" text="升级"/>
+
+            </FlowPane>
+        </VBox>
+    </right>
+</BorderPane>
