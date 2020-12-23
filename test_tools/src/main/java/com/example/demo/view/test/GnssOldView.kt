@@ -1,8 +1,11 @@
 package com.example.demo.view.test
 
 import com.example.demo.utils.showProgressStage
+import com.example.demo.utils.showSnackbar
 import com.example.demo.utils.sqlite.SqliteHelper
+import com.example.demo.utils.view.DialogBuilder
 import com.example.demo.view.test.bean.OldCase
+import com.jfoenix.controls.JFXButton
 import javafx.application.Platform
 import javafx.geometry.Pos
 import javafx.scene.chart.XYChart
@@ -11,6 +14,7 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import kfoenix.jfxbutton
 import kfoenix.jfxsnackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
@@ -57,7 +61,7 @@ class GnssOldView : View("老化测试") {
         hbox {
 
             vbox {
-                alignment=Pos.CENTER
+                alignment = Pos.CENTER
                 label("测试正常的数据")
                 tableview(controller.buff) {
                     prefWidth = 400.0
@@ -72,9 +76,24 @@ class GnssOldView : View("老化测试") {
                 }
             }
             vbox {
-                alignment=Pos.CENTER
+                alignment = Pos.CENTER
                 label("不通过的数据")
                 tableview(controller.fail) {
+                    prefWidth = 400.0
+                    readonlyColumn("ip", OldCase::ip)
+                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
+                    readonlyColumn("id", OldCase::id)
+                    readonlyColumn("波动时间", OldCase::time)
+                    readonlyColumn("结果", OldCase::testResult).cellFormat {
+                        text = it
+                        itemStyle(it)
+                    }
+                }
+            }
+            vbox {
+                alignment = Pos.CENTER
+                label("上传失败的数据")
+                tableview(controller.uploaderr) {
                     prefWidth = 400.0
                     readonlyColumn("ip", OldCase::ip)
                     readonlyColumn("卫星颗数", OldCase::satelliteCount)
@@ -126,28 +145,55 @@ class GnssOldView : View("老化测试") {
                 disableProperty().bind(controller.isStart)
                 action {
                     val showProgressStage = showProgressStage("正在上传中")
-                    runBlocking {
-                        val fail = controller.fail.asFlow()
-                        val buff = controller.buff.asFlow()
-
-
-                        flowOf(fail, buff).flattenConcat().map {
-                            it.apply {
-                                controller.testUpload(this)
-                                println("ssss$this")
-                            }
-                        }.collect {
-                            println("测试完成")
-                            delay(3000)
-                            Platform.runLater {
-                                showProgressStage.close()
-                            }
-                        }
+                    if (controller.fail.isEmpty() && controller.buff.isEmpty()) {
+                        showSnackbar("未检测到要提交的数据")
+                        return@action
                     }
+                    showProgressStage.show()
+                    runAsync {
+                        controller.upload()
+                    } ui {
+                        showProgressStage.close()
+                    }
+                }
+            }
+            jfxbutton {
+                text = "再次提交上传失败的数据"
+                disableProperty().bind(controller.isStart)
+                action {
+                    reUpload()
                 }
             }
         }
 
+    }
+
+    private fun JFXButton.reUpload() {
+        val showProgressStage = showProgressStage("正在上传中")
+        if (controller.uploaderr.isEmpty()) {
+            showSnackbar("未检测到要提交的数据")
+            return
+        }
+        showProgressStage.show()
+        runAsync {
+            controller.reUpload()
+        } ui {
+            showProgressStage.close()
+            if (controller.uploaderr.isEmpty()) {
+                showSnackbar("上传成功")
+            } else {
+                DialogBuilder(this)
+                        .setTitle("发现未上传的数据")
+                        .setMessage("是否再次上传")
+                        .setPositiveBtn("确定", {
+                            reUpload()
+                        }, "#00ff00")
+                        .setNegativeBtn("取消") {
+
+                        }
+                        .create();
+            }
+        }
     }
 
     private fun TableCell<OldCase, String>.itemStyle(it: String) {

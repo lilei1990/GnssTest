@@ -4,9 +4,15 @@ import com.example.demo.model.DeviceTestModel
 import com.example.demo.model.TestStatus
 import com.example.demo.net.Api
 import com.example.demo.utils.TimeUtil
+import com.example.demo.utils.showSnackbar
+import com.example.demo.utils.view.DialogBuilder
 import com.example.demo.view.test.bean.OldCase
 import com.google.gson.JsonArray
 import javafx.collections.FXCollections
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import tornadofx.*
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
@@ -24,6 +30,7 @@ class GnssOldController : Controller() {
 
     val buff = observableListOf<OldCase>()
     val fail = observableListOf<OldCase>()
+    val uploaderr = observableListOf<OldCase>()
 
     val texasCities = FXCollections.observableArrayList<String>()
     val isStart = booleanProperty(false)
@@ -38,7 +45,7 @@ class GnssOldController : Controller() {
         var endTime = System.currentTimeMillis()
         runAsync {
             isStart.value = true
-            while ((endTime - startTime) <= timeOut&&!isStop) {
+            while ((endTime - startTime) <= timeOut && !isStop) {
                 val ggamap_buff = GnssTestData.ggamap_buff
                 val ggamap_fail = GnssTestData.ggamap_fail
 
@@ -62,14 +69,55 @@ class GnssOldController : Controller() {
         }
     }
 
+    fun upload() {
+        runBlocking {
+            channelFlow<OldCase> {
+                for (oldCase in fail) {
+                    send(oldCase)
+                }
+                for (oldCase in buff) {
+                    send(oldCase)
+                }
+            }.map {
+                it.apply {
+                    if (!testUpload(this)) {//上传失败.添加到上传失败的容器
+                        uploaderr.add(it)
+                    }
+                }
+            }.flowOn(Dispatchers.IO).collect {
+            }
+        }
+    }
+
+    /**
+     * 重新上传失败的数据
+     */
+    fun reUpload() {
+        runBlocking {
+            channelFlow<OldCase> {
+                for (oldCase in uploaderr) {
+                    send(oldCase)
+                }
+            }.map {
+                it.apply {
+                    if (testUpload(this)) {//上传失败.添加到上传失败的容器
+                        uploaderr.remove(it)
+                    }
+                }
+            }.flowOn(Dispatchers.IO).collect {
+
+            }
+        }
+    }
+
     /**
      * 上传测试结果
      */
-    fun testUpload(oldCase: OldCase) {
+    fun testUpload(oldCase: OldCase): Boolean {
         val deviceTestModel = DeviceTestModel()
         deviceTestModel.testTime = TimeUtil.getSimpleDateTime()
         deviceTestModel.status = GnssTestData.testStatus
-        deviceTestModel.equipmentId= "${oldCase.id}"
+        deviceTestModel.equipmentId = "${oldCase.id}"
 
         var jsr = JsonArray()
 
@@ -77,14 +125,13 @@ class GnssOldController : Controller() {
 
         deviceTestModel.remark = jsr.toString()
         deviceTestModel.userId = GnssConfig.userId.value
-        var rst = Api.uploadTestRest(deviceTestModel).let {
-            if (it) {
-                TestStatus.PASS
-            } else {
-                TestStatus.FAIL
-            }
-        }
-
+        var rst = Api.uploadTestRest(deviceTestModel)
+//        if (it) {
+//            TestStatus.PASS
+//        } else {
+//            TestStatus.FAIL
+//        }
+        return rst
     }
 
     fun stop() {
