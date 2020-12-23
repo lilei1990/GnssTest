@@ -44,7 +44,7 @@ dependencies {
     implementation group: 'org.ini4j', name: 'ini4j', version: '0.5.4'
     testCompile "org.junit.jupiter:junit-jupiter-api:$junit_version"
     compile group: 'junit', name: 'junit', version: '4.13'
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.4'
+    implementation 'org.xerial:sqlite-jdbc:3.8.11.2'
     testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit_version"
 }
 

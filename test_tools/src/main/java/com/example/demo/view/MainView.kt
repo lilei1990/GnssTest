@@ -4,10 +4,7 @@ import com.example.demo.model.TestStatus
 import com.example.demo.utils.openNewStage
 import com.example.demo.utils.shwoInternalWindow
 import com.example.demo.view.mavlink.MavLinkView
-import com.example.demo.view.test.GnssConfigView
-import com.example.demo.view.test.GnssTestData
-import com.example.demo.view.test.GnssTestView
-import com.example.demo.view.test.JobNumView
+import com.example.demo.view.test.*
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Control
@@ -21,8 +18,9 @@ class MainView : View() {
 
 
     val mainController: MainController by inject()
+    val gnssOldView: GnssOldView by inject()
+    val gnssConfigView: GnssConfigView by inject()
     val input = SimpleStringProperty()
-
 
     //根节点
     override val root = vbox {
@@ -30,7 +28,7 @@ class MainView : View() {
             menu("设置") {
                 item("设置") {
                     action {
-                        shwoInternalWindow(GnssConfigView(),escapeClosesWindow = true,closeButton = true)
+                        shwoInternalWindow(gnssConfigView,escapeClosesWindow = true,closeButton = true)
                     }
                 }
             }
@@ -63,7 +61,7 @@ class MainView : View() {
                 defaultConfig()
                 action {
                     GnssTestData.testStatus = TestStatus.TEST_STATUS_OLD
-                    openNewStage("GNSS参考站", JobNumView())
+                    openNewStage("GNSS参考站", gnssOldView)
                     close()
                 }
             }
@@ -74,33 +72,7 @@ class MainView : View() {
                     close()
                 }
             }
-            jfxbutton("Gnss测试") {
-                defaultConfig()
-                action {
-                    openNewStage("MAVLink  测试", GnssTestView())
-                    close()
-                }
-            }
         }
-//
-//    private fun openNewStage(title: String, view: View): Stage {
-//        val secondStage = Stage()
-//        secondStage.title = title
-//        val jfxDecorator =
-//                MyJFXDecorator(
-//                        stage = secondStage,
-//                        view = view.root,
-//                        myTitle = "程序入口")
-//        val secondScene = Scene(jfxDecorator)
-//        secondStage.scene = secondScene
-//        secondStage.show()
-//        close()
-////        secondStage.icons.add(Image("106c.png"))
-//
-//        return secondStage
-//    }
-
-
     }
 
     private fun Control.defaultConfig() {

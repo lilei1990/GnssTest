@@ -9,5 +9,5 @@ import com.example.demo.model.UDP_Msg
  * 描述 :
  */
 interface CallBacks {
-    fun send(msg: UDP_Msg)
+    fun send(msg: UDP_Msg,address:String)
 }

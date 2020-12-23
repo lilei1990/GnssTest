@@ -58,26 +58,41 @@ public class UDPBroadcast {
         while (isRun) {
             byte[] buffer = new byte[2048];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+//            System.out.println(packet.getAddress());
+//            InetAddress address = packet.getAddress();
             ds.receive(packet);
 //            String s = new String(packet.getData(), 0, packet.getLength());
 //            System.out.println(packet.getAddress() + ":" + packet.getPort() + "    →    " + s);
             //                System.out.println(udp_msg.getStr());
-
-
+            num++;
             if (listener != null) {
-                listener.send(Pack.INSTANCE.unPack(buffer));
+                listener.send(Pack.INSTANCE.unPack(buffer), packet.getAddress().getHostAddress());
 
             }
         }
     }
 
-    public void send(String msg, int port) throws IOException {
+    public static void sendBroadcast(String msg, int port) throws IOException {
         DatagramSocket ds = new DatagramSocket();
         DatagramPacket dp = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
                 InetAddress.getByName("255.255.255.255"), port);
         ds.send(dp);
         ds.close();
     }
+
+    public static void sendBroadcast(byte[] msg, int port) {
+        try {
+            DatagramSocket ds = new DatagramSocket();
+            DatagramPacket dp = new DatagramPacket(msg, msg.length,
+                    InetAddress.getByName("255.255.255.255"), port);
+            ds.send(dp);
+            ds.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int num = 0;
 
     public static byte[] send(byte[] msg, int port) {
         try {
@@ -94,6 +109,7 @@ public class UDPBroadcast {
             ds.setSoTimeout(20000);
             // 2.接收服务器响应的数据
             ds.receive(packet2);
+
             // 3.读取数据
 //        String reply = new String(data2, 0, packet2.getLength());
             //                System.out.println(udp_msg.getStr());

@@ -62,3 +62,5 @@ gradle-app.setting
 /test_tools/build/
 /test_tools/build/classes/java/main/
 /.idea/
+/testHelper.db
+/testHelper.db-journal

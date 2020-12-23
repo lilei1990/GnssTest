@@ -2,6 +2,7 @@ package com.example.demo.view.test
 
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.Ini4jUtils
+import net.sf.marineapi.nmea.sentence.GGASentence
 import tornadofx.intProperty
 import tornadofx.longProperty
 import tornadofx.stringProperty
@@ -54,6 +55,8 @@ object GnssConfig {
 
     //按键测试最多测试多少次
     var test_key_num = intProperty(5)
+    //gga/ 卫星数掉下来达到次时间认定失败
+    var gga_timeout = intProperty(10000)
 
     fun save() {
         val list = listOf(
@@ -69,7 +72,8 @@ object GnssConfig {
             IniFileEntity("ldap", "gps_test_min_noise", "${gps_test_min_noise.value}"),
             IniFileEntity("ldap", "gps_test_min_satellite_Count", "${gps_test_min_satellite_Count.value}"),
             IniFileEntity("ldap", "gps_test_min_num", "${gps_test_min_num.value}"),
-            IniFileEntity("ldap", "test_key_num", "${test_key_num.value}")
+            IniFileEntity("ldap", "test_key_num", "${test_key_num.value}"),
+            IniFileEntity("ldap", "gga_timeout", "${gga_timeout.value}")
 
         )
         Ini4jUtils.updateIniFile("${config_path}config.ini", list)
@@ -101,7 +105,8 @@ object GnssConfig {
             "gps_test_min_noise",
             "gps_test_min_satellite_Count",
             "gps_test_min_num",
-            "test_key_num"
+            "test_key_num",
+            "gga_timeout"
         )
         val file = File("${config_path}config.ini")
         val readIniFile = Ini4jUtils.readIniFile(file, fileContent)
@@ -119,6 +124,7 @@ object GnssConfig {
         gps_test_min_satellite_Count.value = getldap!!.get("gps_test_min_satellite_Count")!!.toInt()
         gps_test_min_num.value = getldap!!.get("gps_test_min_num")!!.toInt()
         test_key_num.value = getldap!!.get("test_key_num")!!.toInt()
+        gga_timeout.value = getldap!!.get("gga_timeout")!!.toInt()
 
     }
 }

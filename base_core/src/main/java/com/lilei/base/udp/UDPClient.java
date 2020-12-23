@@ -4,16 +4,65 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 /*
  * 客户端
  */
-public class UDPClient {
-    public static void main(String[] args) throws IOException {
 
+public class UDPClient {
+    static int num = 0;
+    public static void main(String[] args) throws IOException {
+        for (int i = 0; i < 35; i++) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    start();
+                }
+            };
+            new Thread(runnable).start();
+        }
     }
 
-    public static byte[]  send(byte[] data) throws IOException {
+    private static void start() {
+        Random r = new Random(1);
+        while (true) {
+            try {
+                num++;
+                Thread.sleep(100);
+                short id = (short) 0x0102;
+                String str = "$GPGGA,092204.999,4250.5589,S,14718.5084,E,1,"+r.nextInt(100)+",24.4,19.7,M,,,,0000*1F\n";
+                byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+                int len = bytes.length;
+                ByteBuffer byteBuffer = ByteBuffer.allocate(32 + len);
+                byteBuffer.putShort(id);
+                byteBuffer.putShort((short) len);
+                byteBuffer.position(32);
+                byteBuffer.put(bytes);
+                byte[] array = byteBuffer.array();
+                sendBroadcast(array, 50250);
+                System.out.println(num);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void sendBroadcast(byte[] msg, int port) {
+        try {
+            DatagramSocket ds = new DatagramSocket();
+            DatagramPacket dp = new DatagramPacket(msg, msg.length,
+                    InetAddress.getByName("255.255.255.255"), port);
+            ds.send(dp);
+            ds.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static byte[] send(byte[] data) throws IOException {
         /*
          * 向服务器端发送数据
          */

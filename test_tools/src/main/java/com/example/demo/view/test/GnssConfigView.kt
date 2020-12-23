@@ -3,6 +3,7 @@ package com.example.demo.view.test
 import com.example.demo.utils.showSnackbar
 import com.example.demo.view.test.GnssConfig.defaut_timeOut
 import com.example.demo.view.test.GnssConfig.eth_test_ip
+import com.example.demo.view.test.GnssConfig.gga_timeout
 import com.example.demo.view.test.GnssConfig.gps_test_min_noise
 import com.example.demo.view.test.GnssConfig.gps_test_min_num
 import com.example.demo.view.test.GnssConfig.gps_test_min_satellite_Count
@@ -73,6 +74,7 @@ class Config : Fragment("设置") {
     lateinit var gps_test_min_satellite_Count_View: TextField
     lateinit var gps_test_min_num_View: TextField
     lateinit var test_key_num_View: TextField
+    lateinit var gga_timeout_View: TextField
     override val root = vbox {
         paddingAll = 15
         prefWidth = 500.0
@@ -213,6 +215,16 @@ class Config : Fragment("设置") {
                 pubPor()
             }
             test_key_num_View = textfield("${test_key_num.value}") {
+                textProperty().addListener { obs, old, new ->
+                }
+            }
+        }
+        hbox {
+            alignment = Pos.CENTER_LEFT
+            label("卫星数掉下认定失败时间:  ") {
+                pubPor()
+            }
+            gga_timeout_View = textfield("${gga_timeout.value}") {
                 textProperty().addListener { obs, old, new ->
                 }
             }

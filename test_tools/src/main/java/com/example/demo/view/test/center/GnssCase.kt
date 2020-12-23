@@ -69,7 +69,7 @@ open class GnssCase() {
                 whenID(it)
             }
         }.flowOn(Dispatchers.IO).onCompletion {
-//            testUpload()
+            testUpload()
             println("测试完成")
         }.collect {
             GnssTestData.hd100Case.add(it)
