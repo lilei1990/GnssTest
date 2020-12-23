@@ -17,8 +17,6 @@ import tornadofx.*
 class MainView : View() {
 
 
-    val mainController: MainController by inject()
-    val gnssOldView: GnssOldView by inject()
     val gnssConfigView: GnssConfigView by inject()
     val input = SimpleStringProperty()
 
@@ -61,7 +59,7 @@ class MainView : View() {
                 defaultConfig()
                 action {
                     GnssTestData.testStatus = TestStatus.TEST_STATUS_OLD
-                    openNewStage("GNSS参考站", gnssOldView)
+                    openNewStage("GNSS参考站", JobNumView())
                     close()
                 }
             }

@@ -4,7 +4,8 @@ import com.example.demo.BaseView
 import com.example.demo.ToastEvent
 import com.example.demo.net.Api
 import com.example.demo.utils.*
-import com.example.demo.view.test.center.Case
+import com.example.demo.view.test.GnssConfig.userId
+import com.example.demo.view.test.bean.Case
 import javafx.application.Platform
 import javafx.scene.control.*
 import javafx.scene.control.cell.PropertyValueFactory
@@ -23,7 +24,7 @@ import tornadofx.*
  * 邮箱 :416587959@qq.com
  * 描述 :
  */
-class GnssTestView constructor(jobNum: String = "") : BaseView() {
+class GnssTestView  : BaseView() {
     companion object {
         lateinit var gnssTestView: GnssTestView
     }
@@ -109,7 +110,7 @@ class GnssTestView constructor(jobNum: String = "") : BaseView() {
             }
         }
 
-        btJobNum.text = "工号:   $jobNum"
+        btJobNum.text = "工号:   ${userId.value}"
         controller.bind(this)
 
     }

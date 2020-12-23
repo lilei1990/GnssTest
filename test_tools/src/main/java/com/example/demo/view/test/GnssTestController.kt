@@ -7,11 +7,8 @@ import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.rxtx.SerialPortUtilTest
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.utils.PingUtils
-import com.example.demo.utils.PropertiesLocalUtil
-import com.example.demo.utils.TimeUtil
-import com.example.demo.view.test.center.GnssCase
+import com.example.demo.view.test.bean.GnssCase
 
-import com.google.gson.JsonArray
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.scene.control.Alert
@@ -206,6 +203,9 @@ class CenterController : Controller() {
             fire(ToastEvent("bid不能为空"))
             return false
         }
+        if (checkBID(GnssTestData.bid.value)) {
+
+        }
         //检查网络
         if (GnssTestData.bid.value.isNullOrEmpty()) {
             val ping = PingUtils.ping(GnssConfig.eth_test_ip.value)
@@ -249,14 +249,23 @@ class CenterController : Controller() {
      * 开始测试
      */
     suspend fun test() {
-//        if (!check()) {
-//            return
-//        }
+        if (!check()) {
+            return
+        }
+
         GnssCase().run()
         udpStaus.value = GREEN
 
     }
-
+    /**
+     * 查询单板ID
+     *
+     */
+    fun checkBID(bid: String): Boolean {
+        val last = Api.queryHistoryLast(bid)
+        //为null则查询不到
+        return last == null
+    }
     /**
      * 获取基站版本文件的版本号
      *

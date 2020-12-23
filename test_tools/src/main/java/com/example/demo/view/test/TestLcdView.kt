@@ -2,7 +2,7 @@ package com.example.demo.view.test
 
 import com.example.demo.utils.showSnackbar
 import com.example.demo.utils.view.DialogBuilder
-import com.example.demo.view.test.center.Case
+import com.example.demo.view.test.bean.Case
 import javafx.geometry.Pos
 import kfoenix.jfxbutton
 import tornadofx.*

@@ -1,23 +1,20 @@
 package com.example.demo.view.test
 
-import com.example.demo.model.DeviceTestModel
-import com.example.demo.model.EnumProperties
-import com.example.demo.model.TestStatus
-import com.example.demo.net.Api
-import com.example.demo.utils.PropertiesLocalUtil
-import com.example.demo.utils.TimeUtil
+import com.example.demo.utils.showProgressStage
 import com.example.demo.utils.sqlite.SqliteHelper
-import com.google.gson.JsonArray
-import javafx.collections.FXCollections
+import com.example.demo.view.test.bean.OldCase
+import javafx.application.Platform
 import javafx.geometry.Pos
 import javafx.scene.chart.XYChart
 import javafx.scene.control.TableCell
 import javafx.scene.paint.Color
+import javafx.scene.text.Font
 import kfoenix.jfxbutton
 import kfoenix.jfxsnackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import tornadofx.*
-import java.lang.Thread.sleep
-import java.text.SimpleDateFormat
 
 /**
  * 作者 : lei
@@ -25,12 +22,11 @@ import java.text.SimpleDateFormat
  * 邮箱 :416587959@qq.com
  * 描述 :
  */
-data class GGA(var ip: String, var gga: String, var result: String)
+//data class GGA(var ip: String, var gga: String, var result: String)
 class GnssOldView : View("老化测试") {
     val items = observableListOf<XYChart.Data<String, Number>>()
     var h = SqliteHelper("testHelper.db")
     val controller: GnssOldController by inject()
-
 
 
     var test_timeOut = 1
@@ -44,12 +40,11 @@ class GnssOldView : View("老化测试") {
 //        h.executeUpdate("create table GGA(str varchar(200),ip varchar(20),time TIMESTAMP);")
         //周期性去check数据
         for (i in 1..24) {
-            controller.   texasCities.add("${i}小时")
+            controller.texasCities.add("${i}小时")
         }
 
 
     }
-
 
 
 //每收到一个udp数据解析包ip地址用来标识设备
@@ -61,31 +56,34 @@ class GnssOldView : View("老化测试") {
 
         hbox {
 
-            tableview(controller.pass) {
-                prefWidth = 300.0
-                readonlyColumn("ip", GGA::ip)
-                readonlyColumn("卫星颗数", GGA::gga)
-                readonlyColumn("结果", GGA::result).cellFormat {
-                    text = it
-                    itemStyle(it)
+            vbox {
+                alignment=Pos.CENTER
+                label("测试正常的数据")
+                tableview(controller.buff) {
+                    prefWidth = 400.0
+                    readonlyColumn("ip", OldCase::ip)
+                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
+                    readonlyColumn("id", OldCase::id)
+                    readonlyColumn("波动时间", OldCase::time)
+                    readonlyColumn("结果", OldCase::testResult).cellFormat {
+                        text = it
+                        itemStyle(it)
+                    }
                 }
             }
-            tableview(controller.buff) {
-                prefWidth = 300.0
-                readonlyColumn("ip", GGA::ip)
-                readonlyColumn("波动时间", GGA::gga)
-                readonlyColumn("结果", GGA::result).cellFormat {
-                    text = it
-                    itemStyle(it)
-                }
-            }
-            tableview(controller.fail) {
-                prefWidth = 300.0
-                readonlyColumn("ip", GGA::ip)
-                readonlyColumn("id", GGA::gga)
-                readonlyColumn("结果", GGA::result).cellFormat {
-                    text = it
-                    itemStyle(it)
+            vbox {
+                alignment=Pos.CENTER
+                label("不通过的数据")
+                tableview(controller.fail) {
+                    prefWidth = 400.0
+                    readonlyColumn("ip", OldCase::ip)
+                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
+                    readonlyColumn("id", OldCase::id)
+                    readonlyColumn("波动时间", OldCase::time)
+                    readonlyColumn("结果", OldCase::testResult).cellFormat {
+                        text = it
+                        itemStyle(it)
+                    }
                 }
             }
         }
@@ -93,9 +91,11 @@ class GnssOldView : View("老化测试") {
 
 
         hbox {
+            spacing = 10.0
+            label("工号:   ${GnssConfig.userId.value}")
             text {
                 prefWidth(50.0)
-                textProperty().bind(controller. udpnum)
+                textProperty().bind(controller.udpnum)
             }
             alignment = Pos.CENTER
 
@@ -116,29 +116,47 @@ class GnssOldView : View("老化测试") {
                 }
             }
             jfxbutton {
+                text = "停止测试"
+                action {
+                    controller.stop()
+                }
+            }
+            jfxbutton {
                 text = "上传测试结果"
                 disableProperty().bind(controller.isStart)
                 action {
-                    for (gga in controller.fail) {
+                    val showProgressStage = showProgressStage("正在上传中")
+                    runBlocking {
+                        val fail = controller.fail.asFlow()
+                        val buff = controller.buff.asFlow()
 
+
+                        flowOf(fail, buff).flattenConcat().map {
+                            it.apply {
+                                controller.testUpload(this)
+                                println("ssss$this")
+                            }
+                        }.collect {
+                            println("测试完成")
+                            delay(3000)
+                            Platform.runLater {
+                                showProgressStage.close()
+                            }
+                        }
                     }
-                    controller.testUpload()
                 }
             }
         }
 
     }
 
-    private fun TableCell<GGA, String>.itemStyle(it: String) {
+    private fun TableCell<OldCase, String>.itemStyle(it: String) {
         style {
             if (it.equals("通过")) {
                 backgroundColor += Color.GREEN
                 textFill = Color.WHITE
             } else if (it.equals("不通过")) {
                 backgroundColor += Color.RED
-                textFill = Color.BLACK
-            } else {
-                backgroundColor += Color.YELLOW
                 textFill = Color.BLACK
             }
         }

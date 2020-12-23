@@ -1,6 +1,6 @@
 package com.example.demo.view;
 
-import com.example.demo.view.test.IniFileEntity;
+import com.example.demo.view.test.bean.IniFileEntity;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 

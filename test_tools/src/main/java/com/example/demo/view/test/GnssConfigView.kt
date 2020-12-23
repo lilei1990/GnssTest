@@ -7,6 +7,7 @@ import com.example.demo.view.test.GnssConfig.gga_timeout
 import com.example.demo.view.test.GnssConfig.gps_test_min_noise
 import com.example.demo.view.test.GnssConfig.gps_test_min_num
 import com.example.demo.view.test.GnssConfig.gps_test_min_satellite_Count
+import com.example.demo.view.test.GnssConfig.userId
 import com.example.demo.view.test.GnssConfig.lora_test_Intervals
 import com.example.demo.view.test.GnssConfig.lora_test_chen
 import com.example.demo.view.test.GnssConfig.lora_test_count
@@ -15,9 +16,6 @@ import com.example.demo.view.test.GnssConfig.test_key_num
 import com.example.demo.view.test.GnssConfig.udp_broadcast_port
 import com.example.demo.view.test.GnssConfig.wifi_test_ip
 import com.example.demo.view.test.GnssConfig.wifi_test_pwd
-import javafx.beans.property.IntegerProperty
-import javafx.beans.property.LongProperty
-import javafx.beans.property.StringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.control.TabPane
@@ -41,27 +39,10 @@ class GnssConfigView : View("设置") {
     }
 }
 
-class Screen1 : Fragment("Screen 1") {
-    override val root = vbox {
-        menubar {
-            menu("File") {
-                menu("Connect") {
-                    item("Facebook")
-                    item("Twitter")
-                }
-                item("Save")
-                item("Quit")
-            }
-            menu("Edit") {
-                item("Copy")
-                item("Paste")
-            }
-        }
-    }
-}
 
 class Config : Fragment("设置") {
     lateinit var defaut_timeOut_View: TextField
+    lateinit var userId_View: TextField
     lateinit var eth_test_ip_View: TextField
     lateinit var udp_broadcast_port_View: TextField
     lateinit var wifi_test_ip_View: TextField
@@ -97,6 +78,19 @@ class Config : Fragment("设置") {
                 pubPor()
             }
             eth_test_ip_View = textfield("${eth_test_ip.value}") {
+
+                textProperty().addListener { obs, old, new ->
+
+                }
+            }
+        }
+        hbox {
+
+            alignment = Pos.CENTER_LEFT
+            label("工号:  ") {
+                pubPor()
+            }
+            userId_View = textfield("${userId.value}") {
 
                 textProperty().addListener { obs, old, new ->
 
@@ -236,6 +230,7 @@ class Config : Fragment("设置") {
 
                 if (onlyNum(defaut_timeOut_View.text)) return@action
                 defaut_timeOut.value = defaut_timeOut_View.text.toLong()
+                userId.value = userId_View.text
                 if (onlyIp(eth_test_ip_View.text)) return@action
                 eth_test_ip.value = eth_test_ip_View.text
                 if (onlyNum(udp_broadcast_port_View.text)) return@action
@@ -259,6 +254,8 @@ class Config : Fragment("设置") {
                 gps_test_min_num.value = gps_test_min_num_View.text.toInt()
                 if (onlyNum(test_key_num_View.text)) return@action
                 test_key_num.value = test_key_num_View.text.toInt()
+                if (onlyNum(gga_timeout_View.text)) return@action
+                gga_timeout.value = gga_timeout_View.text.toInt()
                 GnssConfig.save()
                 GnssConfig.read()
 

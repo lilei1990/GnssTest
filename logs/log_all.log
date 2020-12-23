@@ -18786,3 +18786,7 @@ Caused by: java.net.ConnectException: Connection timed out: connect
 2020-12-22 at 15:53:41 GMT+08:00 DEBUG com.example.demo.view.test.GnssConfig 86 <clinit> - 读取配置错误
 2020-12-22 at 15:56:41 GMT+08:00 DEBUG com.example.demo.view.test.GnssConfig 86 <clinit> - 读取配置错误
 2020-12-23 at 11:39:02 GMT+08:00 DEBUG com.example.demo.view.test.GnssConfig 88 <clinit> - 读取配置错误
+2020-12-23 at 16:29:40 GMT+08:00 DEBUG com.example.demo.view.test.GnssConfig 91 <clinit> - 读取配置错误
+2020-12-23 at 16:30:32 GMT+08:00 DEBUG com.example.demo.view.test.GnssConfig 91 <clinit> - 读取配置错误
+2020-12-23 at 16:31:02 GMT+08:00 DEBUG com.example.demo.view.test.GnssConfig 91 <clinit> - 读取配置错误
+2020-12-23 at 16:44:32 GMT+08:00 DEBUG com.example.demo.view.test.GnssConfig 91 <clinit> - 读取配置错误

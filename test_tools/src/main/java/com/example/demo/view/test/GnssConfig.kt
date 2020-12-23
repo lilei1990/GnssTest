@@ -2,7 +2,7 @@ package com.example.demo.view.test
 
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.Ini4jUtils
-import net.sf.marineapi.nmea.sentence.GGASentence
+import com.example.demo.view.test.bean.IniFileEntity
 import tornadofx.intProperty
 import tornadofx.longProperty
 import tornadofx.stringProperty
@@ -19,6 +19,8 @@ object GnssConfig {
     //常规配置
     var config_path = System.getProperty("user.dir") + "\\config\\"
     var defaut_timeOut = longProperty(1000)
+    //工号
+    var userId = stringProperty("00001")
 
     //测试设备的ip
     var eth_test_ip = stringProperty("192.168.1.252")
@@ -60,20 +62,21 @@ object GnssConfig {
 
     fun save() {
         val list = listOf(
-            IniFileEntity("ldap", "defaut_timeOut", "${defaut_timeOut.value}"),
-            IniFileEntity("ldap", "eth_test_ip", "${eth_test_ip.value}"),
-            IniFileEntity("ldap", "udp_broadcast_port", "${udp_broadcast_port.value}"),
-            IniFileEntity("ldap", "wifi_test_ip", "${wifi_test_ip.value}"),
-            IniFileEntity("ldap", "wifi_test_pwd", "${wifi_test_pwd.value}"),
-            IniFileEntity("ldap", "lora_test_Intervals", "${lora_test_Intervals.value}"),
-            IniFileEntity("ldap", "lora_test_chen", "${lora_test_chen.value}"),
-            IniFileEntity("ldap", "lora_test_strength", "${lora_test_strength.value}"),
-            IniFileEntity("ldap", "lora_test_count", "${lora_test_count.value}"),
-            IniFileEntity("ldap", "gps_test_min_noise", "${gps_test_min_noise.value}"),
-            IniFileEntity("ldap", "gps_test_min_satellite_Count", "${gps_test_min_satellite_Count.value}"),
-            IniFileEntity("ldap", "gps_test_min_num", "${gps_test_min_num.value}"),
-            IniFileEntity("ldap", "test_key_num", "${test_key_num.value}"),
-            IniFileEntity("ldap", "gga_timeout", "${gga_timeout.value}")
+                IniFileEntity("ldap", "defaut_timeOut", "${defaut_timeOut.value}"),
+                IniFileEntity("ldap", "userId", "${userId.value}"),
+                IniFileEntity("ldap", "eth_test_ip", "${eth_test_ip.value}"),
+                IniFileEntity("ldap", "udp_broadcast_port", "${udp_broadcast_port.value}"),
+                IniFileEntity("ldap", "wifi_test_ip", "${wifi_test_ip.value}"),
+                IniFileEntity("ldap", "wifi_test_pwd", "${wifi_test_pwd.value}"),
+                IniFileEntity("ldap", "lora_test_Intervals", "${lora_test_Intervals.value}"),
+                IniFileEntity("ldap", "lora_test_chen", "${lora_test_chen.value}"),
+                IniFileEntity("ldap", "lora_test_strength", "${lora_test_strength.value}"),
+                IniFileEntity("ldap", "lora_test_count", "${lora_test_count.value}"),
+                IniFileEntity("ldap", "gps_test_min_noise", "${gps_test_min_noise.value}"),
+                IniFileEntity("ldap", "gps_test_min_satellite_Count", "${gps_test_min_satellite_Count.value}"),
+                IniFileEntity("ldap", "gps_test_min_num", "${gps_test_min_num.value}"),
+                IniFileEntity("ldap", "test_key_num", "${test_key_num.value}"),
+                IniFileEntity("ldap", "gga_timeout", "${gga_timeout.value}")
 
         )
         Ini4jUtils.updateIniFile("${config_path}config.ini", list)
@@ -94,6 +97,7 @@ object GnssConfig {
         val fileContent: MutableMap<String, List<String>> = HashMap()
         fileContent["ldap"] = listOf(
             "defaut_timeOut",
+            "userId",
             "eth_test_ip",
             "udp_broadcast_port",
             "wifi_test_ip",
@@ -112,6 +116,7 @@ object GnssConfig {
         val readIniFile = Ini4jUtils.readIniFile(file, fileContent)
         val getldap = readIniFile.get("ldap")
         defaut_timeOut.value = getldap!!.get("defaut_timeOut")!!.toLong()
+        userId.value = getldap!!.get("userId")
         eth_test_ip.value = getldap!!.get("eth_test_ip")
         udp_broadcast_port.value = getldap!!.get("udp_broadcast_port")!!.toInt()
         wifi_test_ip.value = getldap!!.get("wifi_test_ip")
