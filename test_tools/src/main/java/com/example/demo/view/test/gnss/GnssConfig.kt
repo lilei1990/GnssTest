@@ -1,4 +1,4 @@
-package com.example.demo.view.test
+package com.example.demo.view.test.gnss
 
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.Ini4jUtils

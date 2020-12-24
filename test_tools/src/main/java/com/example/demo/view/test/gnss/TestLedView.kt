@@ -1,4 +1,4 @@
-package com.example.demo.view.test
+package com.example.demo.view.test.gnss
 
 import com.example.demo.utils.showSnackbar
 import com.example.demo.view.test.bean.Case

@@ -1,7 +1,8 @@
-package com.example.demo.view.test
+package com.example.demo.view.test.gnss
 
 import com.example.demo.utils.showSnackbar
-import com.example.demo.view.test.GnssConfig.test_key_num
+import com.example.demo.view.test.gnss.GnssConfig.test_key_num
+import com.example.demo.view.test.UdpUtlis
 import com.example.demo.view.test.bean.Case
 import javafx.geometry.Pos
 import kfoenix.jfxbutton

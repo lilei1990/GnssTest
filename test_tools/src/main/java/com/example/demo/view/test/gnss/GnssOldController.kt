@@ -1,16 +1,13 @@
-package com.example.demo.view.test
+package com.example.demo.view.test.gnss
 
 import com.example.demo.model.DeviceTestModel
-import com.example.demo.model.TestStatus
 import com.example.demo.net.Api
 import com.example.demo.utils.TimeUtil
-import com.example.demo.utils.showSnackbar
-import com.example.demo.utils.view.DialogBuilder
+import com.example.demo.view.test.UDPBroadcast
 import com.example.demo.view.test.bean.OldCase
 import com.google.gson.JsonArray
 import javafx.collections.FXCollections
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import tornadofx.*

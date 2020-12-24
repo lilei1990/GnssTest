@@ -1,4 +1,4 @@
-package com.example.demo.view.test
+package com.example.demo.view.test.gnss
 
 import com.example.demo.utils.showProgressStage
 import com.example.demo.utils.showSnackbar
@@ -6,18 +6,13 @@ import com.example.demo.utils.sqlite.SqliteHelper
 import com.example.demo.utils.view.DialogBuilder
 import com.example.demo.view.test.bean.OldCase
 import com.jfoenix.controls.JFXButton
-import javafx.application.Platform
 import javafx.geometry.Pos
 import javafx.scene.chart.XYChart
 import javafx.scene.control.TableCell
 import javafx.scene.paint.Color
-import javafx.scene.text.Font
 import kfoenix.jfxbutton
 import kfoenix.jfxsnackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
 import tornadofx.*
 
 /**
@@ -57,7 +52,7 @@ class GnssOldView : View("老化测试") {
 
 
     override val root = vbox {
-
+        spacing = 10.0
         hbox {
 
             vbox {

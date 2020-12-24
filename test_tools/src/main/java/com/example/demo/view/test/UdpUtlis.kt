@@ -5,6 +5,8 @@ import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
 import com.example.demo.utils.HexUtil
 import com.example.demo.utils.LoggerUtil
+import com.example.demo.view.test.gnss.GnssConfig
+import com.example.demo.view.test.gnss.GnssTestData
 import gnu.io.SerialPort
 import gnu.io.SerialPortEvent
 import java.io.IOException

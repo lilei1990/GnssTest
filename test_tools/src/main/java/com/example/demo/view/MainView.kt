@@ -4,7 +4,9 @@ import com.example.demo.model.TestStatus
 import com.example.demo.utils.openNewStage
 import com.example.demo.utils.shwoInternalWindow
 import com.example.demo.view.mavlink.MavLinkView
-import com.example.demo.view.test.*
+import com.example.demo.view.test.gnss.GnssConfigView
+import com.example.demo.view.test.gnss.GnssTestData
+import com.example.demo.view.test.gnss.JobNumView
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Control

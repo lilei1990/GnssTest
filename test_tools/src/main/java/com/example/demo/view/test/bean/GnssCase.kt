@@ -7,8 +7,9 @@ import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.*
 import com.example.demo.utils.cmd.*
 import com.example.demo.view.test.*
-import com.example.demo.view.test.GnssConfig.wifi_test_ip
-import com.example.demo.view.test.GnssConfig.wifi_test_pwd
+import com.example.demo.view.test.gnss.GnssConfig.wifi_test_ip
+import com.example.demo.view.test.gnss.GnssConfig.wifi_test_pwd
+import com.example.demo.view.test.gnss.*
 import com.google.gson.JsonArray
 import javafx.application.Platform
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.example.demo.view.test
+package com.example.demo.view.test.gnss
 
 import com.example.demo.ToastEvent
 import com.example.demo.model.*
@@ -88,7 +88,7 @@ class CenterController : Controller() {
                 if (GnssTestData.serialPort1 == null) {
                     fire(ToastEvent("打开端口"))
                     disableSerialport1.value = true
-                    GnssTestData. serialPort1 = SerialPortUtil.openSerialPort(nameCom, SerialPortUtilTest.BAUD_RATE)
+                    GnssTestData.serialPort1 = SerialPortUtil.openSerialPort(nameCom, SerialPortUtilTest.BAUD_RATE)
 //                    startWhitch(serialPort, nameCom, serialPortIndex)
                 }
             }

@@ -1,10 +1,9 @@
-package com.example.demo.view.test
+package com.example.demo.view.test.gnss
 
-import com.example.demo.BaseView
 import com.example.demo.ToastEvent
 import com.example.demo.net.Api
 import com.example.demo.utils.*
-import com.example.demo.view.test.GnssConfig.userId
+import com.example.demo.view.test.gnss.GnssConfig.userId
 import com.example.demo.view.test.bean.Case
 import javafx.application.Platform
 import javafx.scene.control.*
@@ -24,7 +23,7 @@ import tornadofx.*
  * 邮箱 :416587959@qq.com
  * 描述 :
  */
-class GnssTestView  : BaseView() {
+class GnssTestView  : View() {
     companion object {
         lateinit var gnssTestView: GnssTestView
     }

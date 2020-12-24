@@ -1,6 +1,6 @@
 package com.example.demo.view.test.bean
 
-import com.example.demo.view.test.GnssConfig
+import com.example.demo.view.test.gnss.GnssConfig
 
 /**
  * 作者 : lei
