@@ -262,14 +262,7 @@ open class GnssCase() {
 
     }
 
-    /**
-     * 烧录基站单板ID
-     *
-     */
-    fun checkBID(bid: String): Boolean {
-        val last = Api.queryHistoryLast(bid)
-        return last != null
-    }
+
 
     /**
      * 添加配置文件

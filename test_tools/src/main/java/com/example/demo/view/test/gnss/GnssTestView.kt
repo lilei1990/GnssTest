@@ -3,10 +3,11 @@ package com.example.demo.view.test.gnss
 import com.example.demo.ToastEvent
 import com.example.demo.net.Api
 import com.example.demo.utils.*
-import com.example.demo.view.test.gnss.GnssConfig.userId
 import com.example.demo.view.test.bean.Case
+import com.example.demo.view.test.gnss.GnssConfig.userId
 import javafx.application.Platform
 import javafx.scene.control.*
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
@@ -23,7 +24,7 @@ import tornadofx.*
  * 邮箱 :416587959@qq.com
  * 描述 :
  */
-class GnssTestView  : View() {
+class GnssTestView : View() {
     companion object {
         lateinit var gnssTestView: GnssTestView
     }
@@ -51,6 +52,8 @@ class GnssTestView  : View() {
     val cbox1: ComboBox<String> by fxid("cbox1")
     val cbox2: ComboBox<String> by fxid("cbox2")
 
+    //设备id
+    var id = ""
 
     init {
         gnssTestView = this
@@ -114,36 +117,11 @@ class GnssTestView  : View() {
 
     }
 
-    var versionVlue = "v.12.323"
+
     val progress = showProgressStage(
-        "升级中请勿操作..."
+            "升级中请勿操作..."
     )
 
-    /**
-     * 升级软件版本
-     */
-    fun update() {
-//        progress.show()
-//        controller.update()
-    }
-
-    /**
-     * 获取单板ID
-     */
-    fun setSingleCard() {
-
-
-    }
-
-
-    /**
-     * 测试lcd
-     */
-    fun btTestLcd() {
-
-//        openNewStage("屏幕测试",TestLcdView())
-
-    }
 
     /**
      * 刷新串口被点击
@@ -158,16 +136,76 @@ class GnssTestView  : View() {
     }
 
     /**
+     * 停止测试
+     */
+    fun btStopTest() {
+        GnssTestData.reset()
+    }
+
+    /**
      * 开始测试
      * "基站
     00、屏幕选择进入单板测试模式
      */
+
+
     fun btStartTest() {
+        val checkprogress = showProgressStage(
+                "校验数据中..."
+        )
+        checkprogress.show()
+        runAsync {
+            //检查网络
+            if (GnssTestData.bid.value.isNullOrEmpty()) {
+                val ping = PingUtils.ping(GnssConfig.eth_test_ip.value)
+                if (!ping) {
+                    fire(ToastEvent("网络不通,请检查网线连接1"))
+                    return@runAsync
+                }
+            }
+            //检查升级
+            if (!controller.checkUpdate()) {
+                return@runAsync
+            }
+            //检查串口1
+            if (GnssTestData.serialPort1 == null) {
+                fire(ToastEvent("检查串口1是否打开"))
+                return@runAsync
+            }
+            //检查串口2
+            if (GnssTestData.serialPort2 == null) {
+                fire(ToastEvent("检查串口2是否打开"))
+                return@runAsync
+            }
+
+//        //检查设备id
+//        if (GnssTestData.bid.value.isNullOrEmpty()) {
+//            fire(ToastEvent("未获得上报设备id,请检查网线连接"))
+//            return
+//        }
+            //所有检查项都通过就开始测试
+            Platform.runLater {
+                scanID()
+            }
+        } ui {
+            checkprogress.close()
+        }
+
+
+    }
+
+    /**
+     * 扫描设备id
+     */
+    fun scanID() {
+
+        //检查通过输入设备id
         val dialog = TextInputDialog()
         dialog.title = "开始测试";
         dialog.headerText = "请输入测试id";
         dialog.editor.text = GnssTestData.bid.value
         val result = dialog.showAndWait()
+
         result.ifPresent { bid: String ->
 //            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
             var regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
@@ -175,23 +213,113 @@ class GnssTestView  : View() {
                 showSnackbar("请录入正确的ID(8位)")
                 return@ifPresent
             }
-            try {
-                //查询CCID不通过不允许进行测试
-                Api.checkCCID(bid) {
-                    LoggerUtil.LOGGER.debug("查询结果:${it.`object`.size}")
-                    if (it.`object`.size == 0) {
-                        GnssTestData.bid.value = bid
-                        GlobalScope.launch {
-                            controller.test()
+
+            //设备id检查
+            Api.queryHistoryLast().apply {
+                if (this != null && this.size > 0) {//查询到数据如果上次测试结果为通过就提示,否则不通过
+                    if (this.size >= 3 && !this[0].result && !this[1].result && !this[2].result) {//最近测试的三次都是不通过.让后台删除数据
+                        fire(ToastEvent("最近测试的三次都是不通过,拒绝测试!"))
+                        return@ifPresent
+                    }
+                    var res = ""
+                    if (this[0].result) {
+                        res = "通过"
+                    } else {
+                        res = "不通过"
+                    }
+                    Platform.runLater {
+                        val alert = Alert(AlertType.CONFIRMATION)
+                        alert.title = "检查数据"
+                        alert.contentText = "查询到数据如果上次测试结果为$res,是否继续?"
+                        val result = alert.showAndWait();
+                        alert.showAndWait()
+                        //如果点击的是ok按钮就继续,否则什么都不做
+                        if (result.get() === ButtonType.OK) {
+                            GnssTestData.bid.value = bid
+                            scanIMSI()
+                            return@runLater
                         }
                     }
-
                 }
-            } catch (e: java.lang.Exception) {
-                showSnackbar("查询异常")
+            }
+
+        }
+    }
+
+
+    /**
+     * 扫描IMSI
+     */
+    fun scanIMSI() {
+        //检查通过输入设备id
+        val dialog = TextInputDialog()
+        dialog.title = "开始测试";
+        dialog.headerText = "请输入SIM卡编号";
+        dialog.editor.text = GnssTestData.bid.value
+        val result = dialog.showAndWait()
+        result.ifPresent { simNum: String ->
+//            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
+            var regex = "[0-9a-fA-F]{13}"
+            if (!simNum.matches(Regex(regex))) {
+                showSnackbar("请录入正确的SIM卡编号(13位)")
+                return@ifPresent
+            }
+            //查询CCID不通过不允许进行测试
+            val checkCCID = Api.checkCCID(simNum)
+            if (checkCCID == null || checkCCID!!.`object`.size == 0) {//返回数据为null终止
+                showSnackbar("查询不到SIM卡编号")
+                return@ifPresent
+            }
+            //是否能匹配到sim卡编号
+            val ccid = checkCCID!!.`object`.get(0)
+            if (ccid.number != simNum) {
+                showSnackbar("查询SIM卡编号匹配不正确")
+                return@ifPresent
+            }
+            //所有check都通过开始测试
+            GlobalScope.launch {
+                controller.test()
             }
         }
+    }
 
+    /**
+     * 测试前的数据检查
+     */
+
+    fun check(): Boolean {
+        //检查升级
+        if (!controller.checkUpdate()) {
+            return false
+        }
+        //检查串口
+        if (GnssTestData.serialPort1 == null) {
+            fire(ToastEvent("检查串口1是否打开"))
+            return false
+        }
+        //检查串口
+        if (GnssTestData.serialPort2 == null) {
+            fire(ToastEvent("检查串口2是否打开"))
+            return false
+        }
+        //检查设备id
+        if (GnssTestData.bid.value.isNullOrEmpty()) {
+            fire(ToastEvent("未获取设备id"))
+            return false
+        }
+        //检查网络
+        if (GnssTestData.bid.value.isNullOrEmpty()) {
+            val ping = PingUtils.ping(GnssConfig.eth_test_ip.value)
+            if (!ping) {
+                fire(ToastEvent("网络不通"))
+            }
+            return ping
+        }
+
+        //检查版本
+        //检查软件版本
+
+        return true
     }
 
 
@@ -213,6 +341,35 @@ class GnssTestView  : View() {
         }
         controller.start(controller.comboText1.value, 0)
     }
+
+//    /**
+//     * 检查id 如果为true,继续下一步
+//     * false拒绝下一步
+//     */
+//    fun checkId(): Boolean {
+//        val last = Api.queryHistoryLast()
+//        if (last != null && last.size > 0) {//查询到数据如果上次测试结果为通过就提示,否则不通过
+//            var res = ""
+//            if (last[0].result) {
+//                res = "通过"
+//            } else {
+//                res = "不通过"
+//            }
+//
+//
+//
+//            Platform.runLater {
+//                val alert = Alert(AlertType.CONFIRMATION)
+//                alert.title = "检查数据"
+//                alert.contentText = "查询到数据如果上次测试结果为$res,是否继续?"
+//                val result = alert.showAndWait();
+//                alert.showAndWait()
+//            }
+//            //如果点击的是ok按钮就继续
+//            return result.get() == ButtonType.OK
+//        }
+//        return true
+//    }
 
     /**
      * 打开串口2

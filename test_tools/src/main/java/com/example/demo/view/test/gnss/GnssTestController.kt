@@ -7,7 +7,9 @@ import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.rxtx.SerialPortUtilTest
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.utils.PingUtils
+import com.example.demo.utils.view.DialogBuilder
 import com.example.demo.view.test.bean.GnssCase
+import com.jfoenix.controls.JFXButton
 
 import javafx.application.Platform
 import javafx.collections.FXCollections
@@ -179,46 +181,6 @@ class CenterController : Controller() {
         comboText2.value = serialPortList.lastOrNull()
     }
 
-    /**
-     * 测试前的数据检查
-     */
-
-    fun check(): Boolean {
-        //检查升级
-        if (!checkUpdate()) {
-            return false
-        }
-        //检查串口
-        if (GnssTestData.serialPort1 == null) {
-            fire(ToastEvent("检查串口1是否打开"))
-            return false
-        }
-        //检查串口
-        if (GnssTestData.serialPort2 == null) {
-            fire(ToastEvent("检查串口2是否打开"))
-            return false
-        }
-        //检查bid
-        if (GnssTestData.bid.value.isNullOrEmpty()) {
-            fire(ToastEvent("bid不能为空"))
-            return false
-        }
-        if (checkBID(GnssTestData.bid.value)) {
-
-        }
-        //检查网络
-        if (GnssTestData.bid.value.isNullOrEmpty()) {
-            val ping = PingUtils.ping(GnssConfig.eth_test_ip.value)
-            if (!ping) {
-                fire(ToastEvent("网络不通"))
-            }
-            return ping
-        }
-        //检查版本
-        //检查软件版本
-
-        return true
-    }
 
     fun checkUpdate(): Boolean {
         //检查系统版本
@@ -249,23 +211,11 @@ class CenterController : Controller() {
      * 开始测试
      */
     suspend fun test() {
-        if (!check()) {
-            return
-        }
-
         GnssCase().run()
         udpStaus.value = GREEN
 
     }
-    /**
-     * 查询单板ID
-     *
-     */
-    fun checkBID(bid: String): Boolean {
-        val last = Api.queryHistoryLast(bid)
-        //为null则查询不到
-        return last == null
-    }
+
     /**
      * 获取基站版本文件的版本号
      *

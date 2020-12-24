@@ -75,6 +75,7 @@ object GnssTestData {
                                 versionH.value = msg0101.hw
                                 versionS.value = msg0101.sw
                                 versionBsp.value = msg0101.bsp
+                                versionBsp.value = msg0101.net4g1_imsi
                                 sim1ping.value = msg0101.net4g1_ping.toInt()
                                 sim2ping.value = msg0101.net4g2_ping.toInt()
                                 key.value = msg0101.key

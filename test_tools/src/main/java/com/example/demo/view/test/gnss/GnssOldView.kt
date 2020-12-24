@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXButton
 import javafx.geometry.Pos
 import javafx.scene.chart.XYChart
 import javafx.scene.control.TableCell
+import javafx.scene.control.ToolBar
 import javafx.scene.paint.Color
 import kfoenix.jfxbutton
 import kfoenix.jfxsnackbar
@@ -52,8 +53,9 @@ class GnssOldView : View("老化测试") {
 
 
     override val root = vbox {
-        paddingAll=10.0
+        paddingAll = 10.0
         spacing = 10.0
+        ToolBar().add(RestProgressBar::class)
         hbox {
 
             vbox {
@@ -107,6 +109,9 @@ class GnssOldView : View("老化测试") {
 
         hbox {
             spacing = 10.0
+            text("软件版本,设备id") {
+                textProperty().bind(GnssTestData.textInfo)
+            }
             label("工号:   ${GnssConfig.userId.value}")
             text {
                 prefWidth(50.0)
@@ -160,6 +165,7 @@ class GnssOldView : View("老化测试") {
                     reUpload()
                 }
             }
+
         }
 
     }

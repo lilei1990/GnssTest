@@ -65,14 +65,7 @@
             </VBox>
 
             <Button fx:id="btStartTest" onAction="#btStartTest" text="开始测试"/>
-            <FlowPane hgap="10" prefWidth="280" vgap="10">
-                <Button onAction="#setSingleCard" text="打开屏幕测试"/>
-                <Button onAction="#btTestLcd" text="测试lcd"/>
-                <Button onAction="#btStartTest" text="获取USB"/>
-                <Button onAction="#btStartTest" text="获取调试串口"/>
-                <Button onAction="#update" text="升级"/>
-
-            </FlowPane>
+            <Button fx:id="btStopTest" onAction="#btStopTest" text="停止测试"/>
         </VBox>
     </right>
 </BorderPane>

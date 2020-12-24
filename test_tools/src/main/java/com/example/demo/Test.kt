@@ -1,11 +1,15 @@
 package com.example.demo
 
+import com.example.demo.model.DeviceTestModel
+import com.example.demo.net.Api
 import com.example.demo.utils.HexUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import net.sf.marineapi.nmea.util.SatelliteInfo
 import tornadofx.runAsync
+import tornadofx.toModel
 import tornadofx.ui
 
 private val flow = flowOf(1, 2).map {
@@ -18,18 +22,13 @@ private val flow = flowOf(1, 2).map {
 }
 
 suspend fun main(args: Array<String>) {
-    flowOf(1, 2).map {
-
-        it.apply {
-            flowOf(3, 4).collect {
-                delay(3000)
-                println("$it" + Thread.currentThread())
-            }
-        }
-    }.onCompletion {
-        println("测试完成")
+    flow<Int> {
+        delay(2000)
+        emit(5)
+        return@flow
+        emit(6)
     }.collect {
-        println("$it" + Thread.currentThread())
+        println("==="+it)
     }
 //    val satelliteMap = mutableMapOf<Int, Int>()
 //    for (i in 1..10) {

@@ -5,14 +5,19 @@ import com.example.demo.model.Config1For601
 import com.example.demo.DialogCenterMsgWarn
 import com.example.demo.model.*
 import com.example.demo.utils.LoggerUtil
+import com.example.demo.utils.openNewStage
+import com.example.demo.view.test.gnss.GnssOldView
+import com.example.demo.view.test.gnss.GnssTestData
+import com.example.demo.view.test.gnss.GnssTestView
 import com.google.gson.Gson
+import javafx.collections.ObservableList
 import tornadofx.*
 
 
 object Api {
     private const val DevicesHost = "http://192.168.1.252/"
-    private const val url = "http://120.132.12.76:8090/hd_product"
-    private val api = Rest()
+    const val url = "http://120.132.12.76:8090/hd_product"
+    val api = Rest()
     fun getConfig1(fun1: (statistic: Config1For601) -> Unit = {}) {
         runAsync {
 
@@ -38,7 +43,7 @@ object Api {
 
             try {
                 val formUpload =
-                    HttpPostUploadUtil.formUpload("${DevicesHost}cgi-bin/upgrade", null, mutableMapOf("file" to url))
+                        HttpPostUploadUtil.formUpload("${DevicesHost}cgi-bin/upgrade", null, mutableMapOf("file" to url))
                 println(formUpload)
                 fun1(formUpload.contains("成功"))
             } catch (e: Exception) {
@@ -80,17 +85,17 @@ object Api {
      * 查询ccid
      *
      */
-    fun checkCCID(ccid: String, fun1: (rspBean: CheckCCID) -> Unit = {}) {
+    fun checkCCID(ccid: String, fun1: (rspBean: CheckCCID) -> Unit = {}): CheckCCID? {
         try {
-            runAsync {
-                val result = api.get("$url/sim/findByCondition?ccid=$ccid")
-                val parseObject = JSON.parseObject(result.text(), CheckCCID::class.java)
-                fun1(parseObject)
-            }
+
+            val result = api.get("$url/sim/findByCondition?ccid=$ccid")
+            return JSON.parseObject(result.text(), CheckCCID::class.java)
+
+
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
+            return null
         }
-
     }
 
     /**
@@ -120,16 +125,32 @@ object Api {
     "message":""
     }
      */
-    fun queryHistoryLast(equipmentId: String, status: String = "1"): DeviceTestModel? {
+    fun queryHistoryLast(): ObservableList<DeviceTestModel>? {
+        var equipmentId = ""
+        //测试类型	status	char	4	1.单板测试，2.整机测试，3为老化测试
+        var status = ""
+        when (GnssTestData.testStatus) {
+            TestStatus.TEST_STATUS_PRO -> {//单板测试
+                status = "1"
+                equipmentId = GnssTestData.bid.value
+            }
+            TestStatus.TEST_STATUS_TOTAL -> {//整机测试
+                status = "2"
+                equipmentId = GnssTestData.id.value
+            }
+            TestStatus.TEST_STATUS_OLD -> {//老化测试
+                status = "3"
+                equipmentId = GnssTestData.id.value
+            }
+        }
+        //result=1成功的数据
         try {
             var rsp =
-                api.get("$url/machineTest/findByEquipmentId?equipmentId=$equipmentId&status=$status&result=1").one()
-                    .let {
+                    api.get("$url/machineTest/findByPageCondition?equipmentId=$equipmentId&status=$status").one()
+                            .let {
 
-                        it.getJsonObject("object")
-
-
-                    }?.toModel<DeviceTestModel>()
+                                it.getJsonArray("rows")
+                            }?.toModel<DeviceTestModel>()
             println("queryHistoryLast-->$rsp")
 
             return rsp
@@ -140,4 +161,5 @@ object Api {
             return null
         }
     }
+
 }
