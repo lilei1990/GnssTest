@@ -52,6 +52,7 @@ class GnssOldView : View("老化测试") {
 
 
     override val root = vbox {
+        paddingAll=10.0
         spacing = 10.0
         hbox {
 

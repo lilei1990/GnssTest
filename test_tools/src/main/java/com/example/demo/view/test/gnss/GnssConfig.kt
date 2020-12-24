@@ -44,7 +44,6 @@ object GnssConfig {
     //lora测试次数
     var lora_test_count = intProperty(10)
 
-
     //gps
     //信噪测试最低阈值
     var gps_test_min_noise = intProperty(40)
@@ -62,6 +61,7 @@ object GnssConfig {
 
     fun save() {
         val list = listOf(
+                IniFileEntity("ldap", "config_path", "$config_path"),
                 IniFileEntity("ldap", "defaut_timeOut", "${defaut_timeOut.value}"),
                 IniFileEntity("ldap", "userId", "${userId.value}"),
                 IniFileEntity("ldap", "eth_test_ip", "${eth_test_ip.value}"),
@@ -84,7 +84,6 @@ object GnssConfig {
 
     init {
         try {
-
             read()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -96,6 +95,7 @@ object GnssConfig {
 
         val fileContent: MutableMap<String, List<String>> = HashMap()
         fileContent["ldap"] = listOf(
+            "config_path",
             "defaut_timeOut",
             "userId",
             "eth_test_ip",
@@ -115,6 +115,7 @@ object GnssConfig {
         val file = File("${config_path}config.ini")
         val readIniFile = Ini4jUtils.readIniFile(file, fileContent)
         val getldap = readIniFile.get("ldap")
+        config_path = getldap!!.get("config_path")!!
         defaut_timeOut.value = getldap!!.get("defaut_timeOut")!!.toLong()
         userId.value = getldap!!.get("userId")
         eth_test_ip.value = getldap!!.get("eth_test_ip")

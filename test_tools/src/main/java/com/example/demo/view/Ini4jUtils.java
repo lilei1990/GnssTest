@@ -31,6 +31,8 @@ public class Ini4jUtils {
         if (file.exists()) {
             return false;
         }
+        File fileParent = file.getParentFile();
+        fileParent.mkdirs();
         file.createNewFile();
         Ini ini = new Ini();
         ini.load(file);

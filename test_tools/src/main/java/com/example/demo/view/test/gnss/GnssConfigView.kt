@@ -1,6 +1,7 @@
 package com.example.demo.view.test.gnss
 
 import com.example.demo.utils.showSnackbar
+import com.example.demo.view.test.gnss.GnssConfig.config_path
 import com.example.demo.view.test.gnss.GnssConfig.defaut_timeOut
 import com.example.demo.view.test.gnss.GnssConfig.eth_test_ip
 import com.example.demo.view.test.gnss.GnssConfig.gga_timeout
@@ -41,6 +42,7 @@ class GnssConfigView : View("设置") {
 
 
 class Config : Fragment("设置") {
+    lateinit var config_path_View: TextField
     lateinit var defaut_timeOut_View: TextField
     lateinit var userId_View: TextField
     lateinit var eth_test_ip_View: TextField
@@ -63,6 +65,17 @@ class Config : Fragment("设置") {
         label("常规")
         hbox {
             alignment = Pos.CENTER_LEFT
+            label("配置文件路径:  ") {
+                pubPor()
+            }
+            config_path_View = textfield("${GnssConfig.config_path}") {
+                textProperty().addListener { obs, old, new ->
+                }
+            }
+        }
+        hbox {
+            alignment = Pos.CENTER_LEFT
+
             label("默认超时时间:  ") {
                 pubPor()
             }
@@ -71,6 +84,7 @@ class Config : Fragment("设置") {
                 }
             }
         }
+
         hbox {
 
             alignment = Pos.CENTER_LEFT
@@ -231,6 +245,7 @@ class Config : Fragment("设置") {
                 if (onlyNum(defaut_timeOut_View.text)) return@action
                 defaut_timeOut.value = defaut_timeOut_View.text.toLong()
                 userId.value = userId_View.text
+                config_path = config_path_View.text
                 if (onlyIp(eth_test_ip_View.text)) return@action
                 eth_test_ip.value = eth_test_ip_View.text
                 if (onlyNum(udp_broadcast_port_View.text)) return@action
@@ -276,7 +291,7 @@ class Config : Fragment("设置") {
 
     private fun onlyIp(new: String): Boolean {
         var regex =
-            "(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)"
+                "(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)"
         if (!new.matches(Regex(regex))) {
             showSnackbar("${new}值的格式不正确")
             return true
