@@ -8,11 +8,11 @@ package com.example.demo.model
  */
 data class CheckCCID(
     val code: Int,
-    val message: String,
-    val `object`: List<Object>
+    val rows: List<Row>,
+    val total: Int
 )
 
-data class Object(
+data class Row(
     val ccid: String,
     val description: String,
     val id: String,

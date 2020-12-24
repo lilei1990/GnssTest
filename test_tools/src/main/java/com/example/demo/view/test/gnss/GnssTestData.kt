@@ -43,6 +43,9 @@ object GnssTestData {
     var sim1ping = intProperty(0)
     var sim2ping = intProperty(0)
 
+    //获取镜像版本号
+    var net4g1_imsi = stringProperty("")
+    var net4g2_imsi = stringProperty("")
     //用于统计卫星达到标准的数量
     // K卫星编号 V 达到要求次数
     var satelliteMap = mutableMapOf<String, Int>()
@@ -78,6 +81,8 @@ object GnssTestData {
                                 versionBsp.value = msg0101.net4g1_imsi
                                 sim1ping.value = msg0101.net4g1_ping.toInt()
                                 sim2ping.value = msg0101.net4g2_ping.toInt()
+                                net4g1_imsi.value = msg0101.net4g1_imsi
+                                net4g2_imsi.value = msg0101.net4g2_imsi
                                 key.value = msg0101.key
                                 var star = ""
                                 satelliteMap.forEach { t, u ->
@@ -93,7 +98,9 @@ object GnssTestData {
                                         "信道:${msg0101.chan}\n" +
                                         "卫星:${star}\n" +
                                         "4g1:ping通${msg0101.net4g1_ping}次\n" +
-                                        "4g2:ping通${msg0101.net4g2_ping}次\n"
+                                        "4g2:ping通${msg0101.net4g2_ping}次\n" +
+                                        "4g1imsi:${msg0101.net4g1_imsi}\n"+
+                                        "4g2imsi:${msg0101.net4g2_imsi}\n"
                                 //老化测试做数据匹配
                                 if (ggamap_fail.contains(address)) {
                                     ggamap_fail[address]?.id = msg0101.id
@@ -205,7 +212,6 @@ object GnssTestData {
 
         //按钮测试key
         key.value = ""
-
 
 
         //缓冲数据区域,用于临时存放不通过的,如果持续不通过就会被放入fail

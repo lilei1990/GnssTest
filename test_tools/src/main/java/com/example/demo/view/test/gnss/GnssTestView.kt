@@ -206,6 +206,7 @@ class GnssTestView : View() {
         dialog.editor.text = GnssTestData.bid.value
         val result = dialog.showAndWait()
 
+
         result.ifPresent { bid: String ->
 //            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
             var regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
@@ -213,35 +214,52 @@ class GnssTestView : View() {
                 showSnackbar("请录入正确的ID(8位)")
                 return@ifPresent
             }
-
-            //设备id检查
-            Api.queryHistoryLast().apply {
-                if (this != null && this.size > 0) {//查询到数据如果上次测试结果为通过就提示,否则不通过
-                    if (this.size >= 3 && !this[0].result && !this[1].result && !this[2].result) {//最近测试的三次都是不通过.让后台删除数据
-                        fire(ToastEvent("最近测试的三次都是不通过,拒绝测试!"))
-                        return@ifPresent
-                    }
-                    var res = ""
-                    if (this[0].result) {
-                        res = "通过"
-                    } else {
-                        res = "不通过"
-                    }
+            runAsync {
+                val queryHistoryLast = Api.queryHistoryLast(bid)
+                if (queryHistoryLast == null) {
+                    fire(ToastEvent("设备id查询错误"))
+                    return@runAsync
+                }
+                //查询到数据如果上次测试结果为通过就提示,否则不通过
+                if (queryHistoryLast.size >= 3 && !queryHistoryLast[0].result && !queryHistoryLast[1].result && !queryHistoryLast[2].result) {//最近测试的三次都是不通过.让后台删除数据
+                    fire(ToastEvent("最近测试的三次都是不通过,拒绝测试!"))
+                    return@runAsync
+                }
+                //数据查询为0就一次都没有测试过,直接进行下一步
+                if (queryHistoryLast.size == 0) {
                     Platform.runLater {
-                        val alert = Alert(AlertType.CONFIRMATION)
-                        alert.title = "检查数据"
-                        alert.contentText = "查询到数据如果上次测试结果为$res,是否继续?"
-                        val result = alert.showAndWait();
-                        alert.showAndWait()
-                        //如果点击的是ok按钮就继续,否则什么都不做
-                        if (result.get() === ButtonType.OK) {
-                            GnssTestData.bid.value = bid
-                            scanIMSI()
-                            return@runLater
+                        GnssTestData.bid.value = bid
+                        //所有check都通过开始测试
+                        GlobalScope.launch {
+                            controller.test()
                         }
+                    }
+                    return@runAsync
+                }
+                var res = ""
+                if (queryHistoryLast[0].result) {
+                    res = "通过"
+                } else {
+                    res = "不通过"
+                }
+                Platform.runLater {
+                    val alert = Alert(AlertType.CONFIRMATION)
+                    alert.title = "检查数据"
+                    alert.headerText=null
+                    alert.contentText = "查询到数据${queryHistoryLast.size}条,\n上次测试结果为:$res,是否继续?"
+                    val result = alert.showAndWait();
+                    //如果点击的是ok按钮就继续,否则什么都不做
+                    if (result.get() === ButtonType.OK) {
+                        GnssTestData.bid.value = bid
+                        //所有check都通过开始测试
+                        GlobalScope.launch {
+                            controller.test()
+                        }
+                        return@runLater
                     }
                 }
             }
+
 
         }
     }
@@ -255,24 +273,30 @@ class GnssTestView : View() {
         val dialog = TextInputDialog()
         dialog.title = "开始测试";
         dialog.headerText = "请输入SIM卡编号";
-        dialog.editor.text = GnssTestData.bid.value
+        dialog.editor.text = ""
         val result = dialog.showAndWait()
-        result.ifPresent { simNum: String ->
+        val net4g1 = GnssTestData.net4g1_imsi.value
+        val net4g2 = GnssTestData.net4g2_imsi.value
+        if (net4g1.isNullOrEmpty()||net4g2.isNullOrEmpty()) {
+            showSnackbar("未获取到imsi")
+            return
+        }
+        result.ifPresent { ccid: String ->
 //            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
-            var regex = "[0-9a-fA-F]{13}"
-            if (!simNum.matches(Regex(regex))) {
+            var regex = "[0-9a-fA-F]{20}"
+            if (!ccid.matches(Regex(regex))) {
                 showSnackbar("请录入正确的SIM卡编号(13位)")
                 return@ifPresent
             }
             //查询CCID不通过不允许进行测试
-            val checkCCID = Api.checkCCID(simNum)
-            if (checkCCID == null || checkCCID!!.`object`.size == 0) {//返回数据为null终止
+            val checkCCID = Api.checkCCID(ccid)
+            if (checkCCID == null || checkCCID!!.rows.size == 0) {//返回数据为null终止
                 showSnackbar("查询不到SIM卡编号")
                 return@ifPresent
             }
             //是否能匹配到sim卡编号
-            val ccid = checkCCID!!.`object`.get(0)
-            if (ccid.number != simNum) {
+            val sim = checkCCID!!.rows.get(0)
+            if (sim.number != ccid) {
                 showSnackbar("查询SIM卡编号匹配不正确")
                 return@ifPresent
             }

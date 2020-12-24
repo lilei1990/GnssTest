@@ -23,7 +23,7 @@ public class WlanExecute {
      * ---step3 ping校验
      */
     public synchronized boolean check(String ssid, String password) {
-        System.out.println("check : " + ssid+"--"+ password);
+
         try {
             String profileName = password + ".xml";
             if (addProfile(profileName)) {

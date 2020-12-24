@@ -88,7 +88,7 @@ object Api {
     fun checkCCID(ccid: String, fun1: (rspBean: CheckCCID) -> Unit = {}): CheckCCID? {
         try {
 
-            val result = api.get("$url/sim/findByCondition?ccid=$ccid")
+            val result = api.get("$url/sim/findByPageCondition?queryParams=$ccid")
             return JSON.parseObject(result.text(), CheckCCID::class.java)
 
 
@@ -125,22 +125,19 @@ object Api {
     "message":""
     }
      */
-    fun queryHistoryLast(): ObservableList<DeviceTestModel>? {
-        var equipmentId = ""
+    fun queryHistoryLast(equipmentId:String): ObservableList<DeviceTestModel>? {
+
         //测试类型	status	char	4	1.单板测试，2.整机测试，3为老化测试
         var status = ""
         when (GnssTestData.testStatus) {
             TestStatus.TEST_STATUS_PRO -> {//单板测试
                 status = "1"
-                equipmentId = GnssTestData.bid.value
             }
             TestStatus.TEST_STATUS_TOTAL -> {//整机测试
                 status = "2"
-                equipmentId = GnssTestData.id.value
             }
             TestStatus.TEST_STATUS_OLD -> {//老化测试
                 status = "3"
-                equipmentId = GnssTestData.id.value
             }
         }
         //result=1成功的数据

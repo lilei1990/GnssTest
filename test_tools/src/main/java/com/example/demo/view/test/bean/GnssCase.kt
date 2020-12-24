@@ -12,9 +12,12 @@ import com.example.demo.view.test.gnss.GnssConfig.wifi_test_pwd
 import com.example.demo.view.test.gnss.*
 import com.google.gson.JsonArray
 import javafx.application.Platform
+import javafx.scene.control.TextInputDialog
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -38,23 +41,25 @@ enum class GnssType(val id: Int, val testName: String) {
     KEY(14, "KEY"),
     LCD(15, "LCD"),
     LED(16, "LED检测"),
-    POWR(17, "掉电保护")
+    POWR(17, "掉电保护"),
+    IMSI1(18, "4G1（IMSI）"),
+    IMSI2(19, "4G2（IMSI）")
 }
 
 open class GnssCase() {
 
     suspend fun run() {
         val caselist = arrayListOf<Case>()
-        caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
-        caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
-        caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
-        caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
+//        caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
+//        caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
+//        caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
+//        caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
 ////        caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
 //        caselist.add(Case(GnssType.USB.id, GnssType.USB.testName))
 //        caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
 //        caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
 //        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
-        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName))
+//        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName))
 //        caselist.add(Case(GnssType.LORA.id, GnssType.LORA.testName))
 //        caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
 //        caselist.add(Case(GnssType.ETH.id, GnssType.ETH.testName))
@@ -62,6 +67,8 @@ open class GnssCase() {
 //        caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
 //        caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
 //        caselist.add(Case(GnssType.POWR.id, GnssType.POWR.testName))
+        caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
+        caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
         caselist.asFlow().map {
             it.apply {
                 whenID(it)
@@ -221,7 +228,116 @@ open class GnssCase() {
                 }
 
             }
+            GnssType.IMSI1.id -> {//掉电保护
+                var isNext = false
+                Platform.runLater {
+                    //检查通过输入设备id
+                    val dialog = TextInputDialog()
+                    dialog.title = "SIM卡编号1";
+                    dialog.headerText = "请输入SIM卡编号1";
+                    dialog.editor.text = ""
+                    var result = dialog.showAndWait()
+                    val net4g1 = GnssTestData.net4g1_imsi.value
 
+                    if (net4g1.isNullOrEmpty()) {
+                        case.putTestInfo("net4g1:$net4g1")
+                        case.result = false
+                        isNext = true
+                    }
+                    result.ifPresent { ccid: String ->
+
+//            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
+                        var regex = "[0-9a-fA-F]{13}"
+                        if (!ccid.matches(Regex(regex))) {
+                            GnssTestView.gnssTestView.showSnackbar("请录入正确的SIM卡编号(13位)")
+                            case.putTestInfo("请录入正确的SIM卡编号(13位)")
+                            case.result = false
+                            isNext = true
+                            return@ifPresent
+                        }
+                        //查询CCID
+                        val checkCCID = Api.checkCCID(net4g1)
+                        if (checkCCID == null || checkCCID!!.rows.size == 0) {//返回数据为null终止
+                            GnssTestView.gnssTestView.showSnackbar("查询不到SIM卡编号")
+                            case.putTestInfo("查询不到SIM卡编号,ccid:$ccid")
+                            case.result = false
+                            isNext = true
+                            return@ifPresent
+                        }
+                        //是否能匹配到sim卡编号
+                        val sim = checkCCID!!.rows.get(0)
+                        if (sim.number != ccid) {
+                            GnssTestView.gnssTestView.showSnackbar("查询SIM卡编号匹配不正确")
+                            case.putTestInfo("查询SIM卡编号匹配不正确,ccid:$ccid")
+                            case.result = false
+                            isNext = true
+                            return@ifPresent
+                        }
+                        case.result = true
+                        isNext = true
+                    }
+                }
+                //定时检测是否收到下一步的消息
+                while (!isNext) {
+                    delay(1000)
+                }
+
+            }
+            GnssType.IMSI2.id -> {//掉电保护
+                var isNext = false
+                Platform.runLater {
+                    //检查通过输入设备id
+                    val dialog = TextInputDialog()
+                    dialog.title = "SIM卡编号2";
+                    dialog.headerText = "请输入SIM卡编号2";
+                    dialog.editor.text = ""
+                    var result = dialog.showAndWait()
+                    val net4g2 = GnssTestData.net4g2_imsi.value
+
+                    if (net4g2.isNullOrEmpty()) {
+                        case.putTestInfo("net4g2:$net4g2")
+                        case.result = false
+                        isNext = true
+                    }
+                    result.ifPresent { ccid: String ->
+
+//            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
+                        var regex = "[0-9a-fA-F]{13}"
+                        if (!ccid.matches(Regex(regex))) {
+                            GnssTestView.gnssTestView.showSnackbar("请录入正确的SIM卡编号(13位)")
+                            case.putTestInfo("请录入正确的SIM卡编号(13位)")
+                            case.result = false
+                            isNext = true
+                            return@ifPresent
+                        }
+                        //查询CCID不通过不允许进行测试
+                        val checkCCID = Api.checkCCID(net4g2)
+                        if (checkCCID == null || checkCCID!!.rows.size == 0) {//返回数据为null终止
+                            GnssTestView.gnssTestView.showSnackbar("查询不到SIM卡编号")
+                            case.putTestInfo("查询不到SIM卡编号,ccid:$ccid")
+                            case.result = false
+                            isNext = true
+                            return@ifPresent
+                        }
+                        //是否能匹配到sim卡编号
+                        val sim = checkCCID!!.rows.get(0)
+                        if (sim.number != ccid) {
+                            GnssTestView.gnssTestView.showSnackbar("查询SIM卡编号匹配不正确")
+                            case.putTestInfo("查询SIM卡编号匹配不正确,ccid:$ccid")
+                            case.result = false
+                            isNext = true
+                            return@ifPresent
+                        }
+                        case.result = true
+                        isNext = true
+                    }
+                }
+                //定时检测是否收到下一步的消息
+                while (!isNext) {
+                    delay(1000)
+                }
+
+            }
         }
     }
 
@@ -261,7 +377,6 @@ open class GnssCase() {
         }
 
     }
-
 
 
     /**
