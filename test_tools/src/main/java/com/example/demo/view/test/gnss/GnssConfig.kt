@@ -18,7 +18,7 @@ import java.util.*
 object GnssConfig {
     //常规配置
     var config_path = System.getProperty("user.dir") + "\\config\\"
-    var defaut_timeOut = longProperty(1000)
+    var defaut_timeOut = longProperty(10000)
     //工号
     var userId = stringProperty("00001")
 
@@ -33,10 +33,10 @@ object GnssConfig {
     var wifi_test_pwd = stringProperty("1234567890")
 
     //lora测试间隔频率
-    var lora_test_Intervals = longProperty(5000)
+    var lora_test_Intervals = longProperty(10000)
 
     //lora 信道
-    var lora_test_chen = intProperty(20)
+    var lora_test_chen = intProperty(65)
 
     //lora 信号强度
     var lora_test_strength = intProperty(20)

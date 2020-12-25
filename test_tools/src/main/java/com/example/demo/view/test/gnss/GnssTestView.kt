@@ -3,6 +3,7 @@ package com.example.demo.view.test.gnss
 import com.example.demo.ToastEvent
 import com.example.demo.net.Api
 import com.example.demo.utils.*
+import com.example.demo.view.test.UdpUtlis
 import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.gnss.GnssConfig.userId
 import javafx.application.Platform
@@ -13,8 +14,7 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 import javafx.scene.text.Text
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import tornadofx.*
 
 
@@ -51,6 +51,7 @@ class GnssTestView : View() {
     val tviewCaseResult: TableColumn<Case, String> by fxid("tview_case_result")
     val cbox1: ComboBox<String> by fxid("cbox1")
     val cbox2: ComboBox<String> by fxid("cbox2")
+    var job: Job? = null
 
     //设备id
     var id = ""
@@ -139,7 +140,12 @@ class GnssTestView : View() {
      * 停止测试
      */
     fun btStopTest() {
-        GnssTestData.reset()
+        //清除loar
+//        UdpUtlis.clearLoar()
+//        UdpUtlis.recLoar(10,300,1)
+//        if (job != null) {
+//            job!!.cancel()
+//        }
     }
 
     /**
@@ -175,6 +181,13 @@ class GnssTestView : View() {
             //检查串口2
             if (GnssTestData.serialPort2 == null) {
                 fire(ToastEvent("检查串口2是否打开"))
+                return@runAsync
+            }
+            //检信道是否匹配
+            if (GnssConfig.lora_test_chen.value != GnssTestData.chan.value) {
+                fire(ToastEvent("信道不匹配,已经重新配置,稍后重试"))
+                //配置信道
+                UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
                 return@runAsync
             }
 
@@ -230,8 +243,10 @@ class GnssTestView : View() {
                     Platform.runLater {
                         GnssTestData.bid.value = bid
                         //所有check都通过开始测试
-                        GlobalScope.launch {
-                            controller.test()
+                        job = GlobalScope.launch {
+                            withContext(Dispatchers.IO) {
+                                controller.test()
+                            }
                         }
                     }
                     return@runAsync
@@ -245,7 +260,7 @@ class GnssTestView : View() {
                 Platform.runLater {
                     val alert = Alert(AlertType.CONFIRMATION)
                     alert.title = "检查数据"
-                    alert.headerText=null
+                    alert.headerText = null
                     alert.contentText = "查询到数据${queryHistoryLast.size}条,\n上次测试结果为:$res,是否继续?"
                     val result = alert.showAndWait();
                     //如果点击的是ok按钮就继续,否则什么都不做
@@ -264,48 +279,6 @@ class GnssTestView : View() {
         }
     }
 
-
-    /**
-     * 扫描IMSI
-     */
-    fun scanIMSI() {
-        //检查通过输入设备id
-        val dialog = TextInputDialog()
-        dialog.title = "开始测试";
-        dialog.headerText = "请输入SIM卡编号";
-        dialog.editor.text = ""
-        val result = dialog.showAndWait()
-        val net4g1 = GnssTestData.net4g1_imsi.value
-        val net4g2 = GnssTestData.net4g2_imsi.value
-        if (net4g1.isNullOrEmpty()||net4g2.isNullOrEmpty()) {
-            showSnackbar("未获取到imsi")
-            return
-        }
-        result.ifPresent { ccid: String ->
-//            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
-            var regex = "[0-9a-fA-F]{20}"
-            if (!ccid.matches(Regex(regex))) {
-                showSnackbar("请录入正确的SIM卡编号(13位)")
-                return@ifPresent
-            }
-            //查询CCID不通过不允许进行测试
-            val checkCCID = Api.checkCCID(ccid)
-            if (checkCCID == null || checkCCID!!.rows.size == 0) {//返回数据为null终止
-                showSnackbar("查询不到SIM卡编号")
-                return@ifPresent
-            }
-            //是否能匹配到sim卡编号
-            val sim = checkCCID!!.rows.get(0)
-            if (sim.number != ccid) {
-                showSnackbar("查询SIM卡编号匹配不正确")
-                return@ifPresent
-            }
-            //所有check都通过开始测试
-            GlobalScope.launch {
-                controller.test()
-            }
-        }
-    }
 
     /**
      * 测试前的数据检查
@@ -360,40 +333,11 @@ class GnssTestView : View() {
 //            return
 //        }
         if (controller.disableSerialport1.value) {
-            controller.stop(0)
+            controller.stopSerialPort(0)
             return
         }
         controller.start(controller.comboText1.value, 0)
     }
-
-//    /**
-//     * 检查id 如果为true,继续下一步
-//     * false拒绝下一步
-//     */
-//    fun checkId(): Boolean {
-//        val last = Api.queryHistoryLast()
-//        if (last != null && last.size > 0) {//查询到数据如果上次测试结果为通过就提示,否则不通过
-//            var res = ""
-//            if (last[0].result) {
-//                res = "通过"
-//            } else {
-//                res = "不通过"
-//            }
-//
-//
-//
-//            Platform.runLater {
-//                val alert = Alert(AlertType.CONFIRMATION)
-//                alert.title = "检查数据"
-//                alert.contentText = "查询到数据如果上次测试结果为$res,是否继续?"
-//                val result = alert.showAndWait();
-//                alert.showAndWait()
-//            }
-//            //如果点击的是ok按钮就继续
-//            return result.get() == ButtonType.OK
-//        }
-//        return true
-//    }
 
     /**
      * 打开串口2
@@ -408,7 +352,7 @@ class GnssTestView : View() {
 //            return
 //        }
         if (controller.disableSerialport2.value) {
-            controller.stop(1)
+            controller.stopSerialPort(1)
             return
         }
         controller.start(controller.comboText2.value, 1)
@@ -417,8 +361,8 @@ class GnssTestView : View() {
     override fun onDock() {
         super.onDock()
         LoggerUtil.LOGGER.debug("${javaClass.name}-onDock")
-        controller.stop(0)
-        controller.stop(1)
+        controller.stopSerialPort(0)
+        controller.stopSerialPort(1)
 
     }
 

@@ -3,14 +3,14 @@ package com.example.demo.view.test
 import com.alibaba.fastjson.JSON
 import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
-import com.example.demo.utils.HexUtil
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.test.gnss.GnssConfig
 import com.example.demo.view.test.gnss.GnssTestData
 import gnu.io.SerialPort
 import gnu.io.SerialPortEvent
+import kotlinx.coroutines.delay
 import java.io.IOException
-import java.nio.ByteBuffer
+import java.lang.Thread.sleep
 
 /**
  * 作者 : lei
@@ -62,6 +62,7 @@ object UdpUtlis {
         return parkRet(send)
     }
 
+
     /**
      * LCD显示请求	lcd+显示值（0-白；1-黑），例：{“lcd":0}
      */
@@ -110,12 +111,30 @@ object UdpUtlis {
         return parkRet(send)
     }
 
+    /**
+     * 0x0009	Loar清空请求	空
+     */
+    fun clearLoar(): Boolean {
+        val str = ""
+        val send = UDPBroadcast.send(Pack.pack(0x000f, str), 50250)
+        return parkRet(send)
+    }
+
+    /**
+     * 0x0011	lora发送命令请求	num+次数，size+大小，timeout+间隔，例：{"num":10,"size":256,"timeout":2}
+     */
+    fun recLoar(num: Int, size: Int, timeOut: Int): Boolean {
+        val str = "{\"num\":$num,\"size\":$size,\"timeout\":$timeOut}"
+        val send = UDPBroadcast.send(Pack.pack(0x0011, str), 50250)
+        return parkRet(send)
+    }
+
     fun parkRet(data2: ByteArray?): Boolean {
-        data2?:return false
+        data2 ?: return false
         val unPack = Pack.unPack(data2)
         val obj = JSON.parseObject(unPack.str)
         when (unPack.id.toInt()) {
-            0x0002, 0x0006, 0x0008, 0x000c, 0x000e, 0x0009, 0x000c -> {
+            0x0002, 0x0006, 0x0008, 0x000c, 0x000e, 0x0009, 0x000c, 0x0012 -> {
 //                putTestInfo(obj.toJSONString())
                 if (obj["ret"] == 0) { //成功
                     return true
@@ -211,14 +230,9 @@ object UdpUtlis {
     /**
      * 测试Lora
      */
-    fun testLora(serialPort: SerialPort): Boolean {
+    fun testLoraRec(serialPort: SerialPort): Boolean {
+        var count = 0
         var retureFlag = false
-        val byteBuffer = ByteBuffer.allocate(256 * 11)
-        val sendByte = ByteArray(256)
-        for (i in 0..255) {
-            sendByte[i] = i.toByte()
-        }
-        var currentTimeMillis = System.currentTimeMillis()
         try {
             if (serialPort != null) {
                 LoggerUtil.LOGGER.debug("[bhz] 打开端口");
@@ -229,18 +243,10 @@ object UdpUtlis {
 
                         try {
                             var bytes = SerialPortUtil.readData(serialPort)
-                            val newbytes = HexUtil.toHexString(bytes)
-                            val oldbytes = HexUtil.toHexString(sendByte)
-//                            println("=newbytes==${bytes.size}======" + newbytes)
-//                            println("=oldbytes===${sendByte.size}=====" + oldbytes)
-                            byteBuffer.put(bytes)
-                            if (newbytes.contentEquals(oldbytes)) {
-                                println("=========" + HexUtil.toHexString(bytes))
-                                retureFlag = true
-                                serialPort.removeEventListener()
-                            }
-
-//                            SerialPortUtil.sendData(serialPort, byteArray)
+                            val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
+                            println("信号强度:$rssi")
+                            bytes[bytes.size - 1]
+                            count += bytes.size - 1
 
 
                         } catch (e: IOException) {
@@ -254,26 +260,14 @@ object UdpUtlis {
                     }
                 }
             }
-
-            for (i in 1..GnssConfig.lora_test_count.value.toInt()) {//发送10次数据
-                //发个数据
-                SerialPortUtil.sendData(serialPort, sendByte)
-                Thread.sleep(GnssConfig.lora_test_Intervals.value.toLong())
+            Thread.sleep(GnssConfig.lora_test_Intervals.value)
+            if (GnssTestData.udp_msg0101 == null) {
+                return false
+            }
+            if (count == GnssTestData.udp_msg0101!!.loraCounter_rec) {
+                return true
             }
 
-            val buffstr = HexUtil.toHexString(byteBuffer.array())
-            val sendstr = HexUtil.toHexString(sendByte)
-            val split = buffstr.split("${GnssTestData.bid.value}$sendstr")
-            retureFlag = split.size >= GnssConfig.lora_test_count.value.toInt()
-//            putTestInfo("收到次数:${split.size}")
-
-            // sleep 一段时间保证线程可以执行完
-            Thread.sleep(GnssConfig.defaut_timeOut.value.toLong())
-//            if (!retureFlag) {
-//                putTestInfo("超时")
-//            } else {
-//                putTestInfo("完成")
-//            }
             return retureFlag
         } catch (e: Exception) {
 //            putTestInfo("异常")
@@ -282,5 +276,30 @@ object UdpUtlis {
         }
     }
 
+    /**
+     * 测试Lora
+     */
+    fun testLoraSend(serialPort: SerialPort): Boolean {
+        var retureFlag = false
+        val sendByte = ByteArray(256)
+        for (i in 0..255) {
+            sendByte[i] = i.toByte()
+        }
+        for (i in 1..GnssConfig.lora_test_count.value) {
+            //发个数据
+            SerialPortUtil.sendData(serialPort, sendByte)
+            sleep(GnssConfig.lora_test_Intervals.value)
+
+        }
+        //防止上报数据慢
+        sleep(2000)
+        if (GnssTestData.udp_msg0101 == null) {
+            return false
+        }
+        if (GnssConfig.lora_test_count.value * 256 == GnssTestData.udp_msg0101!!.loraCounter_send) {
+            return true
+        }
+        return retureFlag
+    }
 
 }

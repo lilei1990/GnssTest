@@ -6,6 +6,7 @@ import com.example.demo.net.Api
 import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.*
 import com.example.demo.utils.cmd.*
+import com.example.demo.utils.cmd.Command.DISCONNECT
 import com.example.demo.view.test.*
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_ip
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_pwd
@@ -35,41 +36,23 @@ enum class GnssType(val id: Int, val testName: String) {
     SIM1(8, "4G1（SIM）"),
     SIM2(9, "4G2（SIM）"),
     WIFI(10, "WIFI"),
-    LORA(11, "LORA"),
-    GPS(12, "GPS"),
-    ETH(13, "ETH"),
-    KEY(14, "KEY"),
-    LCD(15, "LCD"),
-    LED(16, "LED检测"),
-    POWR(17, "掉电保护"),
-    IMSI1(18, "4G1（IMSI）"),
-    IMSI2(19, "4G2（IMSI）")
+    LORAREC(11, "LORA收"),
+    LORASEED(12, "LORA发"),
+    GPS(13, "GPS"),
+    ETH(14, "ETH"),
+    KEY(15, "KEY"),
+    LCD(16, "LCD"),
+    LED(17, "LED检测"),
+    POWR(18, "掉电保护"),
+    IMSI1(19, "4G1（IMSI）"),
+    IMSI2(20, "4G2（IMSI）")
 }
 
 open class GnssCase() {
 
-    suspend fun run() {
-        val caselist = arrayListOf<Case>()
-//        caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
-//        caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
-//        caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
-//        caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
-////        caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
-//        caselist.add(Case(GnssType.USB.id, GnssType.USB.testName))
-//        caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
-//        caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
-//        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
-//        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName))
-//        caselist.add(Case(GnssType.LORA.id, GnssType.LORA.testName))
-//        caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
-//        caselist.add(Case(GnssType.ETH.id, GnssType.ETH.testName))
-//        caselist.add(Case(GnssType.KEY.id, GnssType.KEY.testName))
-//        caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
-//        caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
-//        caselist.add(Case(GnssType.POWR.id, GnssType.POWR.testName))
-        caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
-        caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
-        caselist.asFlow().map {
+    suspend fun run(caselist: Flow<Case>) {
+
+        caselist.map {
             it.apply {
                 whenID(it)
             }
@@ -100,6 +83,7 @@ open class GnssCase() {
     }
 
     private suspend fun whenID(case: Case) {
+
         when (case.id) {
             GnssType.VHW.id -> {
                 case.result = !GnssTestData.versionH.value.isNullOrEmpty()
@@ -145,19 +129,37 @@ open class GnssCase() {
                 profileContent = profileContent.replace(Profile.WIFI_PASSWORD, wifi_test_pwd.value)
                 FileUtilsJava.writeToFile(Connector.PROFILE_TEMP_PATH + "1234567890.xml", profileContent)
                 //        genProfile("hdwork");
-                var task = check("${GnssTestData.bid.value}", wifi_test_pwd.value)
-                while (!task) {
+                check("${GnssTestData.bid.value}", wifi_test_pwd.value)
+                var task = PingUtils.ping(wifi_test_ip.value)
+                val startTime = System.currentTimeMillis()
+                while (!task) {//如果ping不通
+                    check("${GnssTestData.bid.value}", wifi_test_pwd.value)
                     delay(1000)
-                    task = check("${GnssTestData.bid.value}", wifi_test_pwd.value)
+                    task = PingUtils.ping(wifi_test_ip.value)
+                    if (System.currentTimeMillis() - startTime > case.timeOut) {//超时跳出循环
+                        case.result = false
+                        break
+                    }
                 }
-                //延迟一段时间测试ping，防止未连接
-                delay(case.timeOut)
-                case.result = PingUtils.ping(wifi_test_ip.value)
-                //todo 断开测试WiFi 连接之前的WiFi
+                if (case.result) {//如果测试成功断开之前的连接
+                    //断开测试WiFi 连接之前的WiFi
+                    execute(DISCONNECT, Connector.PROFILE_TEMP_PATH)
+                }
+                case.result = task
+
             }
-            GnssType.LORA.id -> {//测试loar
-                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
-                case.result = UdpUtlis.testLora(GnssTestData.serialPort2!!)
+            GnssType.LORAREC.id -> {//测试loar接受
+                UdpUtlis.clearLoar()
+                UdpUtlis.recLoar(10, 300, 1)
+//                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
+                case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!)
+
+            }
+            GnssType.LORASEED.id -> {//测试loar发送
+                UdpUtlis.clearLoar()
+
+//                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
+                case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!)
 
             }
             GnssType.GPS.id -> {//测试Gps
@@ -236,6 +238,7 @@ open class GnssCase() {
                     dialog.title = "SIM卡编号1";
                     dialog.headerText = "请输入SIM卡编号1";
                     dialog.editor.text = ""
+
                     var result = dialog.showAndWait()
                     val net4g1 = GnssTestData.net4g1_imsi.value
 

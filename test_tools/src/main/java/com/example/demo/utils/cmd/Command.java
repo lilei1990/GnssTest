@@ -30,6 +30,11 @@ public class Command {
      */
     public static final String CONNECT = "netsh wlan connect name=SSID_NAME";
 
+
+    /**
+     * 断开连接WIFI
+     */
+    public static final String DISCONNECT = "netsh wlan disconnect";
     /**
      * 列出接口
      */

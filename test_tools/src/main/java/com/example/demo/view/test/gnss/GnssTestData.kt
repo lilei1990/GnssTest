@@ -46,6 +46,7 @@ object GnssTestData {
     //获取镜像版本号
     var net4g1_imsi = stringProperty("")
     var net4g2_imsi = stringProperty("")
+
     //用于统计卫星达到标准的数量
     // K卫星编号 V 达到要求次数
     var satelliteMap = mutableMapOf<String, Int>()
@@ -59,6 +60,7 @@ object GnssTestData {
 
     //按钮测试key
     var key = stringProperty("")
+    var chan = intProperty(-1)
 
 
     //缓冲数据区域,用于临时存放不通过的,如果持续不通过就会被放入fail
@@ -67,14 +69,19 @@ object GnssTestData {
     //gga数据
     var ggamap_fail = mutableMapOf<String, OldCase>()
 
+    //gga数据
+    var udp_msg0101: UDP_Msg0101? = null
+
     //卫星数据udp广播监听
     val broadcast: UDPBroadcast =
             UDPBroadcast(GnssConfig.udp_broadcast_port.value.toInt()).run().setListener(object : CallBacks {
                 override fun send(it: UDP_Msg, address: String) {
                     when (it.id.toInt()) {
                         0x0101 -> {
+                            println(it.str)
                             val msg0101 = JSON.parseObject<UDP_Msg0101>(it.str, UDP_Msg0101::class.java)
                             Platform.runLater {
+                                udp_msg0101 = msg0101
                                 versionH.value = msg0101.hw
                                 versionS.value = msg0101.sw
                                 versionBsp.value = msg0101.bsp
@@ -84,6 +91,7 @@ object GnssTestData {
                                 net4g1_imsi.value = msg0101.net4g1_imsi
                                 net4g2_imsi.value = msg0101.net4g2_imsi
                                 key.value = msg0101.key
+                                chan.value = msg0101.chan
                                 var star = ""
                                 satelliteMap.forEach { t, u ->
                                     if (u > 0) {
@@ -97,9 +105,11 @@ object GnssTestData {
                                         "bid:${msg0101.bid}\n" +
                                         "信道:${msg0101.chan}\n" +
                                         "卫星:${star}\n" +
+                                        "lora收:${msg0101.loraCounter_rec}\n" +
+                                        "lora发:${msg0101.loraCounter_send}\n" +
                                         "4g1:ping通${msg0101.net4g1_ping}次\n" +
                                         "4g2:ping通${msg0101.net4g2_ping}次\n" +
-                                        "4g1imsi:${msg0101.net4g1_imsi}\n"+
+                                        "4g1imsi:${msg0101.net4g1_imsi}\n" +
                                         "4g2imsi:${msg0101.net4g2_imsi}\n"
                                 //老化测试做数据匹配
                                 if (ggamap_fail.contains(address)) {
@@ -219,5 +229,6 @@ object GnssTestData {
 
         //gga数据
         ggamap_fail = mutableMapOf<String, OldCase>()
+        udp_msg0101 = null
     }
 }

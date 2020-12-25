@@ -48,19 +48,20 @@ data class UDP_Msg(val id: Short, val len: Short, val str: String) {
 }
 
 data class UDP_Msg0101(
-    val net4g1: String,
-    val net4g2: String,
-    val bid: Int,
-    val bsp: String,
-    val chan: Int,
-    val hw: String,
-    val id: Int,
-    val key: String,
-    val lcd: Int,
-    val mode: Int,
-    val power: Int,
-    val sw: String,
-    val wifi: Int
+        val net4g1: String,
+        val net4g2: String,
+        val bid: Int,
+        val bsp: String,
+        val chan: Int,
+        val hw: String,
+        val loraCounter: String,
+        val id: Int,
+        val key: String,
+        val lcd: Int,
+        val mode: Int,
+        val power: Int,
+        val sw: String,
+        val wifi: Int
 ) {
     lateinit var net4g1_open: String
     lateinit var net4g1_imsi: String
@@ -70,6 +71,8 @@ data class UDP_Msg0101(
     lateinit var net4g2_imsi: String
     lateinit var net4g2_ccid: String
     lateinit var net4g2_ping: String
+    var loraCounter_rec: Int = 0
+    var loraCounter_send: Int = 0
     //"开关,imsi,ccid,ping通次数", （开关：0-关；1-开）
 // "4g1":"1,460044023303381,89860420011990833381,1834",
 //    val _4g1_open: Boolean =true
@@ -77,6 +80,7 @@ data class UDP_Msg0101(
     init {
         val split1 = net4g1.split(",")
         val split2 = net4g2.split(",")
+        val lora = loraCounter.split(",")
         net4g1_open = split1[0]
         net4g1_imsi = split1[1]
         net4g1_ccid = split1[2]
@@ -86,6 +90,8 @@ data class UDP_Msg0101(
         net4g2_imsi = split2[1]
         net4g2_ccid = split2[2]
         net4g2_ping = split2[3]
+        loraCounter_rec = lora[0].toInt()
+        loraCounter_send = lora[1].toInt()
     }
 
 
