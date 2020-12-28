@@ -33,7 +33,7 @@ object GnssConfig {
     var wifi_test_pwd = stringProperty("1234567890")
 
     //lora测试间隔频率
-    var lora_test_Intervals = longProperty(10000)
+    var lora_test_Intervals = intProperty(1)
 
     //lora 信道
     var lora_test_chen = intProperty(65)
@@ -122,7 +122,7 @@ object GnssConfig {
         udp_broadcast_port.value = getldap!!.get("udp_broadcast_port")!!.toInt()
         wifi_test_ip.value = getldap!!.get("wifi_test_ip")
         wifi_test_pwd.value = getldap!!.get("wifi_test_pwd")
-        lora_test_Intervals.value = getldap!!.get("lora_test_Intervals")!!.toLong()
+        lora_test_Intervals.value = getldap!!.get("lora_test_Intervals")!!.toInt()
         lora_test_chen.value = getldap!!.get("lora_test_chen")!!.toInt()
         lora_test_strength.value = getldap!!.get("lora_test_strength")!!.toInt()
         lora_test_count.value = getldap!!.get("lora_test_count")!!.toInt()

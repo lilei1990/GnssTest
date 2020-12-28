@@ -6,6 +6,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
+<?import com.jfoenix.controls.JFXProgressBar?>
 <BorderPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
@@ -44,7 +45,7 @@
                         <Button onAction="#btClearLog" text="清除日志" AnchorPane.rightAnchor="30"
                                 AnchorPane.topAnchor="20"/>
                     </AnchorPane>
-
+                    <ProgressBar fx:id="progressbar" prefWidth="10.0" prefHeight="20.0"/>
                 </VBox>
             </SplitPane>
         </AnchorPane>
@@ -66,6 +67,7 @@
 
             <Button fx:id="btStartTest" onAction="#btStartTest" text="开始测试"/>
             <Button fx:id="btStopTest" onAction="#btStopTest" text="停止测试"/>
+
         </VBox>
     </right>
 </BorderPane>

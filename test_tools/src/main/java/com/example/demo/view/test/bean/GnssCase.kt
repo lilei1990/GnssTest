@@ -1,5 +1,6 @@
 package com.example.demo.view.test.bean
 
+import com.example.demo.ToastEvent
 import com.example.demo.model.DeviceTestModel
 import com.example.demo.model.TestStatus
 import com.example.demo.net.Api
@@ -8,22 +9,26 @@ import com.example.demo.utils.*
 import com.example.demo.utils.cmd.*
 import com.example.demo.utils.cmd.Command.DISCONNECT
 import com.example.demo.view.test.*
+import com.example.demo.view.test.gnss.*
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_ip
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_pwd
-import com.example.demo.view.test.gnss.*
 import com.google.gson.JsonArray
 import javafx.application.Platform
+import javafx.scene.control.Button
 import javafx.scene.control.TextInputDialog
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.ArrayList
+import java.util.*
+import javafx.scene.control.Alert.AlertType
+
+import javafx.scene.control.Alert
+import tornadofx.booleanProperty
+
 
 enum class GnssType(val id: Int, val testName: String) {
     VHW(1, "硬件版本号"),
@@ -31,8 +36,8 @@ enum class GnssType(val id: Int, val testName: String) {
     VSW(3, "软件版本号"),
     BID(4, "单板ID"),
     ID(5, "整机ID"),
-    USB(6, "USB"),
-    SER(7, "调试串口"),
+//    USB(6, "USB"),
+    SER(7, "调试串口USB"),
     SIM1(8, "4G1（SIM）"),
     SIM2(9, "4G2（SIM）"),
     WIFI(10, "WIFI"),
@@ -48,17 +53,24 @@ enum class GnssType(val id: Int, val testName: String) {
     IMSI2(20, "4G2（IMSI）")
 }
 
+var StopTest = booleanProperty(false)
+
 open class GnssCase() {
 
-    suspend fun run(caselist: Flow<Case>) {
 
+    suspend fun run(caselist: Flow<Case>) {
+        StopTest.value = false
         caselist.map {
             it.apply {
-                whenID(it)
+                if (!StopTest.value) {//任务没有手动终止才继续执行
+                    whenID(it)
+                }
             }
         }.flowOn(Dispatchers.IO).onCompletion {
-            testUpload()
-            println("测试完成")
+            if (!StopTest.value) {//不是手动终止结束任务的就提交数据
+                testUpload()
+                println("测试完成提交数据")
+            }
         }.collect {
             GnssTestData.hd100Case.add(it)
             println(it.typeName)
@@ -98,7 +110,6 @@ open class GnssCase() {
                 case.putTestInfo(GnssTestData.versionBsp.value)
             }
             GnssType.BID.id -> {//写单板id
-
                 case.result = UdpUtlis.writeBID(GnssTestData.bid.value)
                 //重启wifi
                 UdpUtlis.enableWifi(false)
@@ -106,11 +117,13 @@ open class GnssCase() {
                 UdpUtlis.enableWifi(true)
             }
             GnssType.ID.id -> {//写整机id
-
+                case.result = UdpUtlis.writeID(GnssTestData.bid.value)
+                //重启wifi
+                UdpUtlis.enableWifi(false)
+                delay(5000)
+                UdpUtlis.enableWifi(true)
             }
-            GnssType.USB.id -> {//USB测试
 
-            }
             GnssType.SER.id -> {//测试串口
                 case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!)
 
@@ -140,6 +153,9 @@ open class GnssCase() {
                         case.result = false
                         break
                     }
+                    if (StopTest.value) {
+                        break
+                    }
                 }
                 if (case.result) {//如果测试成功断开之前的连接
                     //断开测试WiFi 连接之前的WiFi
@@ -150,16 +166,18 @@ open class GnssCase() {
             }
             GnssType.LORAREC.id -> {//测试loar接受
                 UdpUtlis.clearLoar()
-                UdpUtlis.recLoar(10, 300, 1)
+                delay(1000)
+                case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
 //                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
-                case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!)
+
 
             }
             GnssType.LORASEED.id -> {//测试loar发送
                 UdpUtlis.clearLoar()
-
+                delay(1000)
+                UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
 //                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
-                case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!)
+                case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
 
             }
             GnssType.GPS.id -> {//测试Gps
@@ -186,6 +204,9 @@ open class GnssCase() {
                 //定时检测是否收到下一步的消息
                 while (!isNext) {
                     delay(1000)
+                    if (StopTest.value) {
+                        break
+                    }
                 }
 
             }
@@ -199,6 +220,9 @@ open class GnssCase() {
                 //定时检测是否收到下一步的消息
                 while (!isNext) {
                     delay(1000)
+                    if (StopTest.value) {
+                        break
+                    }
                 }
 
             }
@@ -214,6 +238,9 @@ open class GnssCase() {
                 while (!isNext) {
                     SerialPortUtil.sendData(GnssTestData.serialPort2, ByteArray(256))
                     delay(1000)
+                    if (StopTest.value) {
+                        break
+                    }
                 }
             }
 
@@ -227,6 +254,9 @@ open class GnssCase() {
                 //定时检测是否收到下一步的消息
                 while (!isNext) {
                     delay(1000)
+                    if (StopTest.value) {
+                        break
+                    }
                 }
 
             }
@@ -238,8 +268,6 @@ open class GnssCase() {
                     dialog.title = "SIM卡编号1";
                     dialog.headerText = "请输入SIM卡编号1";
                     dialog.editor.text = ""
-
-                    var result = dialog.showAndWait()
                     val net4g1 = GnssTestData.net4g1_imsi.value
 
                     if (net4g1.isNullOrEmpty()) {
@@ -247,6 +275,14 @@ open class GnssCase() {
                         case.result = false
                         isNext = true
                     }
+                    var result = dialog.showAndWait()
+                    //如果用户点击了取消按钮result.isPresent()将会返回false
+                    if (!result.isPresent) {
+                        case.putTestInfo("----点击了取消按钮")
+                        case.result = false
+                        isNext = true
+                    }
+
                     result.ifPresent { ccid: String ->
 
 //            var regex = "300[0-9a-fA-F]{2}[4-9a-fA-F]{1}[0-9a-fA-F]{2}"
@@ -283,6 +319,9 @@ open class GnssCase() {
                 //定时检测是否收到下一步的消息
                 while (!isNext) {
                     delay(1000)
+                    if (StopTest.value) {
+                        break
+                    }
                 }
 
             }
@@ -294,11 +333,16 @@ open class GnssCase() {
                     dialog.title = "SIM卡编号2";
                     dialog.headerText = "请输入SIM卡编号2";
                     dialog.editor.text = ""
-                    var result = dialog.showAndWait()
                     val net4g2 = GnssTestData.net4g2_imsi.value
-
                     if (net4g2.isNullOrEmpty()) {
                         case.putTestInfo("net4g2:$net4g2")
+                        case.result = false
+                        isNext = true
+                    }
+                    var result = dialog.showAndWait()
+                    //如果用户点击了取消按钮result.isPresent()将会返回false
+                    if (!result.isPresent) {
+                        case.putTestInfo("----点击了取消按钮")
                         case.result = false
                         isNext = true
                     }
@@ -334,10 +378,14 @@ open class GnssCase() {
                         case.result = true
                         isNext = true
                     }
+
                 }
                 //定时检测是否收到下一步的消息
                 while (!isNext) {
                     delay(1000)
+                    if (StopTest.value) {
+                        break
+                    }
                 }
 
             }
@@ -352,10 +400,19 @@ open class GnssCase() {
         val deviceTestModel = DeviceTestModel()
         deviceTestModel.testTime = TimeUtil.getSimpleDateTime()
         deviceTestModel.status = GnssTestData.testStatus
+
         if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PRO) {
-            deviceTestModel.equipmentId = GnssTestData.bid.value
+            if (GnssTestData.udp_msg0101!!.bid == 0) {
+                GnssTestView.gnssTestView.fire(ToastEvent("单板id为空无法上传测试结果"))
+                return
+            }
+            deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.bid.toString()
         } else {
-            deviceTestModel.equipmentId = GnssTestData.id.value
+            if (GnssTestData.udp_msg0101!!.id == 0) {
+                GnssTestView.gnssTestView.fire(ToastEvent("整机id为空无法上传测试结果"))
+                return
+            }
+            deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.id.toString()
         }
 
         var jsr = JsonArray()
@@ -373,8 +430,24 @@ open class GnssCase() {
         deviceTestModel.userId = GnssConfig.userId.value
         var rst = Api.uploadTestRest(deviceTestModel).let {
             if (it) {
+               Platform.runLater {
+                   val alert = Alert(AlertType.INFORMATION)
+                   alert.title = "成功"
+                   alert.headerText = null
+                   alert.contentText = "数据提交成功!"
+                   alert.showAndWait()
+                   //上传成功结束清除数据
+                   GnssTestData.hd100Case.clear()
+               }
                 TestStatus.PASS
             } else {
+                Platform.runLater {
+                val alert = Alert(AlertType.INFORMATION)
+                alert.title = "失败"
+                alert.headerText = null
+                alert.contentText = "数据提交失败!"
+                alert.showAndWait()
+                }
                 TestStatus.FAIL
             }
         }
@@ -434,6 +507,9 @@ open class GnssCase() {
             var line: String? = null
             while (bReader.readLine().also { line = it } != null) {
                 result.add(line)
+                if (StopTest.value) {
+                    break
+                }
             }
         } catch (e: IOException) {
             e.printStackTrace()

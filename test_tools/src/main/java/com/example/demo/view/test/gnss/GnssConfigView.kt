@@ -147,7 +147,7 @@ class Config : Fragment("设置") {
         label("lora")
         hbox {
             alignment = Pos.CENTER_LEFT
-            label("lora测试间隔频率:  ") {
+            label("lora测试间隔频率秒:  ") {
                 pubPor()
             }
             lora_test_Intervals_View = textfield("${lora_test_Intervals.value}") {
@@ -254,7 +254,7 @@ class Config : Fragment("设置") {
                 wifi_test_ip.value = wifi_test_ip_View.text
                 wifi_test_pwd.value = wifi_test_pwd_View.text
                 if (onlyNum(lora_test_Intervals_View.text)) return@action
-                lora_test_Intervals.value = lora_test_Intervals_View.text.toLong()
+                lora_test_Intervals.value = lora_test_Intervals_View.text.toInt()
                 if (onlyNum(lora_test_chen_View.text)) return@action
                 lora_test_chen.value = lora_test_chen_View.text.toInt()
                 if (onlyNum(lora_test_strength_View.text)) return@action

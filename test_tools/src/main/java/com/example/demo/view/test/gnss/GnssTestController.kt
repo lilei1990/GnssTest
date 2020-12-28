@@ -36,6 +36,7 @@ class CenterController : Controller() {
     var udpStaus = objectProperty(RED)
     val disableSerialport1 = booleanProperty(false)
     val disableSerialport2 = booleanProperty(false)
+    var StopTest = booleanProperty(false)
 
     //重启设备
     val isResystem = booleanProperty(false)
@@ -47,7 +48,7 @@ class CenterController : Controller() {
     val comboText2 = stringProperty("")
 
     //升级文件路径
-    val updatePath = System.getProperty("user.dir") + "\\gnss_update\\gnss_1.0.1.fty07"
+    val updatePath = System.getProperty("user.dir") + "\\gnss_update\\gnss_1.0.1.fty09"
 
     //缓冲区数量
     var queue_gsv: HashMap<String, SatelliteInfo> = HashMap()
@@ -218,23 +219,27 @@ class CenterController : Controller() {
 //        caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
 //        caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
 //        caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
-//        caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
-////        caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
+
+        if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PRO) {//单板测试
+            caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
+        } else {//整机
+            caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
+        }
 //        caselist.add(Case(GnssType.USB.id, GnssType.USB.testName))
 //        caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
 //        caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
 //        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
 //        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName,timeOut = 25000))
-        caselist.add(Case(GnssType.LORAREC.id, GnssType.LORAREC.testName))
-        caselist.add(Case(GnssType.LORASEED.id, GnssType.LORASEED.testName))
-        caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
-        caselist.add(Case(GnssType.ETH.id, GnssType.ETH.testName))
-        caselist.add(Case(GnssType.KEY.id, GnssType.KEY.testName))
-        caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
-        caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
+//        caselist.add(Case(GnssType.LORAREC.id, GnssType.LORAREC.testName))
+//        caselist.add(Case(GnssType.LORASEED.id, GnssType.LORASEED.testName))
+//        caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
+//        caselist.add(Case(GnssType.ETH.id, GnssType.ETH.testName))
+//        caselist.add(Case(GnssType.KEY.id, GnssType.KEY.testName))
+//        caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
+//        caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
         caselist.add(Case(GnssType.POWR.id, GnssType.POWR.testName))
-        caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
-        caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
+//        caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
+//        caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
         val asflow = caselist.asFlow()
         GnssCase().run(asflow)
         udpStaus.value = GREEN
@@ -279,7 +284,6 @@ class CenterController : Controller() {
     fun bind(gnssTestView: GnssTestView) {
         this.gnssTestView = gnssTestView
     }
-
 
 
 }

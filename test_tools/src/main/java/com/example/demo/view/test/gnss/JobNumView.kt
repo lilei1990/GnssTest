@@ -31,12 +31,13 @@ class JobNumView : View() {
                     GnssConfig.userId.value= input.value
                     when (GnssTestData.testStatus) {
                         TestStatus.TEST_STATUS_PRO -> {//单板测试
-                            openNewStage("GNSS参考站", GnssTestView())
+                            openNewStage("参考站单板测试", GnssTestView())
                         }
                         TestStatus.TEST_STATUS_TOTAL -> {//整机测试
+                            openNewStage("参考站整机测试", GnssTestView())
                         }
                         TestStatus.TEST_STATUS_OLD -> {//老化测试
-                            openNewStage("GNSS参考站", GnssOldView())
+                            openNewStage("参考站老化测试", GnssOldView())
                         }
                     }
 

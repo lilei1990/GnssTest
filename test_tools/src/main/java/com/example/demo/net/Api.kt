@@ -103,6 +103,8 @@ object Api {
      */
     fun uploadTestRest(deviceTestModel: DeviceTestModel): Boolean {
         try {
+            LoggerUtil.LOGGER.debug(deviceTestModel.toJSON())
+            LoggerUtil.LOGGER.debug(deviceTestModel.toString())
             var rsp = api.post("$url/machineTest/save", deviceTestModel).one().let {
                 it.getInt("code") == 200 && it.getString("message") == "添加成功！"
             }

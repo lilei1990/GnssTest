@@ -9,12 +9,15 @@ import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.bean.OldCase
 import gnu.io.SerialPort
 import javafx.application.Platform
+import kotlinx.coroutines.delay
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.GSVSentence
 import tornadofx.intProperty
 import tornadofx.observableListOf
+import tornadofx.runAsync
 import tornadofx.stringProperty
+import java.lang.Thread.sleep
 
 /**
  * 作者 : lei
@@ -55,8 +58,6 @@ object GnssTestData {
     //单板id
     var bid = stringProperty("")
 
-    //整机
-    var id = stringProperty("")
 
     //按钮测试key
     var key = stringProperty("")
@@ -71,6 +72,19 @@ object GnssTestData {
 
     //gga数据
     var udp_msg0101: UDP_Msg0101? = null
+    //数据更新的时间
+    var udpUpdataTime = System.currentTimeMillis()
+    init {
+        runAsync {
+            //定时检测数据是否一直持续收到上报数据
+            while (true) {
+                if (System.currentTimeMillis() - udpUpdataTime > 2000) {
+                    reset()
+                    sleep(2000)
+                }
+            }
+        }
+    }
 
     //卫星数据udp广播监听
     val broadcast: UDPBroadcast =
@@ -78,6 +92,7 @@ object GnssTestData {
                 override fun send(it: UDP_Msg, address: String) {
                     when (it.id.toInt()) {
                         0x0101 -> {
+                            udpUpdataTime = System.currentTimeMillis()
                             println(it.str)
                             val msg0101 = JSON.parseObject<UDP_Msg0101>(it.str, UDP_Msg0101::class.java)
                             Platform.runLater {
@@ -214,11 +229,9 @@ object GnssTestData {
         satelliteMap = mutableMapOf<String, Int>()
         textInfo.value = ""
 
-        //单板id
+        //id
         bid.value = ""
 
-        //整机
-        id.value = ""
 
         //按钮测试key
         key.value = ""

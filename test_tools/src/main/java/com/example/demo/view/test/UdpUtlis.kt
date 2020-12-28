@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSON
 import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
 import com.example.demo.utils.LoggerUtil
+import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.gnss.GnssConfig
 import com.example.demo.view.test.gnss.GnssTestData
 import gnu.io.SerialPort
 import gnu.io.SerialPortEvent
-import kotlinx.coroutines.delay
 import java.io.IOException
 import java.lang.Thread.sleep
 
@@ -145,14 +145,15 @@ object UdpUtlis {
     }
 
     /**
-     * 测试usb读写
+     * 测试串口,usb读写
      */
     fun testSerialPort(serialPort: SerialPort): Boolean {
         var retureFlag = false
 
         val user: ByteArray = "root\n".toByteArray()
         val password: ByteArray = "i501.1234\n".toByteArray()
-        val file: ByteArray = "file /\n".toByteArray()
+        val writefile: ByteArray = "echo \"hello\" > /run/media/sda1/testa /\n".toByteArray()
+        val readfile: ByteArray = "cat /run/media/sda1/testa\n".toByteArray()
         val logout: ByteArray = "logout\n".toByteArray()
         var currentTimeMillis = System.currentTimeMillis()
         try {
@@ -189,9 +190,11 @@ object UdpUtlis {
                                 SerialPortUtil.sendData(serialPort, password)
                             }
                             if (string.contains("root@") && string.contains(":~#")) {
-                                SerialPortUtil.sendData(serialPort, file)
+                                SerialPortUtil.sendData(serialPort, writefile)
+                                sleep(1000)
+                                SerialPortUtil.sendData(serialPort, readfile)
                             }
-                            if (string.contains("/: directory")) {
+                            if (string.contains("hello")) {
                                 LoggerUtil.LOGGER.debug(string);
 //                                taLog.value = "${taLog.value}${TimeUtil.getSimpleDateTime()}:${string}\n"
                                 SerialPortUtil.sendData(serialPort, logout)
@@ -230,7 +233,7 @@ object UdpUtlis {
     /**
      * 测试Lora
      */
-    fun testLoraRec(serialPort: SerialPort): Boolean {
+    fun testLoraRec(serialPort: SerialPort, case: Case): Boolean {
         var count = 0
         var retureFlag = false
         try {
@@ -246,7 +249,7 @@ object UdpUtlis {
                             val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
                             println("信号强度:$rssi")
                             bytes[bytes.size - 1]
-                            count += bytes.size - 1
+                            count += bytes.size
 
 
                         } catch (e: IOException) {
@@ -260,11 +263,13 @@ object UdpUtlis {
                     }
                 }
             }
-            Thread.sleep(GnssConfig.lora_test_Intervals.value)
+            //防止上报数据慢,这个时间和上面配置发送数据的间隔和次数有关
+            sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L+3000)
             if (GnssTestData.udp_msg0101 == null) {
                 return false
             }
-            if (count == GnssTestData.udp_msg0101!!.loraCounter_rec) {
+            case.putTestInfo("发送:${GnssTestData.udp_msg0101!!.loraCounter_send}接受到:$count")
+            if (count == GnssTestData.udp_msg0101!!.loraCounter_send) {
                 return true
             }
 
@@ -279,24 +284,29 @@ object UdpUtlis {
     /**
      * 测试Lora
      */
-    fun testLoraSend(serialPort: SerialPort): Boolean {
+    fun testLoraSend(serialPort: SerialPort, case: Case): Boolean {
         var retureFlag = false
+        //准备要发送的数据
         val sendByte = ByteArray(256)
         for (i in 0..255) {
             sendByte[i] = i.toByte()
         }
+        //循环发送的次数
         for (i in 1..GnssConfig.lora_test_count.value) {
             //发个数据
             SerialPortUtil.sendData(serialPort, sendByte)
-            sleep(GnssConfig.lora_test_Intervals.value)
+            //发送间隔
+            sleep(GnssConfig.lora_test_Intervals.value * 1000L)
 
         }
         //防止上报数据慢
-        sleep(2000)
+        sleep(3000)
         if (GnssTestData.udp_msg0101 == null) {
             return false
         }
-        if (GnssConfig.lora_test_count.value * 256 == GnssTestData.udp_msg0101!!.loraCounter_send) {
+        val count = GnssConfig.lora_test_count.value * 256
+        case.putTestInfo("发送:$count 接收:${GnssTestData.udp_msg0101!!.loraCounter_rec}")
+        if (count == GnssTestData.udp_msg0101!!.loraCounter_rec) {
             return true
         }
         return retureFlag
