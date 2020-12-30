@@ -57,21 +57,21 @@ class MainView : View() {
                     close()
                 }
             }
-            jfxbutton("GNSS参考站 老化测试") {
-                defaultConfig()
-                action {
-                    GnssTestData.testStatus = TestStatus.TEST_STATUS_OLD
-                    openNewStage("GNSS参考站", JobNumView())
-                    close()
-                }
-            }
-            jfxbutton("MAVLink  测试") {
-                defaultConfig()
-                action {
-                    openNewStage("MAVLink  测试", MavLinkView())
-                    close()
-                }
-            }
+//            jfxbutton("GNSS参考站 老化测试") {
+//                defaultConfig()
+//                action {
+//                    GnssTestData.testStatus = TestStatus.TEST_STATUS_OLD
+//                    openNewStage("GNSS参考站", JobNumView())
+//                    close()
+//                }
+//            }
+//            jfxbutton("MAVLink  测试") {
+//                defaultConfig()
+//                action {
+//                    openNewStage("MAVLink  测试", MavLinkView())
+//                    close()
+//                }
+//            }
         }
     }
 

@@ -100,7 +100,6 @@ object GnssTestData {
                                 versionH.value = msg0101.hw
                                 versionS.value = msg0101.sw
                                 versionBsp.value = msg0101.bsp
-                                versionBsp.value = msg0101.net4g1_imsi
                                 sim1ping.value = msg0101.net4g1_ping.toInt()
                                 sim2ping.value = msg0101.net4g2_ping.toInt()
                                 net4g1_imsi.value = msg0101.net4g1_imsi
@@ -116,8 +115,8 @@ object GnssTestData {
                                 textInfo.value = "硬件版本号:${msg0101.hw}\n" +
                                         "镜像版本号:${msg0101.bsp}\n" +
                                         "软件版本号:${msg0101.sw}\n" +
-                                        "id:${msg0101.id}\n" +
-                                        "bid:${msg0101.bid}\n" +
+                                        "id:${Integer.toHexString(msg0101.id)}\n" +
+                                        "bid:${Integer.toHexString(msg0101.bid)}\n" +
                                         "信道:${msg0101.chan}\n" +
                                         "卫星:${star}\n" +
                                         "lora收:${msg0101.loraCounter_rec}\n" +
@@ -208,7 +207,7 @@ object GnssTestData {
             })
 
     fun reset() {
-        testStatus = ""
+
         hd100Case.clear()
 
         //获取硬件版本号

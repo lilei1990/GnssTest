@@ -1,11 +1,15 @@
 package com.example.demo.view.test.gnss
 
+import com.example.demo.ToastEvent
+import com.example.demo.net.Api
+import com.example.demo.utils.PingUtils
 import com.example.demo.utils.showProgressStage
 import com.example.demo.utils.showSnackbar
 import com.example.demo.utils.sqlite.SqliteHelper
 import com.example.demo.utils.view.DialogBuilder
 import com.example.demo.view.test.bean.OldCase
 import com.jfoenix.controls.JFXButton
+import javafx.application.Platform
 import javafx.geometry.Pos
 import javafx.scene.chart.XYChart
 import javafx.scene.control.TableCell
@@ -33,17 +37,16 @@ class GnssOldView : View("老化测试") {
 
 
     init {
-//        h.executeUpdate("drop table if exists GGA;");
-//        //如果表存在就删除
-////      h.executeUpdate("drop table if exists test;");
-//        //创建表
-//        h.executeUpdate("create table GGA(str varchar(200),ip varchar(20),time TIMESTAMP);")
-        //周期性去check数据
+
         for (i in 1..24) {
             controller.texasCities.add("${i}小时")
         }
 
-
+        controller.subscribe<ToastEvent> {
+            Platform.runLater {
+                showSnackbar(it.msg)
+            }
+        }
     }
 
 
@@ -132,6 +135,52 @@ class GnssOldView : View("老化测试") {
                 text = "开始测试"
                 disableProperty().bind(controller.isStart)
                 action {
+                    //检查网络
+                    if (GnssTestData.bid.value.isNullOrEmpty()) {
+                        val ping = PingUtils.ping(GnssConfig.eth_test_ip.value)
+                        if (!ping) {
+                            fire(ToastEvent("网络不通,请检查网线连接1"))
+                            return@action
+                        }
+                    }
+                    if (GnssTestData.udp_msg0101 == null) {
+                        fire(ToastEvent("未获取上报的数据"))
+                        return@action
+                    }
+                    //检查上报的单板id
+                    if (GnssTestData.udp_msg0101!!.bid == 0) {
+                        fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.bid}"))
+                        return@action
+                    }
+
+                    //查询单板测试
+                    val checkBidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.bid.toString())
+                    if (checkBidlist == null) {
+                        fire(ToastEvent("未查询到单板测试数据"))
+                        return@action
+                    }
+                    //查询到数据如果上次测试结果为通过就提示,否则不通过
+                    if (checkBidlist.size >= 1 && !checkBidlist[0].result) {
+                        fire(ToastEvent("最近一次单板测试不通过,拒绝测试!"))
+                        return@action
+                    }
+
+                    //检查上报的整机id
+                    if (GnssTestData.udp_msg0101!!.id == 0) {
+                        fire(ToastEvent("未获取上报的整机id-${GnssTestData.udp_msg0101!!.id}"))
+                        return@action
+                    }
+                    //查询整机测试
+                    val checkidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.id.toString())
+                    if (checkidlist == null) {
+                        fire(ToastEvent("未查询到整机测试数据"))
+                        return@action
+                    }
+                    //查询到数据如果上次测试结果为通过就提示,否则不通过
+                    if (checkidlist.size >= 1 && !checkidlist[0].result) {
+                        fire(ToastEvent("最近一次整机测试不通过,拒绝测试!"))
+                        return@action
+                    }
                     controller.startTest(test_timeOut)
                 }
             }

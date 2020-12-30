@@ -26,8 +26,8 @@
                         <Text text="UDP监听"/>
                         <Circle fx:id="udpStaus" fill="red" radius="5.0" stroke="BLACK" strokeType="INSIDE"/>
                     </HBox>
-                    <VBox spacing="10">
-                        <TableView fx:id="tview" prefWidth="420">
+                    <VBox spacing="5">
+                        <TableView fx:id="tview" prefWidth="420"  prefHeight="500">
                             <columns>
                                 <TableColumn fx:id="tview_id" prefWidth="40.0" text="ID"/>
                                 <TableColumn fx:id="tview_case" prefWidth="140.0" text="测试项"/>
@@ -38,14 +38,14 @@
                         </TableView>
                     </VBox>
                     <!--日志-->
-                    <AnchorPane prefHeight="150">
+                    <AnchorPane prefHeight="100">
                         <TextArea fx:id="ta_log" style="-fx-font-family: 'FangSong';-fx-font-size: 14;"
                                   AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10"
                                   AnchorPane.topAnchor="10"/>
                         <Button onAction="#btClearLog" text="清除日志" AnchorPane.rightAnchor="30"
                                 AnchorPane.topAnchor="20"/>
                     </AnchorPane>
-                    <ProgressBar fx:id="progressbar" prefWidth="10.0" prefHeight="20.0"/>
+
                 </VBox>
             </SplitPane>
         </AnchorPane>

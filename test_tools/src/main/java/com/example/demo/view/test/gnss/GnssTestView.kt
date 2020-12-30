@@ -44,11 +44,11 @@ class GnssTestView : View() {
     val btOpenPort1: Button by fxid("btOpenPort1")
     val btOpenPort2: Button by fxid("btOpenPort2")
 
-//
+    //
     val btJobNum: Button by fxid("btJobNum")
     val btStartTest: Button by fxid("btStartTest")
     val btStopTest: Button by fxid("btStopTest")
-    val progressbar: ProgressBar by fxid("progressbar")
+
     val tview: TableView<Case> by fxid("tview")
     val taLog: TextArea by fxid("ta_log")
     val tviewId: TableColumn<Case, Int> by fxid("tview_id")
@@ -58,7 +58,6 @@ class GnssTestView : View() {
     val cbox1: ComboBox<String> by fxid("cbox1")
     val cbox2: ComboBox<String> by fxid("cbox2")
     var job: Job? = null
-
 
 
     init {
@@ -88,10 +87,14 @@ class GnssTestView : View() {
             } else {
                 btOpenPort2.text = "打开串口"
             }
+
         }
-        progressbar.visibleProperty().bind(StopTest)
         cbox2.disableProperty().bind(controller.disableSerialport2)
         taLog.textProperty().bind(controller.taLog)
+        taLog.textProperty().addListener { observable, oldValue, newValue ->
+            //滚动到底部
+            taLog.positionCaret(controller.taLog.value.length)
+        }
         btRefresh.disableProperty().bind(controller.disableSerialport1)
 
         udpStaus.fillProperty().bind(controller.udpStaus)

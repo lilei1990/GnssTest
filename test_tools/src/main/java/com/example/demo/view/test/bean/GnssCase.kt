@@ -14,7 +14,6 @@ import com.example.demo.view.test.gnss.GnssConfig.wifi_test_ip
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_pwd
 import com.google.gson.JsonArray
 import javafx.application.Platform
-import javafx.scene.control.Button
 import javafx.scene.control.TextInputDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -36,7 +35,8 @@ enum class GnssType(val id: Int, val testName: String) {
     VSW(3, "软件版本号"),
     BID(4, "单板ID"),
     ID(5, "整机ID"),
-//    USB(6, "USB"),
+
+    //    USB(6, "USB"),
     SER(7, "调试串口USB"),
     SIM1(8, "4G1（SIM）"),
     SIM2(9, "4G2（SIM）"),
@@ -55,21 +55,25 @@ enum class GnssType(val id: Int, val testName: String) {
 
 var StopTest = booleanProperty(false)
 
-open class GnssCase() {
+open class GnssCase(centerController: CenterController) {
+    var controller = centerController
 
 
     suspend fun run(caselist: Flow<Case>) {
+        controller.putLogInfo("开始测试")
         StopTest.value = false
         caselist.map {
             it.apply {
                 if (!StopTest.value) {//任务没有手动终止才继续执行
+                    controller.putLogInfo("测试:${it.typeName}....")
                     whenID(it)
                 }
             }
         }.flowOn(Dispatchers.IO).onCompletion {
+            controller.taLog.value += "完成-StopTest:${StopTest.value}"
             if (!StopTest.value) {//不是手动终止结束任务的就提交数据
+                controller.putLogInfo("提交数据")
                 testUpload()
-                println("测试完成提交数据")
             }
         }.collect {
             GnssTestData.hd100Case.add(it)
@@ -403,16 +407,18 @@ open class GnssCase() {
 
         if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PRO) {
             if (GnssTestData.udp_msg0101!!.bid == 0) {
+                controller.putLogInfo("单板id为空无法上传测试结果")
                 GnssTestView.gnssTestView.fire(ToastEvent("单板id为空无法上传测试结果"))
                 return
             }
-            deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.bid.toString()
+            deviceTestModel.equipmentId = Integer.toHexString(GnssTestData.udp_msg0101!!.bid).toString()
         } else {
             if (GnssTestData.udp_msg0101!!.id == 0) {
+                controller.putLogInfo("整机id为空无法上传测试结果")
                 GnssTestView.gnssTestView.fire(ToastEvent("整机id为空无法上传测试结果"))
                 return
             }
-            deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.id.toString()
+            deviceTestModel.equipmentId = Integer.toHexString(GnssTestData.udp_msg0101!!.id).toString()
         }
 
         var jsr = JsonArray()
@@ -430,23 +436,25 @@ open class GnssCase() {
         deviceTestModel.userId = GnssConfig.userId.value
         var rst = Api.uploadTestRest(deviceTestModel).let {
             if (it) {
-               Platform.runLater {
-                   val alert = Alert(AlertType.INFORMATION)
-                   alert.title = "成功"
-                   alert.headerText = null
-                   alert.contentText = "数据提交成功!"
-                   alert.showAndWait()
-                   //上传成功结束清除数据
-                   GnssTestData.hd100Case.clear()
-               }
+                Platform.runLater {
+                    val alert = Alert(AlertType.INFORMATION)
+                    alert.title = "成功"
+                    alert.headerText = null
+                    alert.contentText = "数据提交成功!"
+                    controller.putLogInfo("数据提交成功")
+                    alert.showAndWait()
+                    //上传成功结束清除数据
+                    GnssTestData.hd100Case.clear()
+                }
                 TestStatus.PASS
             } else {
                 Platform.runLater {
-                val alert = Alert(AlertType.INFORMATION)
-                alert.title = "失败"
-                alert.headerText = null
-                alert.contentText = "数据提交失败!"
-                alert.showAndWait()
+                    val alert = Alert(AlertType.INFORMATION)
+                    alert.title = "失败"
+                    alert.headerText = null
+                    alert.contentText = "数据提交失败!"
+                    controller.putLogInfo("数据提交失败")
+                    alert.showAndWait()
                 }
                 TestStatus.FAIL
             }

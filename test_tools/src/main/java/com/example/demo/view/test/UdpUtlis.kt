@@ -35,7 +35,7 @@ object UdpUtlis {
      */
     fun writeID(bid: String): Boolean {
 
-        var str = "{\"bid\":${bid.toInt(16)}}"
+        var str = "{\"id\":${bid.toInt(16)}}"
         val send = UDPBroadcast.send(Pack.pack(0x0003, str), 50250)
         return parkRet(send)
     }
@@ -134,9 +134,9 @@ object UdpUtlis {
         val unPack = Pack.unPack(data2)
         val obj = JSON.parseObject(unPack.str)
         when (unPack.id.toInt()) {
-            0x0002, 0x0006, 0x0008, 0x000c, 0x000e, 0x0009, 0x000c, 0x0012 -> {
-//                putTestInfo(obj.toJSONString())
+            0x0002, 0x0004, 0x0006, 0x0008, 0x000a, 0x000c, 0x000e, 0x0010, 0x0012 -> {
                 if (obj["ret"] == 0) { //成功
+                    println("unPack.id:${unPack.id.toInt()}")
                     return true
                 }
             }
@@ -221,7 +221,7 @@ object UdpUtlis {
             }
 //            fire(PortWorkEvent(false, serialPortIndex))
             // sleep 一段时间保证线程可以执行完
-            Thread.sleep(GnssConfig.defaut_timeOut.value.toLong())
+           sleep(GnssConfig.defaut_timeOut.value.toLong())
 
             return retureFlag
         } catch (e: Exception) {
@@ -264,11 +264,11 @@ object UdpUtlis {
                 }
             }
             //防止上报数据慢,这个时间和上面配置发送数据的间隔和次数有关
-            sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L+3000)
+            sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L + 3000)
             if (GnssTestData.udp_msg0101 == null) {
                 return false
             }
-            case.putTestInfo("发送:${GnssTestData.udp_msg0101!!.loraCounter_send}接受到:$count")
+            case.putTestInfo("发:${GnssTestData.udp_msg0101!!.loraCounter_send}-收:$count")
             if (count == GnssTestData.udp_msg0101!!.loraCounter_send) {
                 return true
             }
@@ -300,12 +300,13 @@ object UdpUtlis {
 
         }
         //防止上报数据慢
+
         sleep(3000)
         if (GnssTestData.udp_msg0101 == null) {
             return false
         }
         val count = GnssConfig.lora_test_count.value * 256
-        case.putTestInfo("发送:$count 接收:${GnssTestData.udp_msg0101!!.loraCounter_rec}")
+        case.putTestInfo("发:$count-收:${GnssTestData.udp_msg0101!!.loraCounter_rec}")
         if (count == GnssTestData.udp_msg0101!!.loraCounter_rec) {
             return true
         }

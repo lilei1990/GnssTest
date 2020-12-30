@@ -37,7 +37,7 @@ class TestKeyView(case: Case, call: () -> Unit) : View() {
         hbox {
             alignment = Pos.CENTER
             text() {
-                text = "请按照图中标注的顺序依次按下按键①➡②➡③➡④➡"
+                text = "请按照图中标注的顺序依次按下按键"
             }
             jfxbutton {
                 text = "点击验证"

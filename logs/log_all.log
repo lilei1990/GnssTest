@@ -19356,3 +19356,184 @@ root
 2020-12-28 at 15:24:38 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
 2020-12-28 at 15:24:55 GMT+08:00 DEBUG com.example.demo.view.test.gnss.CenterController$update$1 140 invoke - 升级结果!true
 2020-12-28 at 15:44:43 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:00:49 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:02:01 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"806354945","status":"1","result":true,"user_id":"00001","testTime":"2020-12-28 16:02:01","remark":"[\"4,\",\"18,\"]"}
+2020-12-28 at 16:02:01 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=806354945, status=1, result=true, userId=00001, testTime=2020-12-28 16:02:01, remark=["4,","18,"], description=null, id=null}
+2020-12-28 at 16:04:14 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:04:39 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:04:57 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"806354945","status":"1","result":false,"user_id":"00001","testTime":"2020-12-28 16:04:57","remark":"[\"4,\",\"7,\",\"18,\"]"}
+2020-12-28 at 16:04:57 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=806354945, status=1, result=false, userId=00001, testTime=2020-12-28 16:04:57, remark=["4,","7,","18,"], description=null, id=null}
+2020-12-28 at 16:07:13 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:07:31 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:07:33 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 16:07:50 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"status":"1","result":false,"testTime":"2020-12-28 16:07:49"}
+2020-12-28 at 16:07:50 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=null, status=1, result=false, userId=null, testTime=2020-12-28 16:07:49, remark=null, description=null, id=null}
+2020-12-28 at 16:07:54 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"status":"1","result":false,"testTime":"2020-12-28 16:07:49"}
+2020-12-28 at 16:07:54 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=null, status=1, result=false, userId=null, testTime=2020-12-28 16:07:49, remark=null, description=null, id=null}
+2020-12-28 at 16:08:54 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:09:15 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:09:20 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 16:09:29 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"status":"1","result":false,"testTime":"2020-12-28 16:09:29"}
+2020-12-28 at 16:09:29 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=null, status=1, result=false, userId=null, testTime=2020-12-28 16:09:29, remark=null, description=null, id=null}
+2020-12-28 at 16:09:35 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"status":"1","result":false,"testTime":"2020-12-28 16:09:29"}
+2020-12-28 at 16:09:35 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=null, status=1, result=false, userId=null, testTime=2020-12-28 16:09:29, remark=null, description=null, id=null}
+2020-12-28 at 16:09:37 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"status":"1","result":false,"testTime":"2020-12-28 16:09:29"}
+2020-12-28 at 16:09:37 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=null, status=1, result=false, userId=null, testTime=2020-12-28 16:09:29, remark=null, description=null, id=null}
+2020-12-28 at 16:10:34 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:10:53 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:11:05 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"status":"1","result":false,"testTime":"2020-12-28 16:11:05"}
+2020-12-28 at 16:11:05 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=null, status=1, result=false, userId=null, testTime=2020-12-28 16:11:05, remark=null, description=null, id=null}
+2020-12-28 at 16:20:46 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:21:44 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:21:46 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# cat /run/media/sda1/testa
+
+2020-12-28 at 16:21:58 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"806354945","status":"1","result":true,"user_id":"00001","testTime":"2020-12-28 16:21:56","remark":"[]"}
+2020-12-28 at 16:21:58 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=806354945, status=1, result=true, userId=00001, testTime=2020-12-28 16:21:56, remark=[], description=null, id=null}
+2020-12-28 at 16:22:29 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:22:53 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:22:58 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 16:23:10 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"806354945","status":"1","result":true,"user_id":"00001","testTime":"2020-12-28 16:23:10","remark":"[\"4,\",\"7,\",\"18,\"]"}
+2020-12-28 at 16:23:10 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=806354945, status=1, result=true, userId=00001, testTime=2020-12-28 16:23:10, remark=["4,","7,","18,"], description=null, id=null}
+2020-12-28 at 16:24:22 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:24:41 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:25:14 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"806354945","status":"1","result":false,"user_id":"00001","testTime":"2020-12-28 16:25:14","remark":"[\"4,\",\"7,\",\"18,\"]"}
+2020-12-28 at 16:25:14 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=806354945, status=1, result=false, userId=00001, testTime=2020-12-28 16:25:14, remark=["4,","7,","18,"], description=null, id=null}
+2020-12-28 at 16:25:41 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 176 serialEvent - usb口检测不通过
+2020-12-28 at 16:26:03 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:26:08 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# cat /run/media/sda1/testa
+
+2020-12-28 at 16:38:52 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:39:10 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:39:16 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 16:51:29 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 16:53:15 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:53:20 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 16:53:29 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100001","status":"1","result":true,"user_id":"00001","testTime":"2020-12-28 16:53:29","remark":"[\"4,\",\"7,\",\"18,\"]"}
+2020-12-28 at 16:53:29 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100001, status=1, result=true, userId=00001, testTime=2020-12-28 16:53:29, remark=["4,","7,","18,"], description=null, id=null}
+2020-12-28 at 16:53:52 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:53:53 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - cat /run/media/sda1/testa
+hello /
+root@imx6ulevk:~# echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# cat /run/media/sda1/testa
+hello /
+root@imx6ulevk:~# logout
+
+Freescale i.MX Release Distro 4.1.15-2.0.1 imx6ulevk /dev/ttymxc0
+
+imx6ulevk login: 
+2020-12-28 at 16:54:05 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100001","status":"1","result":true,"user_id":"00001","testTime":"2020-12-28 16:54:05","remark":"[\"4,\",\"7,\",\"18,\"]"}
+2020-12-28 at 16:54:05 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100001, status=1, result=true, userId=00001, testTime=2020-12-28 16:54:05, remark=["4,","7,","18,"], description=null, id=null}
+2020-12-28 at 16:54:16 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 16:54:31 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100001","status":"1","result":false,"user_id":"00001","testTime":"2020-12-28 16:54:31","remark":"[\"4,\",\"7,\",\"18,\"]"}
+2020-12-28 at 16:54:31 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100001, status=1, result=false, userId=00001, testTime=2020-12-28 16:54:31, remark=["4,","7,","18,"], description=null, id=null}
+2020-12-28 at 16:54:33 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# cat /run/media/sda1/testa
+
+2020-12-28 at 17:06:31 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:06:53 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:06:59 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 17:09:34 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:11:01 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:11:27 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:15:55 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:16:16 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:16:21 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 17:17:13 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:17:42 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:18:03 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:18:08 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# cat /run/media/sda1/testa
+
+2020-12-28 at 17:21:38 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:21:54 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:24:45 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:25:25 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:26:00 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:26:00 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 176 serialEvent - usb口检测不通过
+2020-12-28 at 17:36:39 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:37:07 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:50:32 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:50:54 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 17:52:02 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 17:52:04 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# 
+2020-12-28 at 17:52:37 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 241 testLoraRec - [bhz] 打开端口
+2020-12-28 at 17:54:29 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100001","status":"1","result":false,"user_id":"00001","testTime":"2020-12-28 17:54:29","remark":"[\"1,0,\",\"2,460044023303381,\",\"3,1.0.1.fty10,\",\"4,\",\"7,\",\"8,1141,\",\"9,6,\",\"10,\",\"11,发送:2560 接收:2560,\",\"12,发送:3000接受到:2760,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD黑=通过,LCD白=通过,\",\"17,\",\"18,\",\"19,\",\"20,\"]"}
+2020-12-28 at 17:54:29 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100001, status=1, result=false, userId=00001, testTime=2020-12-28 17:54:29, remark=["1,0,","2,460044023303381,","3,1.0.1.fty10,","4,","7,","8,1141,","9,6,","10,","11,发送:2560 接收:2560,","12,发送:3000接受到:2760,","13,合格卫星数量:0,","14,","15,","16,LCD黑=通过,LCD白=通过,","17,","18,","19,","20,"], description=null, id=null}
+2020-12-28 at 18:51:21 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 18:52:10 GMT+08:00 DEBUG com.example.demo.view.test.gnss.CenterController$update$1 140 invoke - 升级结果!true
+2020-12-28 at 18:53:25 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 18:53:31 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - 
+echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+
+2020-12-28 at 18:54:17 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 241 testLoraRec - [bhz] 打开端口
+2020-12-28 at 18:55:38 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100001","status":"1","result":false,"user_id":"00001","testTime":"2020-12-28 18:55:38","remark":"[\"1,0,\",\"2,460044023303381,\",\"3,1.0.1.fty10,\",\"4,\",\"7,\",\"8,6,\",\"9,8,\",\"10,\",\"11,发:2560-收:2560,\",\"12,发:3000-收:3000,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD黑=通过,LCD白=通过,\",\"17,\",\"18,\",\"19,请录入正确的SIM卡编号(13位),\",\"20,请录入正确的SIM卡编号(13位),\"]"}
+2020-12-28 at 18:55:38 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100001, status=1, result=false, userId=00001, testTime=2020-12-28 18:55:38, remark=["1,0,","2,460044023303381,","3,1.0.1.fty10,","4,","7,","8,6,","9,8,","10,","11,发:2560-收:2560,","12,发:3000-收:3000,","13,合格卫星数量:0,","14,","15,","16,LCD黑=通过,LCD白=通过,","17,","18,","19,请录入正确的SIM卡编号(13位),","20,请录入正确的SIM卡编号(13位),"], description=null, id=null}
+2020-12-28 at 18:58:39 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-28 at 18:59:26 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-28 at 18:59:32 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis$testSerialPort$1 198 serialEvent - echo "hello" > /run/media/sda1/testa /
+root@imx6ulevk:~# SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+uap0: error fetching interface information: Device not found
+SIOCSIFADDR: No such device
+uap0: ERROR while getting interface flags: No such device
+SIOCSIFNETMASK: No such device
+
+2020-12-28 at 19:00:22 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 241 testLoraRec - [bhz] 打开端口
+2020-12-28 at 19:01:16 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100002","status":"1","result":false,"user_id":"00002","testTime":"2020-12-28 19:01:16","remark":"[\"1,0,\",\"2,460044023303381,\",\"3,1.0.1.fty10,\",\"4,\",\"7,\",\"8,4,\",\"9,12,\",\"10,\",\"11,发:2560-收:2560,\",\"12,发:3000-收:2700,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD黑=通过,LCD白=通过,\",\"17,\",\"18,\",\"19,----点击了取消按钮,\",\"20,请录入正确的SIM卡编号(13位),\"]"}
+2020-12-28 at 19:01:16 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100002, status=1, result=false, userId=00002, testTime=2020-12-28 19:01:16, remark=["1,0,","2,460044023303381,","3,1.0.1.fty10,","4,","7,","8,4,","9,12,","10,","11,发:2560-收:2560,","12,发:3000-收:2700,","13,合格卫星数量:0,","14,","15,","16,LCD黑=通过,LCD白=通过,","17,","18,","19,----点击了取消按钮,","20,请录入正确的SIM卡编号(13位),"], description=null, id=null}
+2020-12-29 at 09:42:49 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 09:43:29 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 10:21:45 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 10:23:57 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 14:44:39 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 15:23:41 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 15:24:31 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 15:25:05 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 15:26:20 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 15:28:07 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 15:28:49 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 15:30:28 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 16:50:01 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:31:54 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:32:35 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:33:45 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:35:48 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:36:13 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:36:27 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:37:58 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:38:44 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:41:21 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:41:54 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-29 at 17:44:32 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误

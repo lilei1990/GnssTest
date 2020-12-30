@@ -3,6 +3,7 @@ package com.example.demo.view.test.gnss
 import com.example.demo.model.DeviceTestModel
 import com.example.demo.net.Api
 import com.example.demo.utils.TimeUtil
+import com.example.demo.utils.showProgressStage
 import com.example.demo.view.test.UDPBroadcast
 import com.example.demo.view.test.bean.OldCase
 import com.google.gson.JsonArray
@@ -33,6 +34,7 @@ class GnssOldController : Controller() {
     val isStart = booleanProperty(false)
     var isStop = false
     fun startTest(test_timeOut: Int) {
+
         //超时毫秒数
         val timeOut = test_timeOut * 60 * 60 * 1000
         isStop = false
