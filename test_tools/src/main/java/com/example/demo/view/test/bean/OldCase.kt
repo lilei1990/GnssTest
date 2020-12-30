@@ -27,4 +27,11 @@ open class OldCase : Case() {
     var ip = ""
     var satelliteCount = -1
     var equipmentId = ""
+    var bid = ""
+    //检查设备id是否通过单板整机测试
+    //是否chek过
+    var isCheck = false
+    //check是否通过id
+    var checkId = false
+
 }

@@ -96,8 +96,13 @@ class GnssOldView : View("老化测试") {
                     }
                 }
             }
-            text("软件版本,设备id") {
-                textProperty().bind(GnssTestData.textInfo)
+            vbox {
+                alignment = Pos.TOP_CENTER
+                label("日志")
+                textarea(controller.taLog) {
+                    prefWidth = 150.0
+                    prefHeight=300.0
+                }
             }
         }
 
@@ -126,52 +131,7 @@ class GnssOldView : View("老化测试") {
                 text = "开始测试"
                 disableProperty().bind(controller.isStart)
                 action {
-                    //检查网络
-                    if (GnssTestData.bid.value.isNullOrEmpty()) {
-                        val ping = PingUtils.ping(GnssConfig.eth_test_ip.value)
-                        if (!ping) {
-                            fire(ToastEvent("网络不通,请检查网线连接1"))
-                            return@action
-                        }
-                    }
-                    if (GnssTestData.udp_msg0101 == null) {
-                        fire(ToastEvent("未获取上报的数据"))
-                        return@action
-                    }
-                    //检查上报的单板id
-                    if (GnssTestData.udp_msg0101!!.bid == 0) {
-                        fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.getBidHex()}"))
-                        return@action
-                    }
 
-                    //查询单板测试
-                    val checkBidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.getBidHex(),"1")
-                    if (checkBidlist == null || checkBidlist.size == 0) {
-                        fire(ToastEvent("未查询到单板测试数据${GnssTestData.udp_msg0101!!.getBidHex()}"))
-                        return@action
-                    }
-                    //查询到数据如果上次测试结果为通过就提示,否则不通过
-                    if (checkBidlist.size >= 1 && !checkBidlist[0].result) {
-                        fire(ToastEvent("最近一次单板测试不通过,拒绝测试!"))
-                        return@action
-                    }
-
-                    //检查上报的整机id
-                    if (GnssTestData.udp_msg0101!!.id == 0) {
-                        fire(ToastEvent("未获取上报的整机id-${GnssTestData.udp_msg0101!!.getIdHex()}"))
-                        return@action
-                    }
-                    //查询整机测试
-                    val checkidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.getIdHex(),"2")
-                    if (checkidlist == null) {
-                        fire(ToastEvent("未查询到整机测试数据"))
-                        return@action
-                    }
-                    //查询到数据如果上次测试结果为通过就提示,否则不通过
-                    if (checkidlist.size >= 1 && !checkidlist[0].result) {
-                        fire(ToastEvent("最近一次整机测试不通过,拒绝测试!"))
-                        return@action
-                    }
                     controller.startTest(test_timeOut)
                 }
             }

@@ -93,7 +93,7 @@ object GnssTestData {
                     when (it.id.toInt()) {
                         0x0101 -> {
                             udpUpdataTime = System.currentTimeMillis()
-                            println(it.str)
+//                            println(it.str)
                             val msg0101 = JSON.parseObject<UDP_Msg0101>(it.str, UDP_Msg0101::class.java)
                             Platform.runLater {
                                 udp_msg0101 = msg0101
@@ -128,15 +128,17 @@ object GnssTestData {
                                 //老化测试做数据匹配
                                 if (ggamap_fail.contains(address)) {
                                     ggamap_fail[address]?.equipmentId = msg0101.getIdHex()
+                                    ggamap_fail[address]?.bid = msg0101.getBidHex()
                                 }
                                 //老化测试做数据匹配
                                 if (ggamap_buff.contains(address)) {
                                     ggamap_buff[address]?.equipmentId = msg0101.getIdHex()
+                                    ggamap_buff[address]?.bid = msg0101.getBidHex()
                                 }
                             }
                         }
                         0x0102 -> {
-
+                            println(it.str)
                             val sf = SentenceFactory.getInstance()
                             for (line in it.str.lines()) {
 
