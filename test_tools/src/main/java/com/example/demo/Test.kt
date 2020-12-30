@@ -22,13 +22,20 @@ private val flow = flowOf(1, 2).map {
 }
 
 suspend fun main(args: Array<String>) {
-    flow<Int> {
-        delay(2000)
-        emit(5)
-        return@flow
-        emit(6)
-    }.collect {
-        println("==="+it)
+    runBlocking {
+        flow {
+            emit(1)
+//            throw RuntimeException()
+        }.flowOn(Dispatchers.IO)
+                .catch{
+                    println("catch exception") }
+                .onCompletion { cause ->
+                    if (cause != null)
+                        println("Flow completed exceptionally")
+                    else
+                        println("Done")
+                }
+                .collect { println(it) }
     }
 //    val satelliteMap = mutableMapOf<Int, Int>()
 //    for (i in 1..10) {

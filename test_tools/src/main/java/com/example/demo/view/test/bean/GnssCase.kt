@@ -53,7 +53,12 @@ enum class GnssType(val id: Int, val testName: String) {
     IMSI2(20, "4G2（IMSI）")
 }
 
+//手动终止任务
 var StopTest = booleanProperty(false)
+
+//任务是否终止
+var RunTest = booleanProperty(false)
+//var StopTest = booleanProperty(false)
 
 open class GnssCase(centerController: CenterController) {
     var controller = centerController
@@ -61,7 +66,10 @@ open class GnssCase(centerController: CenterController) {
 
     suspend fun run(caselist: Flow<Case>) {
         controller.putLogInfo("开始测试")
+        //清除上次的数据
+        GnssTestData.hd100Case.clear()
         StopTest.value = false
+        RunTest.value = true
         caselist.map {
             it.apply {
                 if (!StopTest.value) {//任务没有手动终止才继续执行
@@ -69,32 +77,24 @@ open class GnssCase(centerController: CenterController) {
                     whenID(it)
                 }
             }
-        }.flowOn(Dispatchers.IO).onCompletion {
-            controller.taLog.value += "完成-StopTest:${StopTest.value}"
-            if (!StopTest.value) {//不是手动终止结束任务的就提交数据
-                controller.putLogInfo("提交数据")
-                testUpload()
-            }
-        }.collect {
-            GnssTestData.hd100Case.add(it)
-            println(it.typeName)
-        }
-//        channelFlow<Case> {
-//            for (case in caselist) {
-//                async {
-//                    whenID(case)
-//                    send(case)
-//                }
-//            }
-//
-//        }.flowOn(Dispatchers.IO).onCompletion {
-//            println("测试完成")
-//        }
-//            .collect {
-//                GnssTestData.hd100Case.add(it)
-//                println(it.typeName)
-//            }
-//
+        }.flowOn(Dispatchers.IO)
+                .catch {
+                    controller.putLogInfo("捕获到异常${this.toString()}")
+                }
+                .onCompletion {cause ->
+                    RunTest.value = false
+                    if (cause != null) {
+                        controller.putLogInfo("flow异常终止")
+                    } else {
+                        controller.putLogInfo("提交数据")
+                        testUpload()
+                    }
+
+                }.collect {
+                    GnssTestData.hd100Case.add(it)
+                    controller.putLogInfo("${it.typeName}-完成")
+                }
+
 
     }
 
@@ -264,7 +264,7 @@ open class GnssCase(centerController: CenterController) {
                 }
 
             }
-            GnssType.IMSI1.id -> {//掉电保护
+            GnssType.IMSI1.id -> {//sim卡1
                 var isNext = false
                 Platform.runLater {
                     //检查通过输入设备id
@@ -275,16 +275,19 @@ open class GnssCase(centerController: CenterController) {
                     val net4g1 = GnssTestData.net4g1_imsi.value
 
                     if (net4g1.isNullOrEmpty()) {
-                        case.putTestInfo("net4g1:$net4g1")
+                        case.putTestInfo("net4g1_imsi为null:$net4g1")
                         case.result = false
                         isNext = true
+                        return@runLater
                     }
                     var result = dialog.showAndWait()
                     //如果用户点击了取消按钮result.isPresent()将会返回false
                     if (!result.isPresent) {
-                        case.putTestInfo("----点击了取消按钮")
+                        //----点击了取消
+                        case.putTestInfo("取消")
                         case.result = false
                         isNext = true
+                        return@runLater
                     }
 
                     result.ifPresent { ccid: String ->
@@ -329,7 +332,7 @@ open class GnssCase(centerController: CenterController) {
                 }
 
             }
-            GnssType.IMSI2.id -> {//掉电保护
+            GnssType.IMSI2.id -> {//sim卡2
                 var isNext = false
                 Platform.runLater {
                     //检查通过输入设备id
@@ -339,16 +342,19 @@ open class GnssCase(centerController: CenterController) {
                     dialog.editor.text = ""
                     val net4g2 = GnssTestData.net4g2_imsi.value
                     if (net4g2.isNullOrEmpty()) {
-                        case.putTestInfo("net4g2:$net4g2")
+                        case.putTestInfo("net4g2_imsi为null:$net4g2")
                         case.result = false
                         isNext = true
+                        return@runLater
                     }
                     var result = dialog.showAndWait()
                     //如果用户点击了取消按钮result.isPresent()将会返回false
                     if (!result.isPresent) {
-                        case.putTestInfo("----点击了取消按钮")
+                        //----点击了取消按钮
+                        case.putTestInfo("取消")
                         case.result = false
                         isNext = true
+                        return@runLater
                     }
                     result.ifPresent { ccid: String ->
 
@@ -443,8 +449,7 @@ open class GnssCase(centerController: CenterController) {
                     alert.contentText = "数据提交成功!"
                     controller.putLogInfo("数据提交成功")
                     alert.showAndWait()
-                    //上传成功结束清除数据
-                    GnssTestData.hd100Case.clear()
+
                 }
                 TestStatus.PASS
             } else {

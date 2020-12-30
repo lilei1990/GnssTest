@@ -6,6 +6,7 @@ import com.example.demo.net.Api
 import com.example.demo.utils.*
 import com.example.demo.view.test.UdpUtlis
 import com.example.demo.view.test.bean.Case
+import com.example.demo.view.test.bean.RunTest
 import com.example.demo.view.test.bean.StopTest
 import com.example.demo.view.test.gnss.GnssConfig.userId
 import javafx.application.Platform
@@ -67,7 +68,8 @@ class GnssTestView : View() {
         cbox1.items = controller.texasCities1
         cbox2.items = controller.texasCities2
         cbox1.bind(controller.comboText1)
-        btStopTest.visibleProperty()
+
+        btStartTest.disableProperty().bind(RunTest)
         cbox1.disableProperty().bind(controller.disableSerialport1)
         cbox1.disableProperty().addListener { observable, oldValue, newValue ->
             if (newValue) {
@@ -91,10 +93,6 @@ class GnssTestView : View() {
         }
         cbox2.disableProperty().bind(controller.disableSerialport2)
         taLog.textProperty().bind(controller.taLog)
-        taLog.textProperty().addListener { observable, oldValue, newValue ->
-            //滚动到底部
-            taLog.positionCaret(controller.taLog.value.length)
-        }
         btRefresh.disableProperty().bind(controller.disableSerialport1)
 
         udpStaus.fillProperty().bind(controller.udpStaus)
@@ -152,24 +150,18 @@ class GnssTestView : View() {
         val showProgressStage = showProgressStage("终止任务中....!")
         showProgressStage.show()
         runAsync {
-            StopTest.value = true
-            sleep(10000)
 
             GlobalScope.launch {
                 if (job != null) {
                     job!!.cancelAndJoin()
                 }
             }
+            sleep(10000)
         } ui {
+            StopTest.value = true
             GnssTestData.hd100Case.clear()
             showProgressStage.close()
         }
-        //清除loar
-//        UdpUtlis.clearLoar()
-//        UdpUtlis.recLoar(10,300,1)
-//        if (job != null) {
-//            job!!.cancel()
-//        }
     }
 
     /**

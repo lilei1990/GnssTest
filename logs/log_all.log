@@ -19537,3 +19537,147 @@ SIOCSIFNETMASK: No such device
 2020-12-29 at 17:41:21 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
 2020-12-29 at 17:41:54 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
 2020-12-29 at 17:44:32 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 09:33:58 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:01:55 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:02:25 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:03:18 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:04:26 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:05:24 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:09:40 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:10:17 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:11:16 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:11:33 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:13:56 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:14:12 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 10:15:50 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 10:22:08 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 11:25:15 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:24:09 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:24:53 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:25:06 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:26:48 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:27:21 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:27:36 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:28:04 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 13:28:20 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:29:08 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:29:57 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:30:25 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 13:42:16 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:42:31 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:43:15 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:43:29 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:44:30 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:44:57 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:45:27 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:46:08 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:46:29 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:46:54 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:47:19 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:47:36 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:48:16 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:48:31 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:50:20 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:50:51 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 13:51:06 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 13:52:14 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:20:18 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:20:33 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:21:29 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:22:16 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:22:29 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:23:02 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 14:24:53 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:25:07 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:25:41 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 14:26:25 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:26:54 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:27:17 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:27:41 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:28:08 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 14:43:37 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:43:52 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:44:26 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 14:47:13 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:47:37 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 14:55:07 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 14:55:21 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:55:49 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 14:56:49 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 14:57:11 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:01:03 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:03:58 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:04:42 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:04:56 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:05:37 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:06:00 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:10:31 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:10:45 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:11:19 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:25:34 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:25:50 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:26:18 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:27:11 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100005","status":"1","result":false,"user_id":"00001","testTime":"2020-12-30 15:27:11","remark":"[\"1,0,\",\"2,gnss-imx6ull-v1.5.1,\",\"3,1.0.1.fty11,\",\"4,\",\"7,\",\"8,0,\",\"9,130,\",\"10,\",\"11,发:2560-收:0,\",\"12,发:3000-收:4353,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD黑=通过,LCD白=通过,\",\"17,\",\"18,\",\"19,net4g1_imsi为null:,\",\"20,\"]"}
+2020-12-30 at 15:27:11 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100005, status=1, result=false, userId=00001, testTime=2020-12-30 15:27:11, remark=["1,0,","2,gnss-imx6ull-v1.5.1,","3,1.0.1.fty11,","4,","7,","8,0,","9,130,","10,","11,发:2560-收:0,","12,发:3000-收:4353,","13,合格卫星数量:0,","14,","15,","16,LCD黑=通过,LCD白=通过,","17,","18,","19,net4g1_imsi为null:,","20,"], description=null, id=null}
+2020-12-30 at 15:27:23 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:28:28 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:28:45 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:29:16 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:30:14 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:30:35 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:31:09 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:36:17 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:36:32 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:37:00 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:37:58 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:38:28 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:39:03 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:39:26 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:39:54 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:40:44 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100005","status":"1","result":false,"user_id":"00001","testTime":"2020-12-30 15:40:44","remark":"[\"1,0,\",\"2,gnss-imx6ull-v1.5.1,\",\"3,1.0.1.fty11,\",\"4,\",\"7,\",\"8,0,\",\"9,131,\",\"10,\",\"11,发:2560-收:0,\",\"12,发:3000-收:4537,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD白=不通过,\",\"17,\",\"18,\",\"19,net4g1_imsi为null:,\",\"20,----点击了取消按钮,\"]"}
+2020-12-30 at 15:40:44 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100005, status=1, result=false, userId=00001, testTime=2020-12-30 15:40:44, remark=["1,0,","2,gnss-imx6ull-v1.5.1,","3,1.0.1.fty11,","4,","7,","8,0,","9,131,","10,","11,发:2560-收:0,","12,发:3000-收:4537,","13,合格卫星数量:0,","14,","15,","16,LCD白=不通过,","17,","18,","19,net4g1_imsi为null:,","20,----点击了取消按钮,"], description=null, id=null}
+2020-12-30 at 15:41:05 GMT+08:00 ERROR com.example.demo.net.Api 114 uploadTestRest - Failed to execute request tornadofx.RestException: Failed to execute request
+	at tornadofx.Rest.execute(Rest.kt:117) ~[base_core.jar:?]
+	at tornadofx.Rest.post(Rest.kt:76) ~[base_core.jar:?]
+	at tornadofx.Rest.post(Rest.kt:77) ~[base_core.jar:?]
+	at tornadofx.Rest.post$default(Rest.kt:77) ~[base_core.jar:?]
+	at com.example.demo.net.Api.uploadTestRest(Api.kt:108) [main/:?]
+	at com.example.demo.view.test.bean.GnssCase.testUpload(GnssCase.kt:441) [main/:?]
+	at com.example.demo.view.test.bean.GnssCase$run$4.invokeSuspend(GnssCase.kt:90) [main/:?]
+	at com.example.demo.view.test.bean.GnssCase$run$4.invoke(GnssCase.kt) [main/:?]
+	at kotlinx.coroutines.flow.FlowKt__EmittersKt.invokeSafely$FlowKt__EmittersKt(Emitters.kt:165) [base_core.jar:?]
+	at kotlinx.coroutines.flow.FlowKt__EmittersKt$onCompletion$$inlined$unsafeFlow$1.collect(SafeCollector.kt:139) [base_core.jar:?]
+	at kotlinx.coroutines.flow.FlowKt__EmittersKt$onCompletion$$inlined$unsafeFlow$1$1.invokeSuspend(Unknown Source) [base_core.jar:?]
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33) [base_core.jar:?]
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:32) [base_core.jar:?]
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:113) [base_core.jar:?]
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:46) [base_core.jar:?]
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:56) [base_core.jar:?]
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:561) [base_core.jar:?]
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:727) [base_core.jar:?]
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:667) [base_core.jar:?]
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:655) [base_core.jar:?]
+Caused by: java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.connect0(Native Method) ~[?:1.8.0_202-ea]
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:79) ~[?:1.8.0_202-ea]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350) ~[?:1.8.0_202-ea]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206) ~[?:1.8.0_202-ea]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188) ~[?:1.8.0_202-ea]
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172) ~[?:1.8.0_202-ea]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392) ~[?:1.8.0_202-ea]
+	at java.net.Socket.connect(Socket.java:589) ~[?:1.8.0_202-ea]
+	at java.net.Socket.connect(Socket.java:538) ~[?:1.8.0_202-ea]
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:180) ~[?:1.8.0_202-ea]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463) ~[?:1.8.0_202-ea]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558) ~[?:1.8.0_202-ea]
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242) ~[?:1.8.0_202-ea]
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339) ~[?:1.8.0_202-ea]
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357) ~[?:1.8.0_202-ea]
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1220) ~[?:1.8.0_202-ea]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1156) ~[?:1.8.0_202-ea]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1050) ~[?:1.8.0_202-ea]
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:984) ~[?:1.8.0_202-ea]
+	at tornadofx.HttpURLRequest.execute(Rest.kt:293) ~[base_core.jar:?]
+	at tornadofx.Rest.execute(Rest.kt:115) ~[base_core.jar:?]
+	... 19 more
+

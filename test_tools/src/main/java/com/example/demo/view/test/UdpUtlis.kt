@@ -219,6 +219,8 @@ object UdpUtlis {
                     }
                 }
             }
+            //发个换行符激活设备,防止有时候休眠,
+            SerialPortUtil.sendData(serialPort, "\n".toByteArray())
 //            fire(PortWorkEvent(false, serialPortIndex))
             // sleep 一段时间保证线程可以执行完
            sleep(GnssConfig.defaut_timeOut.value.toLong())

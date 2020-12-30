@@ -6,6 +6,7 @@ import com.example.demo.net.Api
 import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.rxtx.SerialPortUtilTest
 import com.example.demo.utils.LoggerUtil
+import com.example.demo.utils.TimeUtil
 import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.bean.GnssCase
 import com.example.demo.view.test.bean.GnssType
@@ -224,7 +225,7 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
         caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
         caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
-        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName,timeOut = 25000))
+        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))
         caselist.add(Case(GnssType.LORAREC.id, GnssType.LORAREC.testName))
         caselist.add(Case(GnssType.LORASEED.id, GnssType.LORASEED.testName))
         caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
@@ -281,8 +282,10 @@ class CenterController : Controller() {
     }
 
 
-    fun putLogInfo(str:String) {
-        taLog.value+="$str\n"
+    fun putLogInfo(str: String) {
+        Platform.runLater {
+            taLog.value = "${TimeUtil.getSimpleDateTime()}-$str\n${taLog.value}"
+        }
     }
 }
 
