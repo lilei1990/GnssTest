@@ -126,22 +126,23 @@ object Api {
     "object":{一条数据},
     "message":""
     }
+    //测试类型	status	char	4	1.单板测试，2.整机测试，3为老化测试
      */
-    fun queryHistoryLast(equipmentId:String): ObservableList<DeviceTestModel>? {
+    fun queryHistoryLast(equipmentId:String,status:String): ObservableList<DeviceTestModel>? {
 
-        //测试类型	status	char	4	1.单板测试，2.整机测试，3为老化测试
-        var status = ""
-        when (GnssTestData.testStatus) {
-            TestStatus.TEST_STATUS_PRO -> {//单板测试
-                status = "1"
-            }
-            TestStatus.TEST_STATUS_TOTAL -> {//整机测试
-                status = "2"
-            }
-            TestStatus.TEST_STATUS_OLD -> {//老化测试
-                status = "3"
-            }
-        }
+//
+//        var status = ""
+//        when (GnssTestData.testStatus) {
+//            TestStatus.TEST_STATUS_PRO -> {//单板测试
+//                status = "1"
+//            }
+//            TestStatus.TEST_STATUS_TOTAL -> {//整机测试
+//                status = "2"
+//            }
+//            TestStatus.TEST_STATUS_OLD -> {//老化测试
+//                status = "3"
+//            }
+//        }
         //result=1成功的数据
         try {
             var rsp =

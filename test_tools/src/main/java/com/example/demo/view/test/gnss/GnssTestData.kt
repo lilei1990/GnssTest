@@ -67,7 +67,7 @@ object GnssTestData {
     //缓冲数据区域,用于临时存放不通过的,如果持续不通过就会被放入fail
     var ggamap_buff = mutableMapOf<String, OldCase>()
 
-    //gga数据
+    //不通过的数据
     var ggamap_fail = mutableMapOf<String, OldCase>()
 
     //gga数据
@@ -115,8 +115,8 @@ object GnssTestData {
                                 textInfo.value = "硬件版本号:${msg0101.hw}\n" +
                                         "镜像版本号:${msg0101.bsp}\n" +
                                         "软件版本号:${msg0101.sw}\n" +
-                                        "id:${Integer.toHexString(msg0101.id)}\n" +
-                                        "bid:${Integer.toHexString(msg0101.bid)}\n" +
+                                        "id:${msg0101.getIdHex()}\n" +
+                                        "bid:${msg0101.getBidHex()}\n" +
                                         "信道:${msg0101.chan}\n" +
                                         "卫星:${star}\n" +
                                         "lora收:${msg0101.loraCounter_rec}\n" +
@@ -127,11 +127,11 @@ object GnssTestData {
                                         "4g2imsi:${msg0101.net4g2_imsi}\n"
                                 //老化测试做数据匹配
                                 if (ggamap_fail.contains(address)) {
-                                    ggamap_fail[address]?.id = msg0101.id
+                                    ggamap_fail[address]?.equipmentId = msg0101.getIdHex()
                                 }
                                 //老化测试做数据匹配
                                 if (ggamap_buff.contains(address)) {
-                                    ggamap_buff[address]?.id = msg0101.id
+                                    ggamap_buff[address]?.equipmentId = msg0101.getIdHex()
                                 }
                             }
                         }

@@ -19681,3 +19681,25 @@ Caused by: java.net.ConnectException: Connection timed out: connect
 	at tornadofx.Rest.execute(Rest.kt:115) ~[base_core.jar:?]
 	... 19 more
 
+2020-12-30 at 15:45:48 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:46:18 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:46:27 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:46:45 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:47:12 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:47:56 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30000002","status":"2","result":false,"user_id":"00005","testTime":"2020-12-30 15:47:56","remark":"[\"1,0,\",\"2,gnss-imx6ull-v1.5.1,\",\"3,1.0.1.fty11,\",\"5,\",\"7,\",\"8,0,\",\"9,20,\",\"10,\",\"11,发:2560-收:0,\",\"12,发:3000-收:4431,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD黑=通过,LCD白=通过,\",\"17,\",\"18,\",\"19,net4g1_imsi为null:,\",\"20,\"]"}
+2020-12-30 at 15:47:56 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30000002, status=2, result=false, userId=00005, testTime=2020-12-30 15:47:56, remark=["1,0,","2,gnss-imx6ull-v1.5.1,","3,1.0.1.fty11,","5,","7,","8,0,","9,20,","10,","11,发:2560-收:0,","12,发:3000-收:4431,","13,合格卫星数量:0,","14,","15,","16,LCD黑=通过,LCD白=通过,","17,","18,","19,net4g1_imsi为null:,","20,"], description=null, id=null}
+2020-12-30 at 15:48:44 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-30 at 15:49:10 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-30 at 15:49:52 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30000002","status":"2","result":false,"user_id":"00005","testTime":"2020-12-30 15:49:52","remark":"[\"1,0,\",\"2,gnss-imx6ull-v1.5.1,\",\"3,1.0.1.fty11,\",\"5,\",\"7,\",\"8,0,\",\"9,13,\",\"10,\",\"11,发:2560-收:0,\",\"12,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD黑=通过,LCD白=通过,\",\"17,\",\"18,\",\"19,net4g1_imsi为null:,\",\"20,查询不到SIM卡编号,ccid:1440202334801,\"]"}
+2020-12-30 at 15:49:52 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30000002, status=2, result=false, userId=00005, testTime=2020-12-30 15:49:52, remark=["1,0,","2,gnss-imx6ull-v1.5.1,","3,1.0.1.fty11,","5,","7,","8,0,","9,13,","10,","11,发:2560-收:0,","12,","13,合格卫星数量:0,","14,","15,","16,LCD黑=通过,LCD白=通过,","17,","18,","19,net4g1_imsi为null:,","20,查询不到SIM卡编号,ccid:1440202334801,"], description=null, id=null}
+2020-12-30 at 15:50:34 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:52:21 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 15:54:18 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 16:49:29 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 16:50:36 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 16:51:36 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 16:53:57 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 16:55:25 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 16:56:24 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 16:58:45 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 17:04:47 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误

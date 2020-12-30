@@ -94,5 +94,12 @@ data class UDP_Msg0101(
         loraCounter_send = lora[1].toInt()
     }
 
+    fun getBidHex(): String {
+        return Integer.toHexString(bid)
+    }
+
+    fun getIdHex(): String {
+        return Integer.toHexString(id)
+    }
 
 }

@@ -26,8 +26,9 @@ class GnssOldController : Controller() {
     //udp包数量
     val udpnum = stringProperty("")
 
-    val buff = observableListOf<OldCase>()
-    val fail = observableListOf<OldCase>()
+    //    val buff = observableListOf<OldCase>()
+//    val fail = observableListOf<OldCase>()
+    val datalist = observableListOf<OldCase>()
     val uploaderr = observableListOf<OldCase>()
 
     val texasCities = FXCollections.observableArrayList<String>()
@@ -49,14 +50,14 @@ class GnssOldController : Controller() {
                 val ggamap_fail = GnssTestData.ggamap_fail
 
                 //清空列表数据
-                buff.clear()
-                fail.clear()
+                datalist.clear()
+
                 ggamap_fail.forEach { (key, vlue) ->
 
-                    fail.add(vlue)
+                    datalist.add(vlue)
                 }
                 ggamap_buff.forEach { (key, vlue) ->
-                    buff.add(vlue)
+                    datalist.add(vlue)
                 }
 
                 //接收到的udp数
@@ -71,12 +72,10 @@ class GnssOldController : Controller() {
     fun upload() {
         runBlocking {
             channelFlow<OldCase> {
-                for (oldCase in fail) {
+                for (oldCase in datalist) {
                     send(oldCase)
                 }
-                for (oldCase in buff) {
-                    send(oldCase)
-                }
+
             }.map {
                 it.apply {
                     if (!testUpload(this)) {//上传失败.添加到上传失败的容器
@@ -116,7 +115,7 @@ class GnssOldController : Controller() {
         val deviceTestModel = DeviceTestModel()
         deviceTestModel.testTime = TimeUtil.getSimpleDateTime()
         deviceTestModel.status = GnssTestData.testStatus
-        deviceTestModel.equipmentId = "${oldCase.id}"
+        deviceTestModel.equipmentId = oldCase.equipmentId
 
         var jsr = JsonArray()
 

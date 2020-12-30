@@ -275,7 +275,7 @@ open class GnssCase(centerController: CenterController) {
                     val net4g1 = GnssTestData.net4g1_imsi.value
 
                     if (net4g1.isNullOrEmpty()) {
-                        case.putTestInfo("net4g1_imsi为null:$net4g1")
+                        case.putTestInfo("imsi为null:$net4g1")
                         case.result = false
                         isNext = true
                         return@runLater
@@ -342,7 +342,7 @@ open class GnssCase(centerController: CenterController) {
                     dialog.editor.text = ""
                     val net4g2 = GnssTestData.net4g2_imsi.value
                     if (net4g2.isNullOrEmpty()) {
-                        case.putTestInfo("net4g2_imsi为null:$net4g2")
+                        case.putTestInfo("imsi为null:$net4g2")
                         case.result = false
                         isNext = true
                         return@runLater
@@ -417,14 +417,14 @@ open class GnssCase(centerController: CenterController) {
                 GnssTestView.gnssTestView.fire(ToastEvent("单板id为空无法上传测试结果"))
                 return
             }
-            deviceTestModel.equipmentId = Integer.toHexString(GnssTestData.udp_msg0101!!.bid).toString()
+            deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.getBidHex()
         } else {
             if (GnssTestData.udp_msg0101!!.id == 0) {
                 controller.putLogInfo("整机id为空无法上传测试结果")
                 GnssTestView.gnssTestView.fire(ToastEvent("整机id为空无法上传测试结果"))
                 return
             }
-            deviceTestModel.equipmentId = Integer.toHexString(GnssTestData.udp_msg0101!!.id).toString()
+            deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.getIdHex()
         }
 
         var jsr = JsonArray()

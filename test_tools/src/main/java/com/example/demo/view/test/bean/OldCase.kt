@@ -26,4 +26,5 @@ open class OldCase : Case() {
     var time = System.currentTimeMillis()
     var ip = ""
     var satelliteCount = -1
+    var equipmentId = ""
 }

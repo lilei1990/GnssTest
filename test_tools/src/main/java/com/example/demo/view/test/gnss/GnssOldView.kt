@@ -19,6 +19,7 @@ import kfoenix.jfxbutton
 import kfoenix.jfxsnackbar
 import kotlinx.coroutines.flow.*
 import tornadofx.*
+import java.lang.Thread.sleep
 
 /**
  * 作者 : lei
@@ -37,7 +38,11 @@ class GnssOldView : View("老化测试") {
 
 
     init {
-
+        runAsync {
+            while (true) {
+                sleep(1000)
+            }
+        }
         for (i in 1..24) {
             controller.texasCities.add("${i}小时")
         }
@@ -64,22 +69,7 @@ class GnssOldView : View("老化测试") {
             vbox {
                 alignment = Pos.CENTER
                 label("测试正常的数据")
-                tableview(controller.buff) {
-                    prefWidth = 400.0
-                    readonlyColumn("ip", OldCase::ip)
-                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
-                    readonlyColumn("id", OldCase::id)
-                    readonlyColumn("波动时间", OldCase::time)
-                    readonlyColumn("结果", OldCase::testResult).cellFormat {
-                        text = it
-                        itemStyle(it)
-                    }
-                }
-            }
-            vbox {
-                alignment = Pos.CENTER
-                label("不通过的数据")
-                tableview(controller.fail) {
+                tableview(controller.datalist) {
                     prefWidth = 400.0
                     readonlyColumn("ip", OldCase::ip)
                     readonlyColumn("卫星颗数", OldCase::satelliteCount)
@@ -106,15 +96,16 @@ class GnssOldView : View("老化测试") {
                     }
                 }
             }
+            text("软件版本,设备id") {
+                textProperty().bind(GnssTestData.textInfo)
+            }
         }
 
 
 
         hbox {
             spacing = 10.0
-            text("软件版本,设备id") {
-                textProperty().bind(GnssTestData.textInfo)
-            }
+
             label("工号:   ${GnssConfig.userId.value}")
             text {
                 prefWidth(50.0)
@@ -149,14 +140,14 @@ class GnssOldView : View("老化测试") {
                     }
                     //检查上报的单板id
                     if (GnssTestData.udp_msg0101!!.bid == 0) {
-                        fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.bid}"))
+                        fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.getBidHex()}"))
                         return@action
                     }
 
                     //查询单板测试
-                    val checkBidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.bid.toString())
-                    if (checkBidlist == null) {
-                        fire(ToastEvent("未查询到单板测试数据"))
+                    val checkBidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.getBidHex(),"1")
+                    if (checkBidlist == null || checkBidlist.size == 0) {
+                        fire(ToastEvent("未查询到单板测试数据${GnssTestData.udp_msg0101!!.getBidHex()}"))
                         return@action
                     }
                     //查询到数据如果上次测试结果为通过就提示,否则不通过
@@ -167,11 +158,11 @@ class GnssOldView : View("老化测试") {
 
                     //检查上报的整机id
                     if (GnssTestData.udp_msg0101!!.id == 0) {
-                        fire(ToastEvent("未获取上报的整机id-${GnssTestData.udp_msg0101!!.id}"))
+                        fire(ToastEvent("未获取上报的整机id-${GnssTestData.udp_msg0101!!.getIdHex()}"))
                         return@action
                     }
                     //查询整机测试
-                    val checkidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.id.toString())
+                    val checkidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.getIdHex(),"2")
                     if (checkidlist == null) {
                         fire(ToastEvent("未查询到整机测试数据"))
                         return@action
@@ -195,7 +186,7 @@ class GnssOldView : View("老化测试") {
                 disableProperty().bind(controller.isStart)
                 action {
                     val showProgressStage = showProgressStage("正在上传中")
-                    if (controller.fail.isEmpty() && controller.buff.isEmpty()) {
+                    if (controller.datalist.isEmpty()) {
                         showSnackbar("未检测到要提交的数据")
                         return@action
                     }

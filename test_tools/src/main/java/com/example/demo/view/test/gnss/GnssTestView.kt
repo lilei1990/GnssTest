@@ -272,11 +272,11 @@ class GnssTestView : View() {
         }
         //检查上报的单板id
         if (GnssTestData.udp_msg0101!!.bid == 0) {
-            fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.bid}"))
+            fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.getBidHex()}"))
             return
         }
         //查询单板测试
-        val checkBidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.bid.toString())
+        val checkBidlist = Api.queryHistoryLast(GnssTestData.udp_msg0101!!.getBidHex(),"1")
         if (checkBidlist == null) {
             fire(ToastEvent("未查询到单板测试数据"))
             return
@@ -288,7 +288,7 @@ class GnssTestView : View() {
         }
         //检查整机id
         runAsync {
-            val queryHistoryLast = Api.queryHistoryLast(devid)
+            val queryHistoryLast = Api.queryHistoryLast(devid,"2")
             if (queryHistoryLast == null) {
                 fire(ToastEvent("设备id查询错误"))
                 return@runAsync
@@ -338,7 +338,7 @@ class GnssTestView : View() {
 
     private fun checkBid(bid: String) {
         runAsync {
-            val queryHistoryLast = Api.queryHistoryLast(bid)
+            val queryHistoryLast = Api.queryHistoryLast(bid,"1")
             if (queryHistoryLast == null) {
                 fire(ToastEvent("设备id查询错误"))
                 return@runAsync
