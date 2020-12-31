@@ -1,7 +1,10 @@
 package com.example.demo.view.test.gnss
 
 import com.example.demo.utils.showSnackbar
+import com.example.demo.view.test.gnss.GnssConfig.comboText1
+import com.example.demo.view.test.gnss.GnssConfig.comboText2
 import com.example.demo.view.test.gnss.GnssConfig.config_path
+import com.example.demo.view.test.gnss.GnssConfig.debug
 import com.example.demo.view.test.gnss.GnssConfig.defaut_timeOut
 import com.example.demo.view.test.gnss.GnssConfig.eth_test_ip
 import com.example.demo.view.test.gnss.GnssConfig.gga_timeout
@@ -17,12 +20,14 @@ import com.example.demo.view.test.gnss.GnssConfig.test_key_num
 import com.example.demo.view.test.gnss.GnssConfig.udp_broadcast_port
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_ip
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_pwd
+import com.jfoenix.controls.JFXCheckBox
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.control.TabPane
 import javafx.scene.control.TextField
 import javafx.scene.paint.Color
 import kfoenix.jfxbutton
+import kfoenix.jfxcheckbox
 import tornadofx.*
 
 /**
@@ -43,6 +48,7 @@ class GnssConfigView : View("设置") {
 
 class Config : Fragment("设置") {
     lateinit var config_path_View: TextField
+    lateinit var debug_View: JFXCheckBox
     lateinit var defaut_timeOut_View: TextField
     lateinit var userId_View: TextField
     lateinit var eth_test_ip_View: TextField
@@ -58,11 +64,25 @@ class Config : Fragment("设置") {
     lateinit var gps_test_min_num_View: TextField
     lateinit var test_key_num_View: TextField
     lateinit var gga_timeout_View: TextField
+    lateinit var comboText1_View: TextField
+    lateinit var comboText2_View: TextField
     override val root = vbox {
         paddingAll = 15
         prefWidth = 500.0
         prefHeight = 500.0
         label("常规")
+        hbox {
+            alignment = Pos.CENTER_LEFT
+            label("配置文件路径:  ") {
+                pubPor()
+            }
+            debug_View = jfxcheckbox(GnssConfig.debug) {
+                selectedProperty().addListener { observable, oldValue, newValue ->
+                    println(newValue)
+                    GnssConfig.save()
+                }
+            }
+        }
         hbox {
             alignment = Pos.CENTER_LEFT
             label("配置文件路径:  ") {
@@ -237,7 +257,26 @@ class Config : Fragment("设置") {
                 }
             }
         }
-
+        hbox {
+            alignment = Pos.CENTER_LEFT
+            label("串口1:  ") {
+                pubPor()
+            }
+            comboText1_View = textfield("${comboText1.value}") {
+                textProperty().addListener { obs, old, new ->
+                }
+            }
+        }
+        hbox {
+            alignment = Pos.CENTER_LEFT
+            label("串口2:  ") {
+                pubPor()
+            }
+            comboText2_View = textfield("${comboText2.value}") {
+                textProperty().addListener { obs, old, new ->
+                }
+            }
+        }
         jfxbutton {
             text = "保存"
             action {
@@ -245,6 +284,7 @@ class Config : Fragment("设置") {
                 if (onlyNum(defaut_timeOut_View.text)) return@action
                 defaut_timeOut.value = defaut_timeOut_View.text.toLong()
                 userId.value = userId_View.text
+                debug.value = debug_View.isSelected
                 config_path = config_path_View.text
                 if (onlyIp(eth_test_ip_View.text)) return@action
                 eth_test_ip.value = eth_test_ip_View.text
@@ -271,6 +311,8 @@ class Config : Fragment("设置") {
                 test_key_num.value = test_key_num_View.text.toInt()
                 if (onlyNum(gga_timeout_View.text)) return@action
                 gga_timeout.value = gga_timeout_View.text.toInt()
+                comboText1.value = comboText1_View.text
+                comboText2.value = comboText2_View.text
                 GnssConfig.save()
                 GnssConfig.read()
 

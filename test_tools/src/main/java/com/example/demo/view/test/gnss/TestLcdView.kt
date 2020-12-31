@@ -49,6 +49,7 @@ class TestLcdView(case: Case, call: () -> Unit) : View("屏幕测试") {
                             case.putTestInfo("LCD黑=通过")
                             showSnackbar("通过")
                             checkResult(case)
+                            btn2.fire()
                         }, "#00ff00")
                         .setNegativeBtn("不通过") {
                             resultBlack = "不通过"

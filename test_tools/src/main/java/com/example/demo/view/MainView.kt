@@ -2,15 +2,11 @@ package com.example.demo.view
 
 import com.example.demo.model.TestStatus
 import com.example.demo.utils.openNewStage
-import com.example.demo.utils.showSnackbar
 import com.example.demo.utils.shwoInternalWindow
-import com.example.demo.utils.view.DialogBuilder
-import com.example.demo.view.mavlink.MavLinkView
 import com.example.demo.view.test.gnss.GnssConfigView
 import com.example.demo.view.test.gnss.GnssTestData
 import com.example.demo.view.test.gnss.JobNumView
 import com.jfoenix.controls.JFXButton
-import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Control
@@ -29,7 +25,8 @@ class MainView : View() {
 
     //根节点
     override val root = vbox {
-
+        prefWidth = 600.0
+        prefHeight = 600.0
         menubar {
             menu("设置") {
                 item("设置") {
@@ -40,9 +37,10 @@ class MainView : View() {
             }
 
         }
-        vbox(20, Pos.CENTER) {
 
+        vbox(20, Pos.CENTER) {
             paddingAll = 20.0
+
             label("测试工具") {
                 style = "-fx-font-size: 50;-fx-font-weight: BOLD;"
                 alignment = Pos.CENTER

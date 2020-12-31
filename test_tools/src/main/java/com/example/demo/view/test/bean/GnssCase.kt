@@ -179,6 +179,9 @@ open class GnssCase(centerController: CenterController) {
                 UdpUtlis.clearLoar()
                 delay(1000)
                 case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
+                if (!case.result) {//测试不通过再来一次
+                    case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
+                }
 //                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
 
 
@@ -189,7 +192,9 @@ open class GnssCase(centerController: CenterController) {
                 UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
 //                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
                 case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
-
+                if (!case.result) {//测试不通过再来一次
+                    case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
+                }
             }
             GnssType.GPS.id -> {//测试Gps
                 delay(case.timeOut)

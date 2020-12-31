@@ -8,6 +8,8 @@ import com.example.demo.view.test.UdpUtlis
 import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.bean.RunTest
 import com.example.demo.view.test.bean.StopTest
+import com.example.demo.view.test.gnss.GnssConfig.comboText1
+import com.example.demo.view.test.gnss.GnssConfig.comboText2
 import com.example.demo.view.test.gnss.GnssConfig.userId
 import javafx.application.Platform
 import javafx.scene.control.*
@@ -67,7 +69,7 @@ class GnssTestView : View() {
 
         cbox1.items = controller.texasCities1
         cbox2.items = controller.texasCities2
-        cbox1.bind(controller.comboText1)
+        cbox1.bind(comboText1)
 
         btStartTest.disableProperty().bind(RunTest)
         cbox1.disableProperty().bind(controller.disableSerialport1)
@@ -76,16 +78,18 @@ class GnssTestView : View() {
                 Platform.runLater {
                     btOpenPort1.text = "关闭串口"
                 }
+                GnssConfig.save()
             } else {
                 btOpenPort1.text = "打开串口"
             }
         }
-        cbox2.bind(controller.comboText2)
+        cbox2.bind(comboText2)
         cbox2.disableProperty().addListener { observable, oldValue, newValue ->
             if (newValue) {
                 Platform.runLater {
                     btOpenPort2.text = "关闭串口"
                 }
+                GnssConfig.save()
             } else {
                 btOpenPort2.text = "打开串口"
             }
@@ -241,7 +245,13 @@ class GnssTestView : View() {
             var regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
             when (GnssTestData.testStatus) {
                 TestStatus.TEST_STATUS_PRO -> {//单板测试
-                    regex = "301[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
+
+                    if (GnssConfig.debug.value) {//测试模式
+                        regex ="301[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
+                    } else {
+                        regex = "301[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
+                    }
+
 //                    regex = "301[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
                     if (!bid.matches(Regex(regex))) {
                         showSnackbar("请录入正确的ID(8位)")
@@ -250,8 +260,12 @@ class GnssTestView : View() {
                     checkBid(bid)
                 }
                 TestStatus.TEST_STATUS_TOTAL -> {//整机测试
-                    regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
-//                    regex = "300[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
+                    if (GnssConfig.debug.value) {//测试模式
+                        regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
+                    } else {
+                        regex = "300[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
+                    }
+
                     if (!bid.matches(Regex(regex))) {
                         showSnackbar("请录入正确的ID(8位)")
                         return@ifPresent
@@ -432,7 +446,7 @@ class GnssTestView : View() {
      * 打开串口1
      */
     fun btOpenPortAction1() {
-        if (controller.comboText1.value.isNullOrEmpty()) {
+        if (comboText1.value.isNullOrEmpty()) {
             showSnackbar("请检查通讯端口")
             return
         }
@@ -444,14 +458,14 @@ class GnssTestView : View() {
             controller.stopSerialPort(0)
             return
         }
-        controller.start(controller.comboText1.value, 0)
+        controller.start(comboText1.value, 0)
     }
 
     /**
      * 打开串口2
      */
     fun btOpenPortAction2() {
-        if (controller.comboText2.value.isNullOrEmpty()) {
+        if (comboText2.value.isNullOrEmpty()) {
             showSnackbar("请检查通讯端口")
             return
         }
@@ -463,7 +477,7 @@ class GnssTestView : View() {
             controller.stopSerialPort(1)
             return
         }
-        controller.start(controller.comboText2.value, 1)
+        controller.start(comboText2.value, 1)
     }
 
     override fun onDock() {

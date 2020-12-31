@@ -10,6 +10,8 @@ import com.example.demo.utils.TimeUtil
 import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.bean.GnssCase
 import com.example.demo.view.test.bean.GnssType
+import com.example.demo.view.test.gnss.GnssConfig.comboText1
+import com.example.demo.view.test.gnss.GnssConfig.comboText2
 
 import javafx.application.Platform
 import javafx.collections.FXCollections
@@ -42,8 +44,7 @@ class CenterController : Controller() {
 
     val texasCities1 = FXCollections.observableArrayList<String>().asObservable()
     val texasCities2 = FXCollections.observableArrayList<String>().asObservable()
-    val comboText1 = stringProperty("")
-    val comboText2 = stringProperty("")
+
 
     //升级文件路径
     val updatePath = System.getProperty("user.dir") + "\\gnss_update\\gnss_1.0.1.fty11"
@@ -179,8 +180,12 @@ class CenterController : Controller() {
         texasCities1.addAll(serialPortList)
         texasCities2.clear()
         texasCities2.addAll(serialPortList)
-        comboText1.value = serialPortList.firstOrNull()
-        comboText2.value = serialPortList.lastOrNull()
+        if (comboText1.value.isNullOrEmpty()) {
+            comboText1.value = serialPortList.firstOrNull()
+        }
+        if (comboText2.value.isNullOrEmpty()) {
+            comboText2.value = serialPortList.lastOrNull()
+        }
     }
 
 

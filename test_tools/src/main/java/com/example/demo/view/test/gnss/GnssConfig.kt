@@ -3,6 +3,7 @@ package com.example.demo.view.test.gnss
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.Ini4jUtils
 import com.example.demo.view.test.bean.IniFileEntity
+import tornadofx.booleanProperty
 import tornadofx.intProperty
 import tornadofx.longProperty
 import tornadofx.stringProperty
@@ -19,6 +20,8 @@ object GnssConfig {
     //常规配置
     var config_path = System.getProperty("user.dir") + "\\config\\"
     var defaut_timeOut = longProperty(10000)
+    var debug = booleanProperty(true)
+
     //工号
     var userId = stringProperty("00001")
 
@@ -56,12 +59,17 @@ object GnssConfig {
 
     //按键测试最多测试多少次
     var test_key_num = intProperty(5)
+
     //gga/ 卫星数掉下来达到次时间认定失败
     var gga_timeout = intProperty(10000)
 
+    //打开的串口
+    val comboText1 = stringProperty("")
+    val comboText2 = stringProperty("")
     fun save() {
         val list = listOf(
                 IniFileEntity("ldap", "config_path", "$config_path"),
+                IniFileEntity("ldap", "debug", "${debug.value}"),
                 IniFileEntity("ldap", "defaut_timeOut", "${defaut_timeOut.value}"),
                 IniFileEntity("ldap", "userId", "${userId.value}"),
                 IniFileEntity("ldap", "eth_test_ip", "${eth_test_ip.value}"),
@@ -76,7 +84,9 @@ object GnssConfig {
                 IniFileEntity("ldap", "gps_test_min_satellite_Count", "${gps_test_min_satellite_Count.value}"),
                 IniFileEntity("ldap", "gps_test_min_num", "${gps_test_min_num.value}"),
                 IniFileEntity("ldap", "test_key_num", "${test_key_num.value}"),
-                IniFileEntity("ldap", "gga_timeout", "${gga_timeout.value}")
+                IniFileEntity("ldap", "gga_timeout", "${gga_timeout.value}"),
+                IniFileEntity("ldap", "comboText1", "${comboText1.value}"),
+                IniFileEntity("ldap", "comboText2", "${comboText2.value}")
 
         )
         Ini4jUtils.updateIniFile("${config_path}config.ini", list)
@@ -95,27 +105,31 @@ object GnssConfig {
 
         val fileContent: MutableMap<String, List<String>> = HashMap()
         fileContent["ldap"] = listOf(
-            "config_path",
-            "defaut_timeOut",
-            "userId",
-            "eth_test_ip",
-            "udp_broadcast_port",
-            "wifi_test_ip",
-            "wifi_test_pwd",
-            "lora_test_Intervals",
-            "lora_test_chen",
-            "lora_test_strength",
-            "lora_test_count",
-            "gps_test_min_noise",
-            "gps_test_min_satellite_Count",
-            "gps_test_min_num",
-            "test_key_num",
-            "gga_timeout"
+                "config_path",
+                "debug",
+                "defaut_timeOut",
+                "userId",
+                "eth_test_ip",
+                "udp_broadcast_port",
+                "wifi_test_ip",
+                "wifi_test_pwd",
+                "lora_test_Intervals",
+                "lora_test_chen",
+                "lora_test_strength",
+                "lora_test_count",
+                "gps_test_min_noise",
+                "gps_test_min_satellite_Count",
+                "gps_test_min_num",
+                "test_key_num",
+                "gga_timeout",
+                "comboText1",
+                "comboText2"
         )
         val file = File("${config_path}config.ini")
         val readIniFile = Ini4jUtils.readIniFile(file, fileContent)
         val getldap = readIniFile.get("ldap")
         config_path = getldap!!.get("config_path")!!
+        debug.value = getldap!!.get("debug")!!.toBoolean()
         defaut_timeOut.value = getldap!!.get("defaut_timeOut")!!.toLong()
         userId.value = getldap!!.get("userId")
         eth_test_ip.value = getldap!!.get("eth_test_ip")
@@ -131,6 +145,7 @@ object GnssConfig {
         gps_test_min_num.value = getldap!!.get("gps_test_min_num")!!.toInt()
         test_key_num.value = getldap!!.get("test_key_num")!!.toInt()
         gga_timeout.value = getldap!!.get("gga_timeout")!!.toInt()
-
+        comboText1.value = getldap!!.get("comboText1")!!
+        comboText2.value = getldap!!.get("comboText2")!!
     }
 }
