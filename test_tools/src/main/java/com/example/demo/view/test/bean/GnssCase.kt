@@ -81,7 +81,7 @@ open class GnssCase(centerController: CenterController) {
                 .catch {
                     controller.putLogInfo("捕获到异常${this.toString()}")
                 }
-                .onCompletion {cause ->
+                .onCompletion { cause ->
                     RunTest.value = false
                     if (cause != null) {
                         controller.putLogInfo("flow异常终止")
@@ -132,7 +132,12 @@ open class GnssCase(centerController: CenterController) {
 
             GnssType.SER.id -> {//测试串口
                 case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!)
-
+                if (!case.result) {//测试不通过再来一次
+                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!)
+                }
+                if (!case.result) {
+                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!)
+                }
             }
             GnssType.SIM1.id -> {//4G1（SIM）
                 case.result = GnssTestData.sim1ping.value > 0

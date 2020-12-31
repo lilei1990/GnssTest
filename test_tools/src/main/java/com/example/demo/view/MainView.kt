@@ -2,11 +2,15 @@ package com.example.demo.view
 
 import com.example.demo.model.TestStatus
 import com.example.demo.utils.openNewStage
+import com.example.demo.utils.showSnackbar
 import com.example.demo.utils.shwoInternalWindow
+import com.example.demo.utils.view.DialogBuilder
 import com.example.demo.view.mavlink.MavLinkView
 import com.example.demo.view.test.gnss.GnssConfigView
 import com.example.demo.view.test.gnss.GnssTestData
 import com.example.demo.view.test.gnss.JobNumView
+import com.jfoenix.controls.JFXButton
+import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Control
@@ -21,14 +25,16 @@ class MainView : View() {
 
     val gnssConfigView: GnssConfigView by inject()
     val input = SimpleStringProperty()
+    lateinit var btn: JFXButton
 
     //根节点
     override val root = vbox {
+
         menubar {
             menu("设置") {
                 item("设置") {
                     action {
-                        shwoInternalWindow(gnssConfigView,escapeClosesWindow = true,closeButton = true)
+                        shwoInternalWindow(gnssConfigView, escapeClosesWindow = true, closeButton = true)
                     }
                 }
             }
@@ -41,7 +47,7 @@ class MainView : View() {
                 style = "-fx-font-size: 50;-fx-font-weight: BOLD;"
                 alignment = Pos.CENTER
             }
-            jfxbutton("GNSS参考站 单板测试") {
+            btn = jfxbutton("GNSS参考站 单板测试") {
                 defaultConfig()
                 action {
                     GnssTestData.testStatus = TestStatus.TEST_STATUS_PRO
@@ -72,6 +78,7 @@ class MainView : View() {
 //                    close()
 //                }
 //            }
+
         }
     }
 

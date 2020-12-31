@@ -233,9 +233,12 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.KEY.id, GnssType.KEY.testName))
         caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
         caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
-        caselist.add(Case(GnssType.POWR.id, GnssType.POWR.testName))
-        caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
-        caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
+//        caselist.add(Case(GnssType.POWR.id, GnssType.POWR.testName))
+        if (GnssTestData.testStatus == TestStatus.TEST_STATUS_TOTAL) {//整机增加sim卡的检测
+            caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
+            caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
+        }
+
         val asflow = caselist.asFlow()
         GnssCase(this).run(asflow)
         udpStaus.value = GREEN

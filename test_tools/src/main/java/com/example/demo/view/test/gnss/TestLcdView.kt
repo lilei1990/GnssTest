@@ -4,6 +4,8 @@ import com.example.demo.utils.showSnackbar
 import com.example.demo.utils.view.DialogBuilder
 import com.example.demo.view.test.UdpUtlis
 import com.example.demo.view.test.bean.Case
+import com.jfoenix.controls.JFXButton
+import javafx.application.Platform
 import javafx.geometry.Pos
 import kfoenix.jfxbutton
 import tornadofx.*
@@ -19,7 +21,9 @@ class TestLcdView(case: Case, call: () -> Unit) : View("屏幕测试") {
     var open4G2: Boolean = false
     var resultBlack = ""
     var resultWhite = ""
-    val callback=call
+    val callback = call
+    lateinit var btn1: JFXButton
+    lateinit var btn2: JFXButton
     override fun onDock() {
         super.onDock()
         callback()
@@ -29,7 +33,7 @@ class TestLcdView(case: Case, call: () -> Unit) : View("屏幕测试") {
         alignment = Pos.CENTER
         prefWidth = 500.0
         prefHeight = 500.0
-        jfxbutton {
+        btn1 = jfxbutton {
 
             text = "LCD黑"
             action {
@@ -37,28 +41,28 @@ class TestLcdView(case: Case, call: () -> Unit) : View("屏幕测试") {
                     UdpUtlis.showLcd(1)
                 }
                 DialogBuilder(this)
-                    .setTitle("提示")
-                    .setMessage("是否测试成功")
-                    .setPositiveBtn("确定", {
-                        isDisable = true
-                        resultBlack = "通过"
-                        case.putTestInfo("LCD黑=通过")
-                        showSnackbar("通过")
-                        checkResult(case)
-                    }, "#00ff00")
-                    .setNegativeBtn("不通过") {
-                        resultBlack = "不通过"
-                        case.putTestInfo("LCD黑=不通过")
-                        showSnackbar("不通过")
-                        checkResult(case)
-                    }
-                    .create();
+                        .setTitle("提示")
+                        .setMessage("LCD是否变黑")
+                        .setPositiveBtn("确定", {
+                            isDisable = true
+                            resultBlack = "通过"
+                            case.putTestInfo("LCD黑=通过")
+                            showSnackbar("通过")
+                            checkResult(case)
+                        }, "#00ff00")
+                        .setNegativeBtn("不通过") {
+                            resultBlack = "不通过"
+                            case.putTestInfo("LCD黑=不通过")
+                            showSnackbar("不通过")
+                            checkResult(case)
+                        }
+                        .create();
             }
         }
         text() {
             text = "逐\n个\n测\n试\n⬇\n⬇"
         }
-        jfxbutton {
+        btn2 = jfxbutton {
             text = "LCD白"
             action {
                 runAsync {
@@ -66,26 +70,28 @@ class TestLcdView(case: Case, call: () -> Unit) : View("屏幕测试") {
                 }
                 //tfOutPath是一个控件（controller）
                 DialogBuilder(this)
-                    .setTitle("提示")
-                    .setMessage("是否测试成功")
-                    .setPositiveBtn("确定", {
-                        isDisable = true
-                        resultWhite = "通过"
-                        case.putTestInfo("LCD白=通过")
-                        showSnackbar("通过")
-                        checkResult(case)
-                    }, "#00ff00")
-                    .setNegativeBtn("不通过") {
-                        resultWhite = "不通过"
-                        case.putTestInfo("LCD白=不通过")
-                        showSnackbar("不通过")
-                        checkResult(case)
-                    }
-                    .create();
+                        .setTitle("提示")
+                        .setMessage("LCD是否变白")
+                        .setPositiveBtn("确定", {
+                            isDisable = true
+                            resultWhite = "通过"
+                            case.putTestInfo("LCD白=通过")
+                            showSnackbar("通过")
+                            checkResult(case)
+                        }, "#00ff00")
+                        .setNegativeBtn("不通过") {
+                            resultWhite = "不通过"
+                            case.putTestInfo("LCD白=不通过")
+                            showSnackbar("不通过")
+                            checkResult(case)
+                        }
+                        .create();
             }
         }
 
-
+        Platform.runLater {
+            btn1.fire()
+        }
 //        jfxbutton {
 //            text = "4G1关"
 //            action {
@@ -113,13 +119,14 @@ class TestLcdView(case: Case, call: () -> Unit) : View("屏幕测试") {
 //            }
 //        }
     }
+
     fun checkResult(case: Case) {
         if (resultBlack == "通过" && resultWhite == "通过") {
             case.result = true
             close()
             callback()
         } else {//有一个不通过就直接关闭不通过
-            if (resultBlack == "不通过"|| resultWhite == "不通过") {
+            if (resultBlack == "不通过" || resultWhite == "不通过") {
                 case.result = false
                 close()
                 callback()
