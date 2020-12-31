@@ -224,10 +224,11 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
         if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PRO) {//单板测试
             caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
+            caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
         } else {//整机
             caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
         }
-        caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
+
         caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
         caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
         caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))

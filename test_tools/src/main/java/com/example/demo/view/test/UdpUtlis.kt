@@ -5,6 +5,7 @@ import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.test.bean.Case
+import com.example.demo.view.test.gnss.CenterController
 import com.example.demo.view.test.gnss.GnssConfig
 import com.example.demo.view.test.gnss.GnssTestData
 import gnu.io.SerialPort
@@ -170,6 +171,7 @@ object UdpUtlis {
                         try {
                             var bytes = SerialPortUtil.readData(serialPort)
                             val string = String(bytes)
+//                            controller.putLogInfo(string)
                             var recv = ByteUtils.bytesToHexString(bytes)
                             //超过30秒任务失败
                             if (System.currentTimeMillis() - currentTimeMillis > 30000) {
@@ -219,11 +221,12 @@ object UdpUtlis {
                     }
                 }
             }
+//            controller.putLogInfo("发个换行符激活设备")
             //发个换行符激活设备,防止有时候休眠,
             SerialPortUtil.sendData(serialPort, "\n".toByteArray())
 //            fire(PortWorkEvent(false, serialPortIndex))
             // sleep 一段时间保证线程可以执行完
-           sleep(GnssConfig.defaut_timeOut.value.toLong())
+            sleep(GnssConfig.defaut_timeOut.value.toLong())
 
             return retureFlag
         } catch (e: Exception) {
@@ -248,8 +251,8 @@ object UdpUtlis {
 
                         try {
                             var bytes = SerialPortUtil.readData(serialPort)
-                            val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
-                            println("信号强度:$rssi")
+//                            val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
+//                            println("信号强度:$rssi")
                             bytes[bytes.size - 1]
                             count += bytes.size
 
@@ -266,11 +269,11 @@ object UdpUtlis {
                 }
             }
             //防止上报数据慢,这个时间和上面配置发送数据的间隔和次数有关
-            sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L + 3000)
+            sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L + 10000)
+            case.putTestInfo("发:${GnssTestData.udp_msg0101!!.loraCounter_send}-收:$count")
             if (GnssTestData.udp_msg0101 == null) {
                 return false
             }
-            case.putTestInfo("发:${GnssTestData.udp_msg0101!!.loraCounter_send}-收:$count")
             if (count == GnssTestData.udp_msg0101!!.loraCounter_send) {
                 return true
             }
@@ -303,12 +306,12 @@ object UdpUtlis {
         }
         //防止上报数据慢
 
-        sleep(3000)
+        sleep(10000)
+        val count = GnssConfig.lora_test_count.value * 256
+        case.putTestInfo("发:$count-收:${GnssTestData.udp_msg0101!!.loraCounter_rec}")
         if (GnssTestData.udp_msg0101 == null) {
             return false
         }
-        val count = GnssConfig.lora_test_count.value * 256
-        case.putTestInfo("发:$count-收:${GnssTestData.udp_msg0101!!.loraCounter_rec}")
         if (count == GnssTestData.udp_msg0101!!.loraCounter_rec) {
             return true
         }

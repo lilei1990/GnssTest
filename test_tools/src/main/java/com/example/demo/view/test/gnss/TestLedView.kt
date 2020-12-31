@@ -31,7 +31,7 @@ class TestLedView(case: Case, call: () -> Unit) : View("Led测试") {
                     call()
                 }
             }
-            text("电源灯红色常亮、网口灯绿色常亮、电台灯绿色闪烁")
+            text("电源灯红色常亮\n网口灯绿色常亮\n电台灯绿色闪烁\n屏幕亮白\n")
             jfxbutton {
                 text = "不通过"
                 action {

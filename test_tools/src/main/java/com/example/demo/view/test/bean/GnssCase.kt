@@ -74,7 +74,7 @@ open class GnssCase(centerController: CenterController) {
             it.apply {
                 if (!StopTest.value) {//任务没有手动终止才继续执行
                     controller.putLogInfo("测试:${it.typeName}....")
-                    whenID(it)
+                    whenID(it,controller)
                 }
             }
         }.flowOn(Dispatchers.IO)
@@ -100,7 +100,7 @@ open class GnssCase(centerController: CenterController) {
 
     }
 
-    private suspend fun whenID(case: Case) {
+    private suspend fun whenID(case: Case, controller: CenterController) {
 
         when (case.id) {
             GnssType.VHW.id -> {
@@ -180,6 +180,7 @@ open class GnssCase(centerController: CenterController) {
                 delay(1000)
                 case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
                 if (!case.result) {//测试不通过再来一次
+                    UdpUtlis.clearLoar()
                     case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
                 }
 //                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
@@ -193,6 +194,7 @@ open class GnssCase(centerController: CenterController) {
 //                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
                 case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
                 if (!case.result) {//测试不通过再来一次
+                    UdpUtlis.clearLoar()
                     case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
                 }
             }

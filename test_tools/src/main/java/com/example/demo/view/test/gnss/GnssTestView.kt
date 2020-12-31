@@ -297,7 +297,7 @@ class GnssTestView : View() {
             return
         }
         //查询到数据如果上次测试结果为通过就提示,否则不通过
-        if (checkBidlist.size >= 1 && !checkBidlist[0].result) {//最近测试的三次都是不通过.让后台删除数据
+        if (checkBidlist.size >= 1 && !checkBidlist[0].result) {
             fire(ToastEvent("最近一次单板测试不通过,拒绝测试!"))
             return
         }
@@ -308,11 +308,11 @@ class GnssTestView : View() {
                 fire(ToastEvent("设备id查询错误"))
                 return@runAsync
             }
-            //查询到数据如果上次测试结果为通过就提示,否则不通过
-            if (queryHistoryLast.size >= 3 && !queryHistoryLast[0].result && !queryHistoryLast[1].result && !queryHistoryLast[2].result) {//最近测试的三次都是不通过.让后台删除数据
-                fire(ToastEvent("最近测试的三次都是不通过,拒绝测试!"))
-                return@runAsync
-            }
+//            //查询到数据如果上次测试结果为通过就提示,否则不通过
+//            if (queryHistoryLast.size >= 3 && !queryHistoryLast[0].result && !queryHistoryLast[1].result && !queryHistoryLast[2].result) {//最近测试的三次都是不通过.让后台删除数据
+//                fire(ToastEvent("最近测试的三次都是不通过,拒绝测试!"))
+//                return@runAsync
+//            }
             //数据查询为0就一次都没有测试过,直接进行下一步
             if (queryHistoryLast.size == 0) {
                 Platform.runLater {
@@ -358,11 +358,11 @@ class GnssTestView : View() {
                 fire(ToastEvent("设备id查询错误"))
                 return@runAsync
             }
-            //查询到数据如果上次测试结果为通过就提示,否则不通过
-            if (queryHistoryLast.size >= 3 && !queryHistoryLast[0].result && !queryHistoryLast[1].result && !queryHistoryLast[2].result) {//最近测试的三次都是不通过.让后台删除数据
-                fire(ToastEvent("最近测试的三次都是不通过,拒绝测试!"))
-                return@runAsync
-            }
+//            //查询到数据如果上次测试结果为通过就提示,否则不通过
+//            if (queryHistoryLast.size >= 3 && !queryHistoryLast[0].result && !queryHistoryLast[1].result && !queryHistoryLast[2].result) {//最近测试的三次都是不通过.让后台删除数据
+//                fire(ToastEvent("最近测试的三次都是不通过,拒绝测试!"))
+//                return@runAsync
+//            }
             //数据查询为0就一次都没有测试过,直接进行下一步
             if (queryHistoryLast.size == 0) {
                 Platform.runLater {
