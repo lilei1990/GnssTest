@@ -156,9 +156,10 @@ class GnssTestView : View() {
                     job!!.cancelAndJoin()
                 }
             }
+            StopTest.value = true
             sleep(10000)
         } ui {
-            StopTest.value = true
+
             GnssTestData.hd100Case.clear()
             showProgressStage.close()
         }

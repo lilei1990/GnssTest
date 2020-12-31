@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
-    <name>30000002</name>
+    <name>30100009</name>
     <SSIDConfig>
         <SSID>
-            <name>30000002</name>
+            <name>30100009</name>
         </SSID>
     </SSIDConfig>
     <connectionType>ESS</connectionType>

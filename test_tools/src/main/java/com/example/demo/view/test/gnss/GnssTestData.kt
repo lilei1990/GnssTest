@@ -93,7 +93,7 @@ object GnssTestData {
                     when (it.id.toInt()) {
                         0x0101 -> {
                             udpUpdataTime = System.currentTimeMillis()
-//                            println(it.str)
+                            println(it.str)
                             val msg0101 = JSON.parseObject<UDP_Msg0101>(it.str, UDP_Msg0101::class.java)
                             Platform.runLater {
                                 udp_msg0101 = msg0101

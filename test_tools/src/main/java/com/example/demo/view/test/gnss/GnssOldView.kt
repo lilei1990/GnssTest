@@ -1,8 +1,6 @@
 package com.example.demo.view.test.gnss
 
 import com.example.demo.ToastEvent
-import com.example.demo.net.Api
-import com.example.demo.utils.PingUtils
 import com.example.demo.utils.showProgressStage
 import com.example.demo.utils.showSnackbar
 import com.example.demo.utils.sqlite.SqliteHelper
@@ -68,17 +66,21 @@ class GnssOldView : View("老化测试") {
 
             vbox {
                 alignment = Pos.CENTER
-                label("测试正常的数据")
+                label(controller.tabTitleBuff)
                 tableview(controller.datalist) {
                     prefWidth = 400.0
-                    readonlyColumn("ip", OldCase::ip)
-                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
-                    readonlyColumn("id", OldCase::id)
-                    readonlyColumn("波动时间", OldCase::time)
+                    readonlyColumn("整机id", OldCase::equipmentId)
+                    readonlyColumn("查询", OldCase::checkId).cellFormat {
+                        text = "$it"
+                        itemStyleCheckId(it)
+                    }
                     readonlyColumn("结果", OldCase::testResult).cellFormat {
                         text = it
-                        itemStyle(it)
+                        itemStyleResult(it)
                     }
+                    readonlyColumn("ip", OldCase::ip)
+                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
+                    readonlyColumn("波动时间", OldCase::time)
                 }
             }
             vbox {
@@ -86,14 +88,15 @@ class GnssOldView : View("老化测试") {
                 label("上传失败的数据")
                 tableview(controller.uploaderr) {
                     prefWidth = 400.0
-                    readonlyColumn("ip", OldCase::ip)
-                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
-                    readonlyColumn("id", OldCase::id)
-                    readonlyColumn("波动时间", OldCase::time)
+                    readonlyColumn("整机id", OldCase::equipmentId)
                     readonlyColumn("结果", OldCase::testResult).cellFormat {
                         text = it
-                        itemStyle(it)
+                        itemStyleResult(it)
                     }
+                    readonlyColumn("ip", OldCase::ip)
+                    readonlyColumn("卫星颗数", OldCase::satelliteCount)
+                    readonlyColumn("波动时间", OldCase::time)
+
                 }
             }
             vbox {
@@ -101,7 +104,7 @@ class GnssOldView : View("老化测试") {
                 label("日志")
                 textarea(controller.taLog) {
                     prefWidth = 150.0
-                    prefHeight=300.0
+                    prefHeight = 300.0
                 }
             }
         }
@@ -198,13 +201,25 @@ class GnssOldView : View("老化测试") {
         }
     }
 
-    private fun TableCell<OldCase, String>.itemStyle(it: String) {
+    private fun TableCell<OldCase, String>.itemStyleResult(it: String) {
         style {
             if (it.equals("通过")) {
                 backgroundColor += Color.GREEN
                 textFill = Color.WHITE
             } else if (it.equals("不通过")) {
                 backgroundColor += Color.RED
+                textFill = Color.BLACK
+            }
+        }
+    }
+
+    private fun TableCell<OldCase, Boolean>.itemStyleCheckId(it: Boolean) {
+        style {
+            if (it) {
+                backgroundColor += Color.WHITE
+                textFill = Color.BLACK
+            } else {
+                backgroundColor += Color.YELLOW
                 textFill = Color.BLACK
             }
         }

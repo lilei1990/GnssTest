@@ -32,14 +32,14 @@ class GnssOldController : Controller() {
     val texasCities = FXCollections.observableArrayList<String>()
     val isStart = booleanProperty(false)
     var isStop = false
-    val taLog = stringProperty("123232")
+    val taLog = stringProperty("")
+    val tabTitleBuff = stringProperty("测试正常的数据")
+    val tabTitleFail = stringProperty("")
     fun startTest(test_timeOut: Int) {
 
         //超时毫秒数
         val timeOut = test_timeOut * 60 * 60 * 1000
         isStop = false
-//        val timeOut = 10000
-        val f1 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
         val startTime = System.currentTimeMillis()
         var endTime = System.currentTimeMillis()
         runAsync {
@@ -65,7 +65,9 @@ class GnssOldController : Controller() {
                     }
                     datalist.add(vlue)
                 }
-
+                Platform.runLater {
+                tabTitleBuff.value="通过(${ggamap_buff.size})不通过(${ggamap_fail.size})"
+                }
                 //接收到的udp数
                 udpnum.value = "已经接受的数据包:${UDPBroadcast.num}"
                 sleep(1000)
@@ -167,7 +169,7 @@ class GnssOldController : Controller() {
 
         var jsr = JsonArray()
 
-        jsr.add("${oldCase.id},${oldCase.satelliteCount},${oldCase.testResult}")
+        jsr.add("${oldCase.id},${oldCase.satelliteCount}  ,${oldCase.testResult}")
 
         deviceTestModel.remark = jsr.toString()
         deviceTestModel.userId = GnssConfig.userId.value

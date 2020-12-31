@@ -19727,3 +19727,45 @@ Caused by: java.net.ConnectException: Connection timed out: connect
 2020-12-30 at 18:04:12 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
 2020-12-30 at 18:06:18 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
 2020-12-30 at 18:12:53 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 18:16:26 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-30 at 18:21:22 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 09:54:22 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:02:24 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:12:33 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:12:41 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:33:27 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:34:26 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:43:21 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:50:34 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:52:58 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:55:44 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:57:42 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:58:06 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 10:58:32 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100009","status":"1","result":true,"user_id":"00001","testTime":"2020-12-31 10:58:32","remark":"[\"1,0,\",\"2,gnss-imx6ull-v1.5.1,\",\"3,1.0.1.fty11,\"]"}
+2020-12-31 at 10:58:32 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100009, status=1, result=true, userId=00001, testTime=2020-12-31 10:58:32, remark=["1,0,","2,gnss-imx6ull-v1.5.1,","3,1.0.1.fty11,"], description=null, id=null}
+2020-12-31 at 10:58:53 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-31 at 10:59:03 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100009","status":"1","result":false,"user_id":"00001","testTime":"2020-12-31 10:59:03","remark":"[\"7,\",\"8,\",\"9,\",\"10,\",\"11,\",\"12,\",\"13,\",\"14,\",\"15,\",\"16,\",\"17,\",\"18,\",\"19,\",\"20,\"]"}
+2020-12-31 at 10:59:03 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100009, status=1, result=false, userId=00001, testTime=2020-12-31 10:59:03, remark=["7,","8,","9,","10,","11,","12,","13,","14,","15,","16,","17,","18,","19,","20,"], description=null, id=null}
+2020-12-31 at 11:02:30 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 11:02:42 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 11:03:03 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-31 at 11:03:13 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100008","status":"1","result":false,"user_id":"00001","testTime":"2020-12-31 11:03:13","remark":"[\"7,\",\"8,\",\"9,\",\"10,\",\"11,\",\"12,\",\"13,\",\"14,\",\"15,\",\"16,\",\"17,\",\"18,\",\"19,\",\"20,\"]"}
+2020-12-31 at 11:03:13 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100008, status=1, result=false, userId=00001, testTime=2020-12-31 11:03:13, remark=["7,","8,","9,","10,","11,","12,","13,","14,","15,","16,","17,","18,","19,","20,"], description=null, id=null}
+2020-12-31 at 11:03:32 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 11:03:47 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-31 at 11:03:57 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100008","status":"1","result":false,"user_id":"00001","testTime":"2020-12-31 11:03:57","remark":"[\"7,\",\"8,\",\"9,\",\"10,\",\"11,\",\"12,\",\"13,\",\"14,\",\"15,\",\"16,\",\"17,\",\"18,\",\"19,\",\"20,\"]"}
+2020-12-31 at 11:03:57 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100008, status=1, result=false, userId=00001, testTime=2020-12-31 11:03:57, remark=["7,","8,","9,","10,","11,","12,","13,","14,","15,","16,","17,","18,","19,","20,"], description=null, id=null}
+2020-12-31 at 11:06:35 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 11:06:53 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-31 at 11:07:20 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-31 at 11:07:44 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-31 at 11:08:31 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-31 at 11:09:09 GMT+08:00 DEBUG com.example.demo.net.Api 106 uploadTestRest - {"equipmentId":"30100008","status":"1","result":false,"user_id":"00001","testTime":"2020-12-31 11:09:09","remark":"[\"1,0,\",\"2,gnss-imx6ull-v1.5.1,\",\"3,1.0.1.fty11,\",\"4,\",\"7,\",\"8,0,\",\"9,0,\",\"10,\",\"11,发:2560-收:0,\",\"12,发:3000-收:4402,\",\"13,合格卫星数量:0,\",\"14,\",\"15,\",\"16,LCD黑=通过,LCD白=通过,\",\"17,\",\"18,\",\"19,imsi为null:,\",\"20,请录入正确的SIM卡编号(13位),\"]"}
+2020-12-31 at 11:09:09 GMT+08:00 DEBUG com.example.demo.net.Api 107 uploadTestRest - {equipmentId=30100008, status=1, result=false, userId=00001, testTime=2020-12-31 11:09:09, remark=["1,0,","2,gnss-imx6ull-v1.5.1,","3,1.0.1.fty11,","4,","7,","8,0,","9,0,","10,","11,发:2560-收:0,","12,发:3000-收:4402,","13,合格卫星数量:0,","14,","15,","16,LCD黑=通过,LCD白=通过,","17,","18,","19,imsi为null:,","20,请录入正确的SIM卡编号(13位),"], description=null, id=null}
+2020-12-31 at 11:09:30 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 161 testSerialPort - [bhz] 打开端口
+2020-12-31 at 11:10:17 GMT+08:00 DEBUG com.example.demo.view.test.UdpUtlis 243 testLoraRec - [bhz] 打开端口
+2020-12-31 at 11:20:45 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 11:21:03 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 13:10:23 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 13:12:37 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误
+2020-12-31 at 13:15:06 GMT+08:00 DEBUG com.example.demo.view.test.gnss.GnssConfig 90 <clinit> - 读取配置错误

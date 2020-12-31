@@ -86,8 +86,10 @@ open class GnssCase(centerController: CenterController) {
                     if (cause != null) {
                         controller.putLogInfo("flow异常终止")
                     } else {
-                        controller.putLogInfo("提交数据")
-                        testUpload()
+                        if (!StopTest.value) {
+                            controller.putLogInfo("提交数据")
+                            testUpload()
+                        }
                     }
 
                 }.collect {

@@ -1,16 +1,9 @@
 package com.example.demo
 
-import com.example.demo.model.DeviceTestModel
-import com.example.demo.net.Api
-import com.example.demo.utils.HexUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
-import net.sf.marineapi.nmea.util.SatelliteInfo
-import tornadofx.runAsync
-import tornadofx.toModel
-import tornadofx.ui
 
 private val flow = flowOf(1, 2).map {
     it.apply {
