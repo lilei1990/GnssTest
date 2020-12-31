@@ -67,9 +67,10 @@ class GnssOldController : Controller() {
                 }
                 Platform.runLater {
                 tabTitleBuff.value="通过(${ggamap_buff.size})不通过(${ggamap_fail.size})"
+                    //接收到的udp数
+                    udpnum.value = "已经接受的数据包:${UDPBroadcast.num}"
                 }
-                //接收到的udp数
-                udpnum.value = "已经接受的数据包:${UDPBroadcast.num}"
+
                 sleep(1000)
                 endTime = System.currentTimeMillis()
             }
