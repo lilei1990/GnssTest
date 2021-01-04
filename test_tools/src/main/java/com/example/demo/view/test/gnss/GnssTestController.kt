@@ -218,17 +218,26 @@ class CenterController : Controller() {
      * 开始测试
      */
     suspend fun test() {
+        if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PRO) {//单板测试
+            ready_PRO()
+        } else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_TOTAL) {//整机
+            ready_TOTAL()
+        } else {
+           fire(ToastEvent("没有检测到测试类型!终止测试!"))
+        }
+
+    }
+
+    /**
+     * 单板测试
+     */
+    suspend fun ready_PRO() {
         val caselist = arrayListOf<Case>()
         caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
         caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
         caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
-        if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PRO) {//单板测试
-            caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
-            caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
-        } else {//整机
-            caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
-        }
-
+        caselist.add(Case(GnssType.BID.id, GnssType.BID.testName))
+        caselist.add(Case(GnssType.SER.id, GnssType.SER.testName))
         caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
         caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
         caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))
@@ -239,12 +248,60 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.KEY.id, GnssType.KEY.testName))
         caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
         caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
-//        caselist.add(Case(GnssType.POWR.id, GnssType.POWR.testName))
-        if (GnssTestData.testStatus == TestStatus.TEST_STATUS_TOTAL) {//整机增加sim卡的检测
-            caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
-            caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
-        }
+        val asflow = caselist.asFlow()
+        GnssCase(this).run(asflow)
+        udpStaus.value = GREEN
+    }
 
+    /**
+     * 整机测试
+     */
+    suspend fun ready_TOTAL() {
+        val caselist = arrayListOf<Case>()
+        caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
+        caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
+        caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
+        caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
+        caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
+        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
+        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))
+        caselist.add(Case(GnssType.LORAREC.id, GnssType.LORAREC.testName))
+        caselist.add(Case(GnssType.LORASEED.id, GnssType.LORASEED.testName))
+        caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
+        caselist.add(Case(GnssType.ETH.id, GnssType.ETH.testName))
+        caselist.add(Case(GnssType.KEY.id, GnssType.KEY.testName))
+        caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
+        caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
+        caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
+        caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
+        val asflow = caselist.asFlow()
+        GnssCase(this).run(asflow)
+        udpStaus.value = GREEN
+
+    }
+
+    /**
+     * 打包测试
+     */
+    suspend fun ready_PACKAGE() {
+        val caselist = arrayListOf<Case>()
+        caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
+        caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
+        caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
+        caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
+        caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
+        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
+        caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))
+        caselist.add(Case(GnssType.LORAREC.id, GnssType.LORAREC.testName))
+        caselist.add(Case(GnssType.LORASEED.id, GnssType.LORASEED.testName))
+        caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
+        caselist.add(Case(GnssType.ETH.id, GnssType.ETH.testName))
+        caselist.add(Case(GnssType.KEY.id, GnssType.KEY.testName))
+        caselist.add(Case(GnssType.LCD.id, GnssType.LCD.testName))
+        caselist.add(Case(GnssType.LED.id, GnssType.LED.testName))
+        caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
+        caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
+        caselist.add(Case(GnssType.UPDATA.id, GnssType.UPDATA.testName))
         val asflow = caselist.asFlow()
         GnssCase(this).run(asflow)
         udpStaus.value = GREEN

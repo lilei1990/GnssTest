@@ -39,6 +39,9 @@ class JobNumView : View() {
                         TestStatus.TEST_STATUS_OLD -> {//老化测试
                             openNewStage("参考站老化测试", GnssOldView())
                         }
+                        TestStatus.TEST_STATUS_PACKAGE -> {//打包测试
+                            openNewStage("参考站老化测试", GnssTestView())
+                        }
                     }
 
                     close()

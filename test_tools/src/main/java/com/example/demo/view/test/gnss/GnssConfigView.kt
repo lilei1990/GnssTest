@@ -73,7 +73,7 @@ class Config : Fragment("设置") {
         label("常规")
         hbox {
             alignment = Pos.CENTER_LEFT
-            label("配置文件路径:  ") {
+            label("是否debug模式:  ") {
                 pubPor()
             }
             debug_View = jfxcheckbox(GnssConfig.debug) {

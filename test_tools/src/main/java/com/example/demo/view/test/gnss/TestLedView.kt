@@ -22,6 +22,8 @@ class TestLedView(case: Case, call: () -> Unit) : View("Led测试") {
         }
         alignment = Pos.CENTER
         hbox {
+            alignment=Pos.CENTER
+            spacing=10.0
             jfxbutton {
                 text = "通过"
                 action {
@@ -31,7 +33,7 @@ class TestLedView(case: Case, call: () -> Unit) : View("Led测试") {
                     call()
                 }
             }
-            text("电源灯红色常亮\n网口灯绿色常亮\n电台灯绿色闪烁\n屏幕亮白\n")
+            text("1.电源灯红色常亮\n2.网口灯绿色常亮\n3.电台灯绿色闪烁\n4.屏幕亮白\n")
             jfxbutton {
                 text = "不通过"
                 action {

@@ -19,6 +19,10 @@ class TestStatus {
          * 3为老化测试
          */
         val TEST_STATUS_OLD = "3"
+        /**
+         * 4为打包测试
+         */
+        val TEST_STATUS_PACKAGE = "4"
         val TEST_BEGIN = "开始测试"
         val TEST_STOP = "停止测试"
     }

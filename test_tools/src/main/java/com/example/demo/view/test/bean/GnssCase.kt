@@ -50,7 +50,8 @@ enum class GnssType(val id: Int, val testName: String) {
     LED(17, "LED检测"),
     POWR(18, "掉电保护"),
     IMSI1(19, "4G1（IMSI）"),
-    IMSI2(20, "4G2（IMSI）")
+    IMSI2(20, "4G2（IMSI）"),
+    UPDATA(21, "升级正式版本")
 }
 
 //手动终止任务
@@ -74,7 +75,7 @@ open class GnssCase(centerController: CenterController) {
             it.apply {
                 if (!StopTest.value) {//任务没有手动终止才继续执行
                     controller.putLogInfo("测试:${it.typeName}....")
-                    whenID(it,controller)
+                    whenID(it, controller)
                 }
             }
         }.flowOn(Dispatchers.IO)
@@ -413,6 +414,9 @@ open class GnssCase(centerController: CenterController) {
                 }
 
             }
+            GnssType.UPDATA.id -> {//升级正式版本
+
+            }
         }
     }
 
@@ -432,9 +436,16 @@ open class GnssCase(centerController: CenterController) {
                 return
             }
             deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.getBidHex()
-        } else {
+        } else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_TOTAL){
             if (GnssTestData.udp_msg0101!!.id == 0) {
                 controller.putLogInfo("整机id为空无法上传测试结果")
+                GnssTestView.gnssTestView.fire(ToastEvent("整机id为空无法上传测试结果"))
+                return
+            }
+            deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.getIdHex()
+        }else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PACKAGE){
+            if (GnssTestData.udp_msg0101!!.id == 0) {
+                controller.putLogInfo("打包整机id为空无法上传测试结果")
                 GnssTestView.gnssTestView.fire(ToastEvent("整机id为空无法上传测试结果"))
                 return
             }
