@@ -36,11 +36,7 @@ class GnssOldView : View("老化测试") {
 
 
     init {
-        runAsync {
-            while (true) {
-                sleep(1000)
-            }
-        }
+
         for (i in 1..24) {
             controller.texasCities.add("${i}小时")
         }
@@ -141,7 +137,13 @@ class GnssOldView : View("老化测试") {
             jfxbutton {
                 text = "停止测试"
                 action {
-                    controller.stop()
+                    val showProgressStage = showProgressStage("停止中...")
+                    showProgressStage.show()
+                    runAsync {
+                        controller.stop()
+                    } ui{
+                        showProgressStage.close()
+                    }
                 }
             }
             jfxbutton {

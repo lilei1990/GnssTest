@@ -19,19 +19,15 @@ object Api {
     const val url = "http://120.132.12.76:8090/hd_product"
     val api = Rest()
     fun getConfig1(fun1: (statistic: Config1For601) -> Unit = {}) {
-        runAsync {
+        try {
+            var rsp = api.get("${DevicesHost}cgi-bin/rpc_client?getconfig&1").text()
+            val toJson = Gson().fromJson(rsp, Config1For601::class.java)
 
-            try {
-                var rsp = api.get("${DevicesHost}cgi-bin/rpc_client?getconfig&1").text()
-                val toJson = Gson().fromJson(rsp, Config1For601::class.java)
-
-                println(toJson)
-                fun1(toJson)
-            } catch (e: Exception) {
-                FX.eventbus.fire(DialogCenterMsgWarn(e.message!!))
-            }
+            println(toJson)
+            fun1(toJson)
+        } catch (e: Exception) {
+            FX.eventbus.fire(DialogCenterMsgWarn(e.message!!))
         }
-
 
     }
 

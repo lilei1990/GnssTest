@@ -181,91 +181,99 @@ class GnssTestView : View() {
                 "校验数据中..."
         )
         checkprogress.show()
-        //检查网络
-        if (GnssTestData.udp_msg0101 == null) {
-            fire(ToastEvent("未获得上报数据udp_msg0101,请检查网线连接"))
-            checkprogress.close()
-            return
-        }
-        //检查升级
-        if (!controller.checkUpdate()) {
-            checkprogress.close()
-            return
-        }
-        //检查串口1
-        if (GnssTestData.serialPort1 == null) {
-            fire(ToastEvent("检查串口1是否打开"))
-            checkprogress.close()
-            return
-        }
-        //检查串口2
-        if (GnssTestData.serialPort2 == null) {
-            fire(ToastEvent("检查串口2是否打开"))
-            checkprogress.close()
-            return
-        }
-        //检信道是否匹配
-        if (GnssConfig.lora_test_chen.value != GnssTestData.chan.value) {
-            fire(ToastEvent("信道不匹配,已经重新配置,稍后重试"))
-            //配置信道
-            UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
-            checkprogress.close()
-            return
-        }
-       Platform.runLater {
-           checkprogress.close()
-           //检查通过输入设备id
-           val dialog = TextInputDialog()
-           dialog.title = "开始测试";
-           dialog.headerText = "请输入测试id";
-           dialog.editor.text = GnssTestData.bid.value
+        //是否继续
+        var isNext = false
+        runAsync {
+            //检查升级
+            if (!controller.checkUpdate()) {
+                return@runAsync
+            }
+            //检查网络
+            if (GnssTestData.udp_msg0101 == null) {
+                fire(ToastEvent("未获得上报数据udp_msg0101,请检查网线连接"))
+                return@runAsync
+            }
 
-           //所有检查项都通过就开始测试
-           when (GnssTestData.testStatus) {
-               TestStatus.TEST_STATUS_PRO -> {//单板测试
-                   val result = dialog.showAndWait()
-                   result.ifPresent { bid: String ->
-                       var regex = "301[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
-                       if (GnssConfig.debug.value) {//测试模式
-                           regex = "301[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
-                       } else {
-                           regex = "301[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
-                       }
-                       if (!bid.matches(Regex(regex))) {
-                           showSnackbar("请录入正确的ID(8位)")
-                           return@ifPresent
-                       }
-                       checkBid(bid)
-                   }
+            //检查串口1
+            if (GnssTestData.serialPort1 == null) {
+                fire(ToastEvent("检查串口1是否打开"))
+                return@runAsync
+            }
+            //检查串口2
+            if (GnssTestData.serialPort2 == null) {
+                fire(ToastEvent("检查串口2是否打开"))
+                return@runAsync
+            }
+            //检信道是否匹配
+            if (GnssConfig.lora_test_chen.value != GnssTestData.chan.value) {
+                fire(ToastEvent("信道不匹配,已经重新配置,稍后重试"))
+                //配置信道
+                UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
 
-               }
-               TestStatus.TEST_STATUS_TOTAL -> {//整机测试
-                   val result = dialog.showAndWait()
-                   //检查上报的单板id
-                   if (GnssTestData.udp_msg0101!!.bid == 0) {
-                       fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.getBidHex()}"))
-                       return@runLater
-                   }
-                   result.ifPresent { bid: String ->
-                       var regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
-                       if (GnssConfig.debug.value) {//测试模式
-                           regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
-                       } else {
-                           regex = "300[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
-                       }
+                return@runAsync
+            }
+            isNext = true
+        } ui {
+            checkprogress.close()
+            if (!isNext) {
+                //检测不通过,不进行下一步
+                return@ui
+            }
+            //检查通过输入设备id
+            val dialog = TextInputDialog()
+            dialog.title = "开始测试";
+            dialog.headerText = "请输入测试id";
+            dialog.editor.text = GnssTestData.bid.value
 
-                       if (!bid.matches(Regex(regex))) {
-                           showSnackbar("请录入正确的ID(8位)")
-                           return@ifPresent
-                       }
-                       checkid(bid)
-                   }
+            //所有检查项都通过就开始测试
+            when (GnssTestData.testStatus) {
+                TestStatus.TEST_STATUS_PRO -> {//单板测试
+                    val result = dialog.showAndWait()
+                    result.ifPresent { bid: String ->
+                        var regex = "301[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
+                        if (GnssConfig.debug.value) {//测试模式
+                            regex = "301[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
+                        } else {
+                            regex = "301[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
+                        }
+                        if (!bid.matches(Regex(regex))) {
+                            showSnackbar("请录入正确的ID(8位)")
+                            return@ifPresent
+                        }
+                        checkBid(bid)
+                    }
 
-               }
-               TestStatus.TEST_STATUS_PACKAGE -> {//打包测试
-                   checkPack()
-               }
-           } }
+                }
+                TestStatus.TEST_STATUS_TOTAL -> {//整机测试
+                    val result = dialog.showAndWait()
+                    //检查上报的单板id
+                    if (GnssTestData.udp_msg0101!!.bid == 0) {
+                        fire(ToastEvent("未获取上报的单板id-${GnssTestData.udp_msg0101!!.getBidHex()}"))
+                        return@ui
+                    }
+                    result.ifPresent { bid: String ->
+                        var regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
+                        if (GnssConfig.debug.value) {//测试模式
+                            regex = "300[0-9a-fA-F]{2}[0-3]{1}[0-9a-fA-F]{2}"
+                        } else {
+                            regex = "300[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
+                        }
+
+                        if (!bid.matches(Regex(regex))) {
+                            showSnackbar("请录入正确的ID(8位)")
+                            return@ifPresent
+                        }
+                        checkid(bid)
+                    }
+
+                }
+                TestStatus.TEST_STATUS_PACKAGE -> {//打包测试
+                    checkPack()
+                }
+            }
+        }
+
+
     }
 
     /**

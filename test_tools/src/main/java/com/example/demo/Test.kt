@@ -1,9 +1,7 @@
 package com.example.demo
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
 
 private val flow = flowOf(1, 2).map {
     it.apply {
@@ -14,22 +12,46 @@ private val flow = flowOf(1, 2).map {
     }
 }
 
-suspend fun main(args: Array<String>) {
-    runBlocking {
-        flow {
-            emit(1)
-//            throw RuntimeException()
-        }.flowOn(Dispatchers.IO)
-                .catch{
-                    println("catch exception") }
-                .onCompletion { cause ->
-                    if (cause != null)
-                        println("Flow completed exceptionally")
-                    else
-                        println("Done")
-                }
-                .collect { println(it) }
+fun main(args: Array<String>) = runBlocking {
+    launch {
+        while (true) {
+            delay(1000)
+            println("jon")
+        }
     }
+    println("load")
+    coroutineScope {
+        while (true) {
+            delay(5000)
+            println("run")
+        }
+    }
+    runBlocking {
+        while (true) {
+            delay(5000)
+            println("run2")
+        }
+    }
+    println("over")
+}
+
+fun main1(args: Array<String>) {
+
+//    runBlocking {
+//        flow {
+//            emit(1)
+////            throw RuntimeException()
+//        }.flowOn(Dispatchers.IO)
+//                .catch{
+//                    println("catch exception") }
+//                .onCompletion { cause ->
+//                    if (cause != null)
+//                        println("Flow completed exceptionally")
+//                    else
+//                        println("Done")
+//                }
+//                .collect { println(it) }
+//    }
 //    val satelliteMap = mutableMapOf<Int, Int>()
 //    for (i in 1..10) {
 //        satelliteMap.put(i, i)

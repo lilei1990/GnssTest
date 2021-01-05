@@ -93,7 +93,7 @@ object GnssTestData {
                     when (it.id.toInt()) {
                         0x0101 -> {
                             udpUpdataTime = System.currentTimeMillis()
-                            println(it.str)
+//                            println(it.str)
                             val msg0101 = JSON.parseObject<UDP_Msg0101>(it.str, UDP_Msg0101::class.java)
                             Platform.runLater {
                                 udp_msg0101 = msg0101
@@ -118,7 +118,7 @@ object GnssTestData {
                                         "id:${msg0101.getIdHex()}\n" +
                                         "bid:${msg0101.getBidHex()}\n" +
                                         "信道:${msg0101.chan}\n" +
-                                        "卫星:${star}\n" +
+//                                        "卫星:${star}\n" +
                                         "lora收:${msg0101.loraCounter_rec}\n" +
                                         "lora发:${msg0101.loraCounter_send}\n" +
                                         "4g1:ping通${msg0101.net4g1_ping}次\n" +
@@ -138,71 +138,47 @@ object GnssTestData {
                             }
                         }
                         0x0102 -> {
-                            println(it.str)
                             val sf = SentenceFactory.getInstance()
                             for (line in it.str.lines()) {
-
                                 try {
                                     val createParser = sf.createParser(line)
-                                    if (createParser is GSVSentence) {
-                                        val gsvSentence = createParser as GSVSentence
-                                        val satelliteInfos = gsvSentence.satelliteInfo//卫星信息
-                                        gsvSentence.satelliteCount//卫星数量
-                                        for (satelliteInfo in satelliteInfos) {
-                                            var vlue = satelliteMap.get(satelliteInfo.id) ?: 0
-
-                                            if (satelliteInfo.noise > GnssConfig.gps_test_min_noise.value.toInt()) {
-                                                vlue++
-                                            }
-                                            satelliteMap.put(satelliteInfo.id, vlue)
-//                                    satelliteInfo.azimuth//方位角
-//                                    satelliteInfo.elevation//海拔
-//                                    satelliteInfo.noise//信噪比
-//                                    satelliteInfo.id//编号
-
+                                    if (createParser is GGASentence) {
+                                        println("${it.str}---")
+                                        val gsvSentence = createParser as GGASentence
+                                        val satelliteCount = gsvSentence.satelliteCount//卫星数量
+                                        val currentTimeMillis = System.currentTimeMillis()
+                                        if (ggamap_fail.contains(address)) {//这个设备一旦被打入冷宫就永远不处理
+                                            return
                                         }
-                                    } else if (createParser is GGASentence) {
-                                        val sf = SentenceFactory.getInstance()
-                                        for (line in it.str.lines()) {
-                                            val createParser = sf.createParser(line)
-                                            if (createParser is GGASentence) {
-                                                val gsvSentence = createParser as GGASentence
-                                                val satelliteCount = gsvSentence.satelliteCount//卫星数量
-                                                val currentTimeMillis = System.currentTimeMillis()
-                                                if (ggamap_fail.contains(address)) {//这个设备一旦被打入冷宫就永远不处理
-                                                    return
-                                                }
-                                                if (!ggamap_buff.contains(address)) {//如果第一次进来,直接添加到数据到buff
-                                                    val oldCase = OldCase()
-                                                    oldCase.ip = address
-                                                    oldCase.time = currentTimeMillis
-                                                    oldCase.satelliteCount = satelliteCount
-                                                    ggamap_buff[address] = oldCase
-                                                    return
-                                                } else if (satelliteCount < GnssConfig.gps_test_min_satellite_Count.value) {//卫星数量小于设定值
-                                                    ggamap_buff[address]?.result = false
-                                                    ggamap_buff[address]?.satelliteCount = satelliteCount
-                                                    //如果上一次是不通过状态,就彻底不通过
-                                                    //且时间超过一定的时间
-                                                    if ((currentTimeMillis - ggamap_buff[address]?.time!!) > GnssConfig.gga_timeout.value) {
-                                                        ggamap_buff[address]?.result = false
-                                                        ggamap_fail[address] = ggamap_buff[address]!!
-                                                        ggamap_buff.remove(address)
-                                                    }
-                                                } else {//卫星数量大于设定值
-                                                    ggamap_buff[address]?.result = true
-                                                    ggamap_buff[address]?.time = currentTimeMillis
-                                                    ggamap_buff[address]?.satelliteCount = satelliteCount
-
-                                                }
+                                        if (!ggamap_buff.contains(address)) {//如果第一次进来,直接添加到数据到buff
+                                            val oldCase = OldCase()
+                                            oldCase.ip = address
+                                            oldCase.time = currentTimeMillis
+                                            oldCase.satelliteCount = satelliteCount
+                                            ggamap_buff[address] = oldCase
+                                            return
+                                        } else if (satelliteCount < GnssConfig.gps_test_min_satellite_Count.value) {//卫星数量小于设定值
+                                            ggamap_buff[address]?.result = false
+                                            ggamap_buff[address]?.satelliteCount = satelliteCount
+                                            //如果上一次是不通过状态,就彻底不通过
+                                            //且时间超过一定的时间
+                                            if ((currentTimeMillis - ggamap_buff[address]?.time!!) > GnssConfig.gga_timeout.value) {
+                                                ggamap_buff[address]?.result = false
+                                                ggamap_fail[address] = ggamap_buff[address]!!
+                                                ggamap_buff.remove(address)
                                             }
+                                        } else {//卫星数量大于设定值
+                                            ggamap_buff[address]?.result = true
+                                            ggamap_buff[address]?.time = currentTimeMillis
+                                            ggamap_buff[address]?.satelliteCount = satelliteCount
+
                                         }
                                     }
-
                                 } catch (e: Exception) {
-                                }
 
+                                }
                             }
+
                         }
                     }
                 }
@@ -239,10 +215,10 @@ object GnssTestData {
 
 
         //缓冲数据区域,用于临时存放不通过的,如果持续不通过就会被放入fail
-        ggamap_buff = mutableMapOf<String, OldCase>()
+        ggamap_buff.clear()
 
         //gga数据
-        ggamap_fail = mutableMapOf<String, OldCase>()
+        ggamap_fail.clear()
         udp_msg0101 = null
     }
 }

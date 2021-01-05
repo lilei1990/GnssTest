@@ -26,6 +26,7 @@ import java.util.*
 import javafx.scene.control.Alert.AlertType
 
 import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import tornadofx.booleanProperty
 
 
@@ -415,7 +416,15 @@ open class GnssCase(centerController: CenterController) {
 
             }
             GnssType.UPDATA.id -> {//升级正式版本
+                var isNext = false
 
+                //定时检测是否收到下一步的消息
+                while (!isNext) {
+                    delay(1000)
+                    if (StopTest.value) {
+                        break
+                    }
+                }
             }
         }
     }
