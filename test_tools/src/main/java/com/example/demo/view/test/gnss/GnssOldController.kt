@@ -1,5 +1,6 @@
 package com.example.demo.view.test.gnss
 
+import com.example.demo.ToastEvent
 import com.example.demo.model.DeviceTestModel
 import com.example.demo.net.Api
 import com.example.demo.utils.TimeUtil
@@ -125,12 +126,12 @@ class GnssOldController : Controller() {
 
             }.map {
                 it.apply {
-
                     if (!testUpload(this)) {//上传失败.添加到上传失败的容器
                         uploaderr.add(it)
                     }
                 }
             }.flowOn(Dispatchers.IO).collect {
+                fire(ToastEvent("提交完成,${uploaderr.size}条数据提交失败!"))
             }
         }
     }
@@ -189,7 +190,7 @@ class GnssOldController : Controller() {
                     }
                 }
             }.flowOn(Dispatchers.IO).collect {
-
+                fire(ToastEvent("提交完成,${uploaderr.size}条数据提交失败!"))
             }
         }
     }
