@@ -5,7 +5,6 @@ import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.test.bean.Case
-import com.example.demo.view.test.gnss.CenterController
 import com.example.demo.view.test.gnss.GnssConfig
 import com.example.demo.view.test.gnss.GnssTestData
 import gnu.io.SerialPort
@@ -148,7 +147,7 @@ object UdpUtlis {
     /**
      * 测试串口,usb读写
      */
-    fun testSerialPort(serialPort: SerialPort): Boolean {
+    fun testSerialPort(serialPort: SerialPort, case: Case): Boolean {
         var retureFlag = false
 
         val user: ByteArray = "root\n".toByteArray()
@@ -157,6 +156,7 @@ object UdpUtlis {
         val readfile: ByteArray = "cat /run/media/sda1/testa\n".toByteArray()
         val logout: ByteArray = "logout\n".toByteArray()
         var currentTimeMillis = System.currentTimeMillis()
+        SerialPortUtil.removeEventListener(serialPort)
         try {
             if (serialPort != null) {
                 LoggerUtil.LOGGER.debug("[bhz] 打开端口");
@@ -206,23 +206,24 @@ object UdpUtlis {
                                 //                                fire(ToastEvent("usb读写验证通过"))
 //                                hd100Case.add(GNSS_Case(1, "usb口检测","/: directory","通过"))
 //                                stop(0)
-
                             }
-
-
                         } catch (e: IOException) {
+                            case.putTestInfo("异常终止IOException")
                             e.printStackTrace()
                         } catch (e: NullPointerException) {
+                            case.putTestInfo("异常终止NullPointerException")
                             e.printStackTrace()
-
                         } catch (e: Exception) {
+                            case.putTestInfo("异常终止Exception")
                             e.printStackTrace()
                         }
                     }
                 }
             }
 //            controller.putLogInfo("发个换行符激活设备")
+            sleep(1000)
             //发个换行符激活设备,防止有时候休眠,
+            SerialPortUtil.sendData(serialPort, "\n".toByteArray())
             SerialPortUtil.sendData(serialPort, "\n".toByteArray())
 //            fire(PortWorkEvent(false, serialPortIndex))
             // sleep 一段时间保证线程可以执行完
@@ -241,6 +242,7 @@ object UdpUtlis {
     fun testLoraRec(serialPort: SerialPort, case: Case): Boolean {
         var count = 0
         var retureFlag = false
+        SerialPortUtil.removeEventListener(serialPort)
         try {
             if (serialPort != null) {
                 LoggerUtil.LOGGER.debug("[bhz] 打开端口");
@@ -253,16 +255,18 @@ object UdpUtlis {
                             var bytes = SerialPortUtil.readData(serialPort)
 //                            val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
 //                            println("信号强度:$rssi")
-                            bytes[bytes.size - 1]
                             count += bytes.size
 
 
                         } catch (e: IOException) {
+                            case.putTestInfo("异常终止")
                             e.printStackTrace()
                         } catch (e: NullPointerException) {
+                            case.putTestInfo("异常终止")
                             e.printStackTrace()
 
                         } catch (e: Exception) {
+                            case.putTestInfo("异常终止")
                             e.printStackTrace()
                         }
                     }
@@ -280,7 +284,7 @@ object UdpUtlis {
 
             return retureFlag
         } catch (e: Exception) {
-//            putTestInfo("异常")
+            case.putTestInfo("异常终止")
             e.printStackTrace()
             return retureFlag
         }

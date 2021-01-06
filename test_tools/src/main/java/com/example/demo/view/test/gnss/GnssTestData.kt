@@ -53,9 +53,6 @@ object GnssTestData {
     var net4g1_imsi = stringProperty("")
     var net4g2_imsi = stringProperty("")
 
-    //用于统计卫星达到标准的数量
-    // K卫星编号 V 达到要求次数
-    var satelliteMap = mutableMapOf<String, Int>()
     var textInfo = stringProperty("")
 
     //单板id
@@ -90,7 +87,7 @@ object GnssTestData {
                 }
                 //检测0x0102数据
                 ggamap_buff.forEach { (key, data) ->//超过5秒没有获取到数据就卫星数值为零
-                    println("设备id-${data.toString()}-${data.equipmentId}")
+//                    println("设备id-${data.toString()}-${data.equipmentId}-${data.satelliteCount}")
                     if (currentTimeMillis - data.time > GnssConfig.gga_timeout.value) {//掉线或者卫星数不达标
                         data.testInfo = "掉线超时"
                         data.status = 0
@@ -128,11 +125,9 @@ object GnssTestData {
                                 net4g2_imsi.value = msg0101.net4g2_imsi
                                 key.value = msg0101.key
                                 chan.value = msg0101.chan
-                                var star = ""
-                                satelliteMap.forEach { t, u ->
-                                    if (u > 0) {
-                                        star += "\n$t-$u"
-                                    }
+                                var star = 0
+                                ggamap_buff[address]?.apply {
+                                    star = this.satelliteCount
                                 }
                                 textInfo.value = "硬件版本号:${msg0101.hw}\n" +
                                         "镜像版本号:${msg0101.bsp}\n" +
@@ -140,7 +135,7 @@ object GnssTestData {
                                         "id:${msg0101.getIdHex()}\n" +
                                         "bid:${msg0101.getBidHex()}\n" +
                                         "信道:${msg0101.chan}\n" +
-//                                        "卫星:${star}\n" +
+                                        "卫星:${star}\n" +
                                         "lora收:${msg0101.loraCounter_rec}\n" +
                                         "lora发:${msg0101.loraCounter_send}\n" +
                                         "4g1:ping通${msg0101.net4g1_ping}次\n" +
@@ -212,9 +207,7 @@ object GnssTestData {
         sim1ping.value = 0
         sim2ping.value = 0
 
-        //用于统计卫星达到标准的数量
-        // K卫星编号 V 达到要求次数
-        satelliteMap = mutableMapOf<String, Int>()
+
         textInfo.value = ""
 
         //id

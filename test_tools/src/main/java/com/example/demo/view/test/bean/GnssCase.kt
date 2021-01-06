@@ -26,7 +26,6 @@ import java.util.*
 import javafx.scene.control.Alert.AlertType
 
 import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import tornadofx.booleanProperty
 
 
@@ -133,12 +132,15 @@ open class GnssCase(centerController: CenterController) {
             }
 
             GnssType.SER.id -> {//测试串口
-                case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!)
+                case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!, case)
                 if (!case.result) {//测试不通过再来一次
-                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!)
+                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!, case)
                 }
                 if (!case.result) {
-                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!)
+                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!, case)
+                }
+                if (!case.result) {
+                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!, case)
                 }
             }
             GnssType.SIM1.id -> {//4G1（SIM）
@@ -203,11 +205,12 @@ open class GnssCase(centerController: CenterController) {
             GnssType.GPS.id -> {//测试Gps
                 delay(case.timeOut)
                 var num = 0
-                for (mutableEntry in GnssTestData.satelliteMap) {
-                    if (mutableEntry.value > GnssConfig.gps_test_min_num.value) {
-                        num++
+                GnssTestData.ggamap_buff.forEach { (key, vlue) ->
+                    if (vlue.ip.equals("192.168.1.252")) {
+                        num = vlue.satelliteCount
                     }
                 }
+
                 case.result = num > GnssConfig.gps_test_min_satellite_Count.value
                 case.putTestInfo("合格卫星数量:$num")
             }
@@ -445,14 +448,14 @@ open class GnssCase(centerController: CenterController) {
                 return
             }
             deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.getBidHex()
-        } else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_TOTAL){
+        } else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_TOTAL) {
             if (GnssTestData.udp_msg0101!!.id == 0) {
                 controller.putLogInfo("整机id为空无法上传测试结果")
                 GnssTestView.gnssTestView.fire(ToastEvent("整机id为空无法上传测试结果"))
                 return
             }
             deviceTestModel.equipmentId = GnssTestData.udp_msg0101!!.getIdHex()
-        }else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PACKAGE){
+        } else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PACKAGE) {
             if (GnssTestData.udp_msg0101!!.id == 0) {
                 controller.putLogInfo("打包整机id为空无法上传测试结果")
                 GnssTestView.gnssTestView.fire(ToastEvent("整机id为空无法上传测试结果"))
