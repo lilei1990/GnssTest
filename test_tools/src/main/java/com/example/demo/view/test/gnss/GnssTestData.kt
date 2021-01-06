@@ -10,6 +10,7 @@ import com.example.demo.view.test.bean.OldCase
 import gnu.io.SerialPort
 import javafx.application.Platform
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.GSVSentence
@@ -18,6 +19,8 @@ import tornadofx.observableListOf
 import tornadofx.runAsync
 import tornadofx.stringProperty
 import java.lang.Thread.sleep
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 作者 : lei
@@ -65,22 +68,41 @@ object GnssTestData {
 
 
     //缓冲数据区域,用于临时存放不通过的,如果持续不通过就会被放入fail
-    var ggamap_buff = mutableMapOf<String, OldCase>()
+    var ggamap_buff = ConcurrentHashMap<String, OldCase>()
 
-    //不通过的数据
-    var ggamap_fail = mutableMapOf<String, OldCase>()
 
     //gga数据
     var udp_msg0101: UDP_Msg0101? = null
+
     //数据更新的时间
     var udpUpdataTime = System.currentTimeMillis()
+
     init {
         runAsync {
+
             //定时检测数据是否一直持续收到上报数据
             while (true) {
-                if (System.currentTimeMillis() - udpUpdataTime > 2000) {
+                sleep(1000)
+                val currentTimeMillis = System.currentTimeMillis()
+                //检测0x0101数据
+                if (currentTimeMillis - udpUpdataTime > 2000) {
                     reset()
-                    sleep(2000)
+                }
+                //检测0x0102数据
+                ggamap_buff.forEach { (key, data) ->//超过5秒没有获取到数据就卫星数值为零
+                    println("设备id-${data.toString()}-${data.equipmentId}")
+                    if (currentTimeMillis - data.time > GnssConfig.gga_timeout.value) {//掉线或者卫星数不达标
+                        data.testInfo = "掉线超时"
+                        data.status = 0
+                        data.result = false
+                    } else if (data.satelliteCount > GnssConfig.gps_test_min_satellite_Count.value) {////卫星数量大于设定值,数据是最新数据
+                        data.result = true
+                        data.status = 2
+                        data.testInfo = "达标!"
+                    } else {
+                        data.status = 1
+                        data.testInfo = "卫星波动!"
+                    }
                 }
             }
         }
@@ -90,9 +112,9 @@ object GnssTestData {
     val broadcast: UDPBroadcast =
             UDPBroadcast(GnssConfig.udp_broadcast_port.value.toInt()).run().setListener(object : CallBacks {
                 override fun send(it: UDP_Msg, address: String) {
+                    udpUpdataTime = System.currentTimeMillis()
                     when (it.id.toInt()) {
                         0x0101 -> {
-                            udpUpdataTime = System.currentTimeMillis()
 //                            println(it.str)
                             val msg0101 = JSON.parseObject<UDP_Msg0101>(it.str, UDP_Msg0101::class.java)
                             Platform.runLater {
@@ -125,16 +147,14 @@ object GnssTestData {
                                         "4g2:ping通${msg0101.net4g2_ping}次\n" +
                                         "4g1imsi:${msg0101.net4g1_imsi}\n" +
                                         "4g2imsi:${msg0101.net4g2_imsi}\n"
+
+
                                 //老化测试做数据匹配
-                                if (ggamap_fail.contains(address)) {
-                                    ggamap_fail[address]?.equipmentId = msg0101.getIdHex()
-                                    ggamap_fail[address]?.bid = msg0101.getBidHex()
+                                ggamap_buff.get(address)?.apply {
+                                    this.equipmentId = msg0101.getIdHex()
+                                    this.bid = msg0101.getBidHex()
                                 }
-                                //老化测试做数据匹配
-                                if (ggamap_buff.contains(address)) {
-                                    ggamap_buff[address]?.equipmentId = msg0101.getIdHex()
-                                    ggamap_buff[address]?.bid = msg0101.getBidHex()
-                                }
+
                             }
                         }
                         0x0102 -> {
@@ -143,36 +163,27 @@ object GnssTestData {
                                 try {
                                     val createParser = sf.createParser(line)
                                     if (createParser is GGASentence) {
-                                        println("${it.str}---")
+//                                        println("${it.str}---")
                                         val gsvSentence = createParser as GGASentence
                                         val satelliteCount = gsvSentence.satelliteCount//卫星数量
                                         val currentTimeMillis = System.currentTimeMillis()
-                                        if (ggamap_fail.contains(address)) {//这个设备一旦被打入冷宫就永远不处理
-                                            return
-                                        }
-                                        if (!ggamap_buff.contains(address)) {//如果第一次进来,直接添加到数据到buff
+                                        if (!ggamap_buff.containsKey(address)) {//如果第一次进来,直接添加到数据到buff
                                             val oldCase = OldCase()
                                             oldCase.ip = address
                                             oldCase.time = currentTimeMillis
                                             oldCase.satelliteCount = satelliteCount
-                                            ggamap_buff[address] = oldCase
+                                            ggamap_buff.put(address, oldCase)
                                             return
-                                        } else if (satelliteCount < GnssConfig.gps_test_min_satellite_Count.value) {//卫星数量小于设定值
-                                            ggamap_buff[address]?.result = false
-                                            ggamap_buff[address]?.satelliteCount = satelliteCount
-                                            //如果上一次是不通过状态,就彻底不通过
-                                            //且时间超过一定的时间
-                                            if ((currentTimeMillis - ggamap_buff[address]?.time!!) > GnssConfig.gga_timeout.value) {
-                                                ggamap_buff[address]?.result = false
-                                                ggamap_fail[address] = ggamap_buff[address]!!
-                                                ggamap_buff.remove(address)
+                                        } else {//不是第一次进来
+                                            ggamap_buff.get(address)?.apply {//更新数据
+                                                if (this.status != 0) {//如果彻底失败就不再更新数据
+                                                    this.satelliteCount = satelliteCount
+                                                    this.time = currentTimeMillis
+                                                }
                                             }
-                                        } else {//卫星数量大于设定值
-                                            ggamap_buff[address]?.result = true
-                                            ggamap_buff[address]?.time = currentTimeMillis
-                                            ggamap_buff[address]?.satelliteCount = satelliteCount
-
                                         }
+
+
                                     }
                                 } catch (e: Exception) {
 
@@ -214,11 +225,7 @@ object GnssTestData {
         key.value = ""
 
 
-        //缓冲数据区域,用于临时存放不通过的,如果持续不通过就会被放入fail
-        ggamap_buff.clear()
 
-        //gga数据
-        ggamap_fail.clear()
         udp_msg0101 = null
     }
 }

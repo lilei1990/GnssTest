@@ -28,10 +28,15 @@ open class OldCase : Case() {
     var satelliteCount = -1
     var equipmentId = ""
     var bid = ""
+
     //检查设备id是否通过单板整机测试
     //是否chek过
     var isCheck = false
+
     //check是否通过id
     var checkId = false
+
+    //当前状态 0彻底失败,1波动,2通过
+    var status = 1
 
 }

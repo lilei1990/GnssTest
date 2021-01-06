@@ -70,13 +70,14 @@ class GnssOldView : View("老化测试") {
                         text = "$it"
                         itemStyleCheckId(it)
                     }
-                    readonlyColumn("结果", OldCase::testResult).cellFormat {
-                        text = it
-                        itemStyleResult(it)
+                    readonlyColumn("结果", OldCase::status).cellFormat {
+                        itemStyleStatus(it)
+//                        text = it
+//                        itemStyleResult(it)
                     }
                     readonlyColumn("ip", OldCase::ip)
                     readonlyColumn("卫星颗数", OldCase::satelliteCount)
-                    readonlyColumn("波动时间", OldCase::time)
+                    readonlyColumn("info", OldCase::testInfo)
                 }
             }
             vbox {
@@ -85,13 +86,16 @@ class GnssOldView : View("老化测试") {
                 tableview(controller.uploaderr) {
                     prefWidth = 400.0
                     readonlyColumn("整机id", OldCase::equipmentId)
-                    readonlyColumn("结果", OldCase::testResult).cellFormat {
-                        text = it
-                        itemStyleResult(it)
+                    readonlyColumn("查询", OldCase::checkId).cellFormat {
+                        text = "$it"
+                        itemStyleCheckId(it)
+                    }
+                    readonlyColumn("结果", OldCase::status).cellFormat {
+                        itemStyleStatus(it)
                     }
                     readonlyColumn("ip", OldCase::ip)
                     readonlyColumn("卫星颗数", OldCase::satelliteCount)
-                    readonlyColumn("波动时间", OldCase::time)
+                    readonlyColumn("info", OldCase::testInfo)
 
                 }
             }
@@ -110,6 +114,7 @@ class GnssOldView : View("老化测试") {
         hbox {
             spacing = 10.0
 
+            label(controller.continueTime)
             label("工号:   ${GnssConfig.userId.value}")
             text {
                 prefWidth(50.0)
@@ -141,7 +146,7 @@ class GnssOldView : View("老化测试") {
                     showProgressStage.show()
                     runAsync {
                         controller.stop()
-                    } ui{
+                    } ui {
                         showProgressStage.close()
                     }
                 }
@@ -211,6 +216,33 @@ class GnssOldView : View("老化测试") {
             } else if (it.equals("不通过")) {
                 backgroundColor += Color.RED
                 textFill = Color.BLACK
+            }
+        }
+    }
+
+    private fun TableCell<OldCase, Int>.itemStyleStatus(it: Int) {
+        style {
+            when (it) {
+                0 -> {
+                    text = "不通过"
+                    backgroundColor += Color.RED
+                    textFill = Color.BLACK
+                }
+                1 -> {
+                    text = "波动"
+                    backgroundColor += Color.YELLOW
+                    textFill = Color.BLACK
+                }
+                2 -> {
+                    text = "通过"
+                    backgroundColor += Color.GREEN
+                    textFill = Color.WHITE
+                }
+                else -> {
+                    text = "未知"
+                    backgroundColor += Color.WHITE
+                    textFill = Color.BLACK
+                }
             }
         }
     }

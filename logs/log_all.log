@@ -19810,3 +19810,5 @@ Caused by: java.net.ConnectException: Connection timed out: connect
 2021-01-05 at 17:24:43 GMT+08:00 DEBUG com.example.demo.net.Api 103 uploadTestRest - {equipmentId=, status=3, result=false, userId=00001, testTime=2021-01-05 17:24:43, remark=["-1,37  ,通过"], description=null, id=null}
 2021-01-05 at 17:24:43 GMT+08:00 DEBUG com.example.demo.net.Api 102 uploadTestRest - {"equipmentId":"30000001","status":"3","result":false,"user_id":"00001","testTime":"2021-01-05 17:24:43","remark":"[\"-1,32  ,通过\"]"}
 2021-01-05 at 17:24:43 GMT+08:00 DEBUG com.example.demo.net.Api 103 uploadTestRest - {equipmentId=30000001, status=3, result=false, userId=00001, testTime=2021-01-05 17:24:43, remark=["-1,32  ,通过"], description=null, id=null}
+2021-01-06 at 11:06:42 GMT+08:00 DEBUG com.example.demo.net.Api 102 uploadTestRest - {"status":"3","result":true,"user_id":"00001","testTime":"2021-01-06 11:06:40","remark":"[\"达标!\"]"}
+2021-01-06 at 11:06:42 GMT+08:00 DEBUG com.example.demo.net.Api 103 uploadTestRest - {equipmentId=, status=3, result=true, userId=00001, testTime=2021-01-06 11:06:40, remark=["达标!"], description=null, id=null}
