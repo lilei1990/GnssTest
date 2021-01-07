@@ -287,12 +287,6 @@ public class SerialPortUtil {
 
     }
 
-    public static void removeEventListener(SerialPort serialPort) {
-        serialPort.removeEventListener();
-    }
-
-    ;
-
 }
 
 

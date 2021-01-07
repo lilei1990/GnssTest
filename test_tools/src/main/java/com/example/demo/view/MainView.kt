@@ -1,6 +1,7 @@
 package com.example.demo.view
 
 import com.example.demo.model.TestStatus
+import com.example.demo.utils.LoggerUtil
 import com.example.demo.utils.openNewStage
 import com.example.demo.utils.shwoInternalWindow
 import com.example.demo.view.test.gnss.GnssConfigView
@@ -22,7 +23,6 @@ class MainView : View() {
     val gnssConfigView: GnssConfigView by inject()
     val input = SimpleStringProperty()
     lateinit var btn: JFXButton
-
     //根节点
     override val root = vbox {
         prefWidth = 600.0

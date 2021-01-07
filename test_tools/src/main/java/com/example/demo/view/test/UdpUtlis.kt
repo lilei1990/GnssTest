@@ -156,7 +156,7 @@ object UdpUtlis {
         val readfile: ByteArray = "cat /run/media/sda1/testa\n".toByteArray()
         val logout: ByteArray = "logout\n".toByteArray()
         var currentTimeMillis = System.currentTimeMillis()
-        SerialPortUtil.removeEventListener(serialPort)
+        serialPort.removeEventListener()
         try {
             if (serialPort != null) {
                 LoggerUtil.LOGGER.debug("[bhz] 打开端口");
@@ -177,14 +177,7 @@ object UdpUtlis {
                             if (System.currentTimeMillis() - currentTimeMillis > 30000) {
                                 LoggerUtil.LOGGER.debug("usb口检测不通过")
                                 serialPort.removeEventListener()
-                                //                                hd100Case.add(GNSS_Case(1, "usb口检测","超时","不通过"))
-//                                stop(0)
                             }
-//                                if (System.currentTimeMillis() - currentTimeMillis > 3000) {
-//                                    currentTimeMillis = System.currentTimeMillis()
-//                                    SerialPortUtil.sendData(serialPort, "\n".toByteArray())
-//                                    LoggerUtil.LOGGER.debug("登录超时发送回车");
-//                                }
                             if (string.contains("login:")) {
                                 SerialPortUtil.sendData(serialPort, user)
                             }
@@ -209,12 +202,16 @@ object UdpUtlis {
                             }
                         } catch (e: IOException) {
                             case.putTestInfo("异常终止IOException")
+                            serialPort.removeEventListener()
                             e.printStackTrace()
                         } catch (e: NullPointerException) {
                             case.putTestInfo("异常终止NullPointerException")
+                            serialPort.removeEventListener()
                             e.printStackTrace()
                         } catch (e: Exception) {
                             case.putTestInfo("异常终止Exception")
+                            LoggerUtil.LOGGER.debug("异常终止Exception-${e.message}")
+                            serialPort.removeEventListener()
                             e.printStackTrace()
                         }
                     }
@@ -228,9 +225,10 @@ object UdpUtlis {
 //            fire(PortWorkEvent(false, serialPortIndex))
             // sleep 一段时间保证线程可以执行完
             sleep(GnssConfig.defaut_timeOut.value.toLong())
-
+            serialPort.removeEventListener()
             return retureFlag
         } catch (e: Exception) {
+            serialPort.removeEventListener()
             e.printStackTrace()
             return retureFlag
         }
@@ -242,7 +240,7 @@ object UdpUtlis {
     fun testLoraRec(serialPort: SerialPort, case: Case): Boolean {
         var count = 0
         var retureFlag = false
-        SerialPortUtil.removeEventListener(serialPort)
+        serialPort.removeEventListener()
         try {
             if (serialPort != null) {
                 LoggerUtil.LOGGER.debug("[bhz] 打开端口");
@@ -260,13 +258,16 @@ object UdpUtlis {
 
                         } catch (e: IOException) {
                             case.putTestInfo("异常终止")
+                            serialPort.removeEventListener()
                             e.printStackTrace()
                         } catch (e: NullPointerException) {
                             case.putTestInfo("异常终止")
                             e.printStackTrace()
+                            serialPort.removeEventListener()
 
                         } catch (e: Exception) {
                             case.putTestInfo("异常终止")
+                            serialPort.removeEventListener()
                             e.printStackTrace()
                         }
                     }
@@ -275,6 +276,7 @@ object UdpUtlis {
             //防止上报数据慢,这个时间和上面配置发送数据的间隔和次数有关
             sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L + 10000)
             case.putTestInfo("发:${GnssTestData.udp_msg0101!!.loraCounter_send}-收:$count")
+            serialPort.removeEventListener()
             if (GnssTestData.udp_msg0101 == null) {
                 return false
             }
@@ -285,6 +287,7 @@ object UdpUtlis {
             return retureFlag
         } catch (e: Exception) {
             case.putTestInfo("异常终止")
+            serialPort.removeEventListener()
             e.printStackTrace()
             return retureFlag
         }
