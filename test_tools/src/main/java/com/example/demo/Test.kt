@@ -12,30 +12,13 @@ private val flow = flowOf(1, 2).map {
     }
 }
 
-fun main(args: Array<String>) = runBlocking {
-    launch {
-        while (true) {
-            delay(1000)
-            println("jon")
-        }
-    }
-    println("load")
-    coroutineScope {
-        while (true) {
-            delay(5000)
-            println("run")
-        }
-    }
-    runBlocking {
-        while (true) {
-            delay(5000)
-            println("run2")
-        }
-    }
-    println("over")
-}
 
-fun main1(args: Array<String>) {
+fun main(args: Array<String>) {
+    GlobalScope.launch {
+        println("1")
+        delay(1000)
+
+    }
 
 //    runBlocking {
 //        flow {

@@ -170,6 +170,10 @@ object UdpUtlis {
 
                         try {
                             var bytes = SerialPortUtil.readData(serialPort)
+                            if (bytes==null||bytes.isEmpty()) {
+                                LoggerUtil.LOGGER.debug("串口数据为空")
+                                return@setListenerToSerialPort
+                            }
                             val string = String(bytes)
 //                            controller.putLogInfo(string)
                             var recv = ByteUtils.bytesToHexString(bytes)

@@ -85,22 +85,7 @@ object GnssTestData {
                 if (currentTimeMillis - udpUpdataTime > 2000) {
                     reset()
                 }
-                //检测0x0102数据
-                ggamap_buff.forEach { (key, data) ->//超过5秒没有获取到数据就卫星数值为零
-//                    println("设备id-${data.toString()}-${data.equipmentId}-${data.satelliteCount}")
-                    if (currentTimeMillis - data.time > GnssConfig.gga_timeout.value) {//掉线或者卫星数不达标
-                        data.testInfo = "掉线超时"
-                        data.status = 0
-                        data.result = false
-                    } else if (data.satelliteCount > GnssConfig.gps_test_min_satellite_Count.value) {////卫星数量大于设定值,数据是最新数据
-                        data.result = true
-                        data.status = 2
-                        data.testInfo = "达标!"
-                    } else {
-                        data.status = 1
-                        data.testInfo = "卫星波动!"
-                    }
-                }
+
             }
         }
     }

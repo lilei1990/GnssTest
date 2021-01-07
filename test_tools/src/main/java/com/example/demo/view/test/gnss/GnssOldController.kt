@@ -12,7 +12,9 @@ import javafx.collections.FXCollections
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import tornadofx.*
 import java.lang.Thread.sleep
@@ -41,6 +43,29 @@ class GnssOldController : Controller() {
     //持续时间
     val continueTime = stringProperty()
 
+    init {
+        val currentTimeMillis = System.currentTimeMillis()
+        GlobalScope.launch {
+            while (true) {
+                //检测0x0102数据
+                GnssTestData.ggamap_buff.forEach { (key, data) ->//超过5秒没有获取到数据就卫星数值为零
+//                    println("设备id-${data.toString()}-${data.equipmentId}-${data.satelliteCount}")
+                    if (currentTimeMillis - data.time > GnssConfig.gga_timeout.value) {//掉线或者卫星数不达标
+                        data.testInfo = "掉线超时"
+                        data.status = 0
+                        data.result = false
+                    } else if (data.satelliteCount > GnssConfig.gps_test_min_satellite_Count.value) {////卫星数量大于设定值,数据是最新数据
+                        data.result = true
+                        data.status = 2
+                        data.testInfo = "达标!"
+                    } else {
+                        data.status = 1
+                        data.testInfo = "卫星波动!"
+                    }
+                }
+            }
+        }
+    }
 
     fun startTest(test_timeOut: Int) {
         //开始测试之前初始化数据
