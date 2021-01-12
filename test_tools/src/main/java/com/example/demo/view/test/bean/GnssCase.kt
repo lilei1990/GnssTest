@@ -188,18 +188,27 @@ open class GnssCase(centerController: CenterController) {
                     UdpUtlis.clearLoar()
                     case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
                 }
-//                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
-
+                if (!case.result) {//测试不通过再来一次
+                    UdpUtlis.clearLoar()
+                    case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
+                }
 
             }
             GnssType.LORASEED.id -> {//测试loar发送
                 UdpUtlis.clearLoar()
                 delay(1000)
                 UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
-//                case.result = UdpUtlis.loraCfg(GnssConfig.lora_test_chen.value)
                 case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
+                delay(10000)
                 if (!case.result) {//测试不通过再来一次
                     UdpUtlis.clearLoar()
+                    UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
+                    case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
+                }
+                delay(10000)
+                if (!case.result) {//测试不通过再来一次
+                    UdpUtlis.clearLoar()
+                    UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
                     case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
                 }
             }
