@@ -223,7 +223,7 @@ class GnssTestView : View() {
             val dialog = TextInputDialog()
             dialog.title = "开始测试";
             dialog.headerText = "请输入测试id";
-            dialog.editor.text = GnssTestData.bid.value
+            dialog.editor.text = GnssTestData.bid.value.toLowerCase()
 
             //所有检查项都通过就开始测试
             when (GnssTestData.testStatus) {
@@ -236,11 +236,12 @@ class GnssTestView : View() {
                         } else {
                             regex = "301[0-9a-fA-F]{2}[4-f]{1}[0-9a-fA-F]{2}"
                         }
+
                         if (!bid.matches(Regex(regex))) {
                             showSnackbar("请录入正确的ID(8位)")
                             return@ifPresent
                         }
-                        checkBid(bid)
+                        checkBid(bid.toLowerCase())
                     }
 
                 }
@@ -263,7 +264,7 @@ class GnssTestView : View() {
                             showSnackbar("请录入正确的ID(8位)")
                             return@ifPresent
                         }
-                        checkid(bid)
+                        checkid(bid.toLowerCase())
                     }
 
                 }
@@ -470,7 +471,7 @@ class GnssTestView : View() {
         }
         //检查网络
         if (GnssTestData.bid.value.isNullOrEmpty()) {
-            val ping = PingUtils.ping(GnssConfig.eth_test_ip.value)
+            val ping = PingUtils.ping(GnssConfig.eth_test_ip.value,1,1)
             if (!ping) {
                 fire(ToastEvent("网络不通"))
             }

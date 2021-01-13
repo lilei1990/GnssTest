@@ -163,6 +163,7 @@ public class SerialPortUtil {
             os.write(data);
             os.flush();
         } catch (IOException e) {
+            LoggerUtil.LOGGER.debug("串口sendData异常");
             e.printStackTrace();
         } finally {
             try {

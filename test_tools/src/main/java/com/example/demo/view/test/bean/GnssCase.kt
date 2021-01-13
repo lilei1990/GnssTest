@@ -80,6 +80,7 @@ open class GnssCase(centerController: CenterController) {
             }
         }.flowOn(Dispatchers.IO)
                 .catch {
+
                     LoggerUtil.LOGGER.debug("捕获到异常${this.toString()}")
                     controller.putLogInfo("捕获到异常${this.toString()}")
                 }
@@ -160,12 +161,12 @@ open class GnssCase(centerController: CenterController) {
                 FileUtilsJava.writeToFile(Connector.PROFILE_TEMP_PATH + "1234567890.xml", profileContent)
                 //        genProfile("hdwork");
                 check("${GnssTestData.bid.value}", wifi_test_pwd.value)
-                var task = PingUtils.ping(wifi_test_ip.value)
+                var task = PingUtils.ping(wifi_test_ip.value,1,3)
                 val startTime = System.currentTimeMillis()
                 while (!task) {//如果ping不通
                     check("${GnssTestData.bid.value}", wifi_test_pwd.value)
                     delay(1000)
-                    task = PingUtils.ping(wifi_test_ip.value)
+                    task = PingUtils.ping(wifi_test_ip.value,1,1)
                     if (System.currentTimeMillis() - startTime > case.timeOut) {//超时跳出循环
                         case.result = false
                         break
@@ -184,6 +185,7 @@ open class GnssCase(centerController: CenterController) {
             GnssType.LORAREC.id -> {//测试loar接受
                 UdpUtlis.clearLoar()
                 delay(1000)
+
                 case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
                 if (!case.result) {//测试不通过再来一次
                     UdpUtlis.clearLoar()
@@ -202,12 +204,12 @@ open class GnssCase(centerController: CenterController) {
                 delay(1000)
                 case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
 
-
-                if (!case.result && !StopTest.value) {//测试不通过再来一次
-                    delay(10000)
-                    UdpUtlis.clearLoar()
-                    case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
-                }
+//
+//                if (!case.result && !StopTest.value) {//测试不通过再来一次
+//                    delay(10000)
+//                    UdpUtlis.clearLoar()
+//                    case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
+//                }
 
             }
             GnssType.RSSI.id -> {//测试rssi
@@ -217,7 +219,11 @@ open class GnssCase(centerController: CenterController) {
                     sleep((1000 * GnssConfig.lora_test_Intervals.value).toLong())
                     case.result = UdpUtlis.testLoraRssi(GnssTestData.serialPort2!!, case)
                     if (!case.result) {//如果有一次测试不通过就返回结果
+                        println("测试rssi不通过")
                         case.result =false
+                    }
+                    if (StopTest.value) {
+                        break
                     }
 
                 }
@@ -236,7 +242,7 @@ open class GnssCase(centerController: CenterController) {
                 case.putTestInfo("合格卫星数量:$num")
             }
             GnssType.ETH.id -> {//测试eth
-                case.result = PingUtils.ping("192.168.1.252")
+                case.result = PingUtils.ping("192.168.1.252",1,1)
             }
             GnssType.KEY.id -> {//测试key
                 var isNext = false

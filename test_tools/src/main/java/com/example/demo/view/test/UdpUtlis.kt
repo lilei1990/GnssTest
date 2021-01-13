@@ -138,7 +138,7 @@ object UdpUtlis {
         when (unPack.id.toInt()) {
             0x0002, 0x0004, 0x0006, 0x0008, 0x000a, 0x000c, 0x000e, 0x0010, 0x0012 -> {
                 if (obj["ret"] == 0) { //成功
-                    println("unPack.id:${unPack.id.toInt()}")
+//                    println("unPack.id:${unPack.id.toInt()}")
                     return true
                 }
             }
@@ -257,21 +257,22 @@ object UdpUtlis {
                     if (event.eventType == SerialPortEvent.DATA_AVAILABLE) {
 
 
-                        var `is`: InputStream? = null
+                        var inputStrieam: InputStream? = null
                         var bytes: ByteArray? = null
                         try {
+
                             //获得串口的输入流
-                            `is` = serialPort.inputStream
+                            inputStrieam = serialPort.inputStream
                             //获得数据长度
-                            var bufflenth = `is`.available()
+                            var bufflenth = inputStrieam.available()
                             while (bufflenth != 0) {
                                 //初始化byte数组
                                 bytes = ByteArray(bufflenth)
-                                `is`.read(bytes)
-                                bufflenth = `is`.available()
+                                inputStrieam.read(bytes)
+                                bufflenth = inputStrieam.available()
                                 count += bytes.size
                             }
-
+                            inputStrieam.close()
 //                            println("信号强度:$rssi")
 
 //                            LoggerUtil.LOGGER.debug(HexUtil.toHexString(bytes))
@@ -282,22 +283,24 @@ object UdpUtlis {
                         } catch (e: IOException) {
                             case.putTestInfo("异常终止")
                             serialPort.removeEventListener()
+                            inputStrieam?.close()
                             e.printStackTrace()
                         } catch (e: NullPointerException) {
                             case.putTestInfo("异常终止")
                             e.printStackTrace()
                             serialPort.removeEventListener()
-
+                            inputStrieam?.close()
                         } catch (e: Exception) {
                             case.putTestInfo("异常终止")
                             serialPort.removeEventListener()
                             e.printStackTrace()
+                            inputStrieam?.close()
                         }
                     }
                 }
             }
-            sleep(5000)
             recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
+
 
             //防止上报数据慢,这个时间和上面配置发送数据的间隔和次数有关
             sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L + 10000)
@@ -336,7 +339,6 @@ object UdpUtlis {
                 if (event.eventType == SerialPortEvent.DATA_AVAILABLE) {
                     sleep(1000)
                     val bytes = SerialPortUtil.readData(serialPort)
-
                     if (bytes.size==51) {
                         //                    val bytes = SerialPortUtil.readData(serialPort)
                         //无线信号中db值射端一般是正值，数bai值越大发射功率越大越好；接收端一般是负值，数值越小代表灵敏度越高越好。
@@ -344,15 +346,17 @@ object UdpUtlis {
                         if (rssi > GnssConfig.lora_test_strength.value) {
                             retureFlag = true
                         }
-                        LoggerUtil.LOGGER.debug("$rssi-$retureFlag-${HexUtil.toHexString(bytes)}")
+                        LoggerUtil.LOGGER.debug("$rssi-$retureFlag")
                         case.putTestInfo("$rssi")
                     }
+                    LoggerUtil.LOGGER.debug("${HexUtil.toHexString(bytes)}")
 
                 }
             }
         }
         recLoar(1, 50, GnssConfig.lora_test_Intervals.value)
-        sleep(1500)
+        sleep(3000)
+        LoggerUtil.LOGGER.debug("retureFlag-$retureFlag}")
         return retureFlag
     }
 
@@ -360,6 +364,16 @@ object UdpUtlis {
      * 测试Lora
      */
     fun testLoraSend(serialPort: SerialPort, case: Case): Boolean {
+        try {
+            serialPort.removeEventListener()
+            SerialPortUtil.setListenerToSerialPort(serialPort) {
+
+            }
+        } catch (e:Exception) {
+            LoggerUtil.LOGGER.debug("测试Lora发生异常")
+        }
+
+
         var retureFlag = false
         //准备要发送的数据
         val sendByte = ByteArray(256)
