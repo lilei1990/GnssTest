@@ -1,5 +1,7 @@
 package com.example.demo.rxtx;
 
+import com.example.demo.utils.HexUtil;
+import com.example.demo.utils.LoggerUtil;
 import gnu.io.*;
 
 import java.io.IOException;
@@ -181,7 +183,7 @@ public class SerialPortUtil {
      */
     public static byte[] readData(SerialPort serialPort) {
         InputStream is = null;
-        byte[] bytes = null;
+        byte[] bytes = new byte[0];
         try {
             //获得串口的输入流
             is = serialPort.getInputStream();
@@ -193,7 +195,10 @@ public class SerialPortUtil {
                 is.read(bytes);
                 bufflenth = is.available();
             }
+            return bytes;
+
         } catch (IOException e) {
+            LoggerUtil.LOGGER.debug("串口错误");
             e.printStackTrace();
         } finally {
             try {
@@ -205,6 +210,32 @@ public class SerialPortUtil {
             }
         }
         return bytes;
+    }
+
+    public static byte[] readDataRSSI(SerialPort serialPort) {
+        try {
+            InputStream inputStream = serialPort.getInputStream();
+            // 通过输入流对象的available方法获取数组字节长度
+            int available = inputStream.available();
+            byte[] readBuffer = new byte[available];
+
+            // 从线路上读取数据流
+            int len = 0;
+            while ((len = inputStream.read(readBuffer)) != -1) {
+//
+//                String data = new String(readBuffer, 0, len).trim();
+//
+//                System.out.println("data:" + HexUtil.toHexString(readBuffer));
+//                System.out.println("dataHex:");// 读取后置空流对象
+                inputStream.close();
+                inputStream = null;
+                break;
+            }
+            return readBuffer;
+        } catch (IOException e) {
+
+        }
+        return null;
     }
 
     /**

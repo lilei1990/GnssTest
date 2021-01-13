@@ -1,5 +1,6 @@
 package com.example.demo.view
 
+import com.example.demo.Version
 import com.example.demo.model.TestStatus
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.utils.openNewStage
@@ -34,7 +35,13 @@ class MainView : View() {
                         shwoInternalWindow(gnssConfigView, escapeClosesWindow = true, closeButton = true)
                     }
                 }
+                item("测试") {
+                    action {
+                        openNewStage("GNSS参考站", DebugTestView())
+                    }
+                }
             }
+
 
         }
 
@@ -43,6 +50,10 @@ class MainView : View() {
 
             label("测试工具") {
                 style = "-fx-font-size: 50;-fx-font-weight: BOLD;"
+                alignment = Pos.CENTER
+            }
+
+            label("${Version.name}") {
                 alignment = Pos.CENTER
             }
             btn = jfxbutton("GNSS参考站 单板测试") {

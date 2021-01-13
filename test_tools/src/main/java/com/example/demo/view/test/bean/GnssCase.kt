@@ -27,6 +27,7 @@ import javafx.scene.control.Alert.AlertType
 
 import javafx.scene.control.Alert
 import tornadofx.booleanProperty
+import java.lang.Thread.sleep
 
 
 enum class GnssType(val id: Int, val testName: String) {
@@ -35,14 +36,13 @@ enum class GnssType(val id: Int, val testName: String) {
     VSW(3, "软件版本号"),
     BID(4, "单板ID"),
     ID(5, "整机ID"),
-
-    //    USB(6, "USB"),
-    SER(7, "调试串口USB"),
-    SIM1(8, "4G1（SIM）"),
-    SIM2(9, "4G2（SIM）"),
-    WIFI(10, "WIFI"),
-    LORAREC(11, "LORA收"),
-    LORASEED(12, "LORA发"),
+    SER(6, "调试串口USB"),
+    SIM1(7, "4G1（SIM）"),
+    SIM2(8, "4G2（SIM）"),
+    WIFI(9, "WIFI"),
+    LORAREC(10, "LORA收"),
+    LORASEED(11, "LORA发"),
+    RSSI(12, "RSSI"),
     GPS(13, "GPS"),
     ETH(14, "ETH"),
     KEY(15, "KEY"),
@@ -80,6 +80,7 @@ open class GnssCase(centerController: CenterController) {
             }
         }.flowOn(Dispatchers.IO)
                 .catch {
+                    LoggerUtil.LOGGER.debug("捕获到异常${this.toString()}")
                     controller.putLogInfo("捕获到异常${this.toString()}")
                 }
                 .onCompletion { cause ->
@@ -186,10 +187,12 @@ open class GnssCase(centerController: CenterController) {
                 case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
                 if (!case.result) {//测试不通过再来一次
                     UdpUtlis.clearLoar()
+                    delay(1000)
                     case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
                 }
                 if (!case.result) {//测试不通过再来一次
                     UdpUtlis.clearLoar()
+                    delay(1000)
                     case.result = UdpUtlis.testLoraSend(GnssTestData.serialPort2!!, case)
                 }
 
@@ -197,20 +200,28 @@ open class GnssCase(centerController: CenterController) {
             GnssType.LORASEED.id -> {//测试loar发送
                 UdpUtlis.clearLoar()
                 delay(1000)
-                UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
                 case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
-                delay(10000)
-                if (!case.result) {//测试不通过再来一次
+
+
+                if (!case.result && !StopTest.value) {//测试不通过再来一次
+                    delay(10000)
                     UdpUtlis.clearLoar()
-                    UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
                     case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
                 }
-                delay(10000)
-                if (!case.result) {//测试不通过再来一次
-                    UdpUtlis.clearLoar()
-                    UdpUtlis.recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
-                    case.result = UdpUtlis.testLoraRec(GnssTestData.serialPort2!!, case)
+
+            }
+            GnssType.RSSI.id -> {//测试rssi
+                UdpUtlis.clearLoar()
+                case.result =true
+                for (i in 1..GnssConfig.lora_test_count.value) {
+                    sleep((1000 * GnssConfig.lora_test_Intervals.value).toLong())
+                    case.result = UdpUtlis.testLoraRssi(GnssTestData.serialPort2!!, case)
+                    if (!case.result) {//如果有一次测试不通过就返回结果
+                        case.result =false
+                    }
+
                 }
+
             }
             GnssType.GPS.id -> {//测试Gps
                 delay(case.timeOut)

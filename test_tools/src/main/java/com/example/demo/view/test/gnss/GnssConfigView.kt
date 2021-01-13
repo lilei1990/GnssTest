@@ -297,7 +297,7 @@ class Config : Fragment("设置") {
                 lora_test_Intervals.value = lora_test_Intervals_View.text.toInt()
                 if (onlyNum(lora_test_chen_View.text)) return@action
                 lora_test_chen.value = lora_test_chen_View.text.toInt()
-                if (onlyNum(lora_test_strength_View.text)) return@action
+                if (onlyNegNum(lora_test_strength_View.text)) return@action
                 lora_test_strength.value = lora_test_strength_View.text.toInt()
                 if (onlyNum(lora_test_count_View.text)) return@action
                 lora_test_count.value = lora_test_count_View.text.toInt()
@@ -330,7 +330,14 @@ class Config : Fragment("设置") {
         return false
     }
 
-
+    private fun onlyNegNum(new: String): Boolean {
+        var regex = "-[1-9]\\d*"
+        if (!new.matches(Regex(regex))) {
+            showSnackbar("${new}只能键入负数")
+            return true
+        }
+        return false
+    }
     private fun onlyIp(new: String): Boolean {
         var regex =
                 "(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)"

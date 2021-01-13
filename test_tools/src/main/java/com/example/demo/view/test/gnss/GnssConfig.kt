@@ -42,7 +42,7 @@ object GnssConfig {
     var lora_test_chen = intProperty(65)
 
     //lora 信号强度
-    var lora_test_strength = intProperty(20)
+    var lora_test_strength = intProperty(-30)
 
     //lora测试次数
     var lora_test_count = intProperty(10)

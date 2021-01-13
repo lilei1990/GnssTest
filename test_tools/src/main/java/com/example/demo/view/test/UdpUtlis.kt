@@ -3,6 +3,7 @@ package com.example.demo.view.test
 import com.alibaba.fastjson.JSON
 import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
+import com.example.demo.utils.HexUtil
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.gnss.GnssConfig
@@ -10,6 +11,7 @@ import com.example.demo.view.test.gnss.GnssTestData
 import gnu.io.SerialPort
 import gnu.io.SerialPortEvent
 import java.io.IOException
+import java.io.InputStream
 import java.lang.Thread.sleep
 
 /**
@@ -170,7 +172,7 @@ object UdpUtlis {
 
                         try {
                             var bytes = SerialPortUtil.readData(serialPort)
-                            if (bytes==null||bytes.isEmpty()) {
+                            if (bytes == null || bytes.isEmpty()) {
                                 LoggerUtil.LOGGER.debug("串口数据为空")
                                 return@setListenerToSerialPort
                             }
@@ -245,6 +247,7 @@ object UdpUtlis {
         var count = 0
         var retureFlag = false
         serialPort.removeEventListener()
+        println("开始")
         try {
             if (serialPort != null) {
                 LoggerUtil.LOGGER.debug("[bhz] 打开端口");
@@ -253,11 +256,27 @@ object UdpUtlis {
                     //数据通知
                     if (event.eventType == SerialPortEvent.DATA_AVAILABLE) {
 
+
+                        var `is`: InputStream? = null
+                        var bytes: ByteArray? = null
                         try {
-                            var bytes = SerialPortUtil.readData(serialPort)
-//                            val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
+                            //获得串口的输入流
+                            `is` = serialPort.inputStream
+                            //获得数据长度
+                            var bufflenth = `is`.available()
+                            while (bufflenth != 0) {
+                                //初始化byte数组
+                                bytes = ByteArray(bufflenth)
+                                `is`.read(bytes)
+                                bufflenth = `is`.available()
+                                count += bytes.size
+                            }
+
 //                            println("信号强度:$rssi")
-                            count += bytes.size
+
+//                            LoggerUtil.LOGGER.debug(HexUtil.toHexString(bytes))
+
+//                            LoggerUtil.LOGGER.debug("大小:${bytes.size}==${count}")
 
 
                         } catch (e: IOException) {
@@ -277,14 +296,20 @@ object UdpUtlis {
                     }
                 }
             }
+            sleep(5000)
+            recLoar(GnssConfig.lora_test_count.value, 300, GnssConfig.lora_test_Intervals.value)
+
             //防止上报数据慢,这个时间和上面配置发送数据的间隔和次数有关
             sleep(GnssConfig.lora_test_Intervals.value * GnssConfig.lora_test_count.value * 1000L + 10000)
             case.putTestInfo("发:${GnssTestData.udp_msg0101!!.loraCounter_send}-收:$count")
+            LoggerUtil.LOGGER.debug("\n发:${GnssTestData.udp_msg0101!!.loraCounter_send}-收:$count")
+
             serialPort.removeEventListener()
             if (GnssTestData.udp_msg0101 == null) {
                 return false
             }
-            if (count == GnssTestData.udp_msg0101!!.loraCounter_send) {
+            //减去rssi的校验位,因为超过240拆包两个
+            if (count-GnssConfig.lora_test_count.value*2 == GnssTestData.udp_msg0101!!.loraCounter_send) {
                 return true
             }
 
@@ -300,6 +325,40 @@ object UdpUtlis {
     /**
      * 测试Lora
      */
+    fun testLoraRssi(serialPort: SerialPort, case: Case): Boolean {
+        var count = 0
+        var retureFlag = false
+        serialPort.removeEventListener()
+
+        if (serialPort != null) {
+            SerialPortUtil.setListenerToSerialPort(serialPort) { event: SerialPortEvent ->
+                //数据通知
+                if (event.eventType == SerialPortEvent.DATA_AVAILABLE) {
+                    sleep(1000)
+                    val bytes = SerialPortUtil.readData(serialPort)
+
+                    if (bytes.size==51) {
+                        //                    val bytes = SerialPortUtil.readData(serialPort)
+                        //无线信号中db值射端一般是正值，数bai值越大发射功率越大越好；接收端一般是负值，数值越小代表灵敏度越高越好。
+                        val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
+                        if (rssi > GnssConfig.lora_test_strength.value) {
+                            retureFlag = true
+                        }
+                        LoggerUtil.LOGGER.debug("$rssi-$retureFlag-${HexUtil.toHexString(bytes)}")
+                        case.putTestInfo("$rssi")
+                    }
+
+                }
+            }
+        }
+        recLoar(1, 50, GnssConfig.lora_test_Intervals.value)
+        sleep(1500)
+        return retureFlag
+    }
+
+    /**
+     * 测试Lora
+     */
     fun testLoraSend(serialPort: SerialPort, case: Case): Boolean {
         var retureFlag = false
         //准备要发送的数据
@@ -307,8 +366,10 @@ object UdpUtlis {
         for (i in 0..255) {
             sendByte[i] = i.toByte()
         }
+        LoggerUtil.LOGGER.debug("准备要发送的数据${sendByte.size}")
         //循环发送的次数
         for (i in 1..GnssConfig.lora_test_count.value) {
+            LoggerUtil.LOGGER.debug("循环发送的次数-${i}")
             //发个数据
             SerialPortUtil.sendData(serialPort, sendByte)
             //发送间隔
