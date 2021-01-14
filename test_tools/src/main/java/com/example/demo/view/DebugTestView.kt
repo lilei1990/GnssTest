@@ -9,6 +9,7 @@ import com.example.demo.view.test.UdpUtlis
 import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.bean.GnssCase
 import com.example.demo.view.test.gnss.*
+import javafx.geometry.Pos
 import kfoenix.jfxbutton
 import kfoenix.jfxtextarea
 import kotlinx.coroutines.delay
@@ -19,6 +20,12 @@ class DebugTestView : View("Debug") {
 
     val controller: DebugController by inject()
     override val root = vbox {
+        //载入样式表`
+        stylesheets.add("/css/jfoenix-components.css")
+        stylesheets.add("/css/jfoenix-main-demo.css")
+        alignment= Pos.CENTER
+        prefWidth = 400.0
+        prefHeight = 400.0
         spacing = 10.0
         jfxbutton("测试loar接受") {
             action {
@@ -49,48 +56,18 @@ class DebugTestView : View("Debug") {
 
         jfxbutton("升级测试版本") {
             action {
-                try {
-                    val testVer = UdpUtlis.getGnssVer(UdpUtlis.updateTestPath)
-                    var controller = GnssTestView.gnssTestView.controller
-                    controller.putLogInfo("当前软件版本:${GnssTestData.versionS.value}")
-                    controller.putLogInfo("要升级的版本:${testVer}")
-                    if (GnssTestData.versionS.value != testVer) {//需要升级
-                        controller.putLogInfo("版本不匹配升级中!")
-                        UdpUtlis.update(controller, Case(), UdpUtlis.updateTestPath)
-                    }
-
-                    var ping = PingUtils.ping("192.168.1.252", 1, 1)
-                    if (!ping) {
-                        sleep(1000)
-                        ping = PingUtils.ping("192.168.1.252", 1, 1)
-                    }
-                    Api.getConfig1() {
-                        var statistic601 = it
-                        statistic601.isResult.apply {
-                            if (this) {
-                                val deviceVersion = it.`object`.deviceVersion
-                                if (testVer == deviceVersion) {
-                                    controller.putLogInfo("正式版本更换完成!")
-                                    controller.putLogInfo("当前软件版本:$deviceVersion")
-                                    //获取新的版本号后去完成打印上送操作
-                                    controller.fire(ToastEvent(it.`object`.deviceVersion))
-                                } else {
-                                    controller.putLogInfo("正式版本更换完成!")
-                                    controller.putLogInfo("当前软件版本:$deviceVersion")
-                                }
-
-                            }
-
-                        }
-                    }
-                } catch (e: Exception) {
-
+                val showProgressStage = showProgressStage("升级中....")
+                showProgressStage.show()
+                runAsync {
+                    controller.upgradeTest()
+                } ui {
+                    showProgressStage.close()
                 }
-
 
             }
         }
         jfxtextarea(controller.taLog) {
+            prefWidth = 500.0
 
         }
     }

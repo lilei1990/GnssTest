@@ -1,6 +1,7 @@
 package com.example.demo.view.test
 
 import com.alibaba.fastjson.JSON
+import com.example.demo.model.TestStatus
 import com.example.demo.net.Api
 import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
@@ -346,9 +347,16 @@ object UdpUtlis {
                         //                    val bytes = SerialPortUtil.readData(serialPort)
                         //无线信号中db值射端一般是正值，数bai值越大发射功率越大越好；接收端一般是负值，数值越小代表灵敏度越高越好。
                         val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
-                        if (rssi > GnssConfig.lora_test_strength.value) {
+
+                        if (rssi >= GnssConfig.lora_test_strength.value && rssi <= -35 && rssi != 0 && rssi != -256) {
                             retureFlag = true
                         }
+//                        else {
+//                            retureFlag = false
+//                        }
+//                        if (rssi > GnssConfig.lora_test_strength.value) {
+//                            retureFlag = true
+//                        }
                         LoggerUtil.LOGGER.debug("$rssi-$retureFlag")
                         case.putTestInfo("$rssi")
                     }

@@ -155,7 +155,6 @@ open class GnssCase(centerController: CenterController) {
                 case.putTestInfo("${GnssTestData.sim2ping.value}")
             }
             GnssType.WIFI.id -> {//测试wifi
-
                 var profileContent = Profile.PROFILE.replace(Profile.WIFI_NAME, "${GnssTestData.bid.value}")
                 profileContent = profileContent.replace(Profile.WIFI_PASSWORD, wifi_test_pwd.value)
                 FileUtilsJava.writeToFile(Connector.PROFILE_TEMP_PATH + "1234567890.xml", profileContent)
@@ -216,6 +215,7 @@ open class GnssCase(centerController: CenterController) {
                 UdpUtlis.clearLoar()
                 case.result = true
                 for (i in 1..GnssConfig.lora_test_count.value) {
+
                     sleep((1000 * GnssConfig.lora_test_Intervals.value).toLong())
                     case.result = UdpUtlis.testLoraRssi(GnssTestData.serialPort2!!, case)
                     if (!case.result) {//如果有一次测试不通过就返回结果

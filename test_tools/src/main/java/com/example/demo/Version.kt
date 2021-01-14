@@ -12,5 +12,7 @@ object Version {
     /**
      *整机测试隐藏
      */
-    val name = "v1.0.3"
+//    val name = "v1.0.3"
+
+    val name = "v1.0.5"
 }

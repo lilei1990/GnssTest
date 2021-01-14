@@ -24,6 +24,7 @@ class MainView : View() {
     val gnssConfigView: GnssConfigView by inject()
     val input = SimpleStringProperty()
     lateinit var btn: JFXButton
+
     //根节点
     override val root = vbox {
         prefWidth = 600.0
@@ -37,7 +38,10 @@ class MainView : View() {
                 }
                 item("测试") {
                     action {
-                        openNewStage("GNSS参考站", DebugTestView())
+                        val debugTestView = DebugTestView()
+                        openNewStage("GNSS参考站", debugTestView)
+                        currentStage?.isIconified = true
+//                        debugTestView.currentStage?.isAlwaysOnTop = true
                     }
                 }
             }

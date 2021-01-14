@@ -35,17 +35,15 @@ object Api {
      * 查询校准结果 间隔1秒，每5秒查询一次校准结果，成功后提示成功，最多查询12次一直失败则提示校准失败
      */
     fun upgrade(url: String, fun1: (isSuccess: Boolean) -> Unit = {}) {
-        runAsync {
 
-            try {
-                val formUpload =
-                        HttpPostUploadUtil.formUpload("${DevicesHost}cgi-bin/upgrade", null, mutableMapOf("file" to url))
-                println(formUpload)
-                fun1(formUpload.contains("成功"))
-            } catch (e: Exception) {
-                e.printStackTrace()
 
-            }
+        try {
+            val formUpload =
+                    HttpPostUploadUtil.formUpload("${DevicesHost}cgi-bin/upgrade", null, mutableMapOf("file" to url))
+            println(formUpload)
+            fun1(formUpload.contains("成功"))
+        } catch (e: Exception) {
+            e.printStackTrace()
 
         }
 
@@ -124,7 +122,7 @@ object Api {
     }
     //测试类型	status	char	4	1.单板测试，2.整机测试，3为老化测试
      */
-    fun queryHistoryLast(equipmentId:String,status:String): ObservableList<DeviceTestModel>? {
+    fun queryHistoryLast(equipmentId: String, status: String): ObservableList<DeviceTestModel>? {
 
 //
 //        var status = ""

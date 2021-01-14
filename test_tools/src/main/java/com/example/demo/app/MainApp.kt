@@ -1,5 +1,6 @@
 package com.example.demo.app
 
+import com.example.demo.view.DebugTestView
 import com.example.demo.view.MainView
 import javafx.scene.Scene
 import javafx.stage.Stage
@@ -10,6 +11,7 @@ import tornadofx.launch
 fun main() {
     try {
         launch<MainApp>()
+//        launch<DebugApp>()
     } catch (t: Throwable) {
         System.out.println("系统发生异常"+t.message)
     }
@@ -46,5 +48,4 @@ class MainApp : App() {
     }
 }
 
-
-//class MainApp: App(MainView::class, Styles::class)
+class DebugApp: App(DebugTestView::class, Styles::class)

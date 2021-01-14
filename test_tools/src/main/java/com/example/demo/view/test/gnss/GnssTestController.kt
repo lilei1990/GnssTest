@@ -118,6 +118,7 @@ class CenterController : Controller() {
      */
     fun update() {
         gnssTestView?.progress?.show()
+        runAsync {
         Api.upgrade(updatePath) {
             LoggerUtil.LOGGER.debug("升级结果!$it")
             if (it) {
@@ -131,6 +132,7 @@ class CenterController : Controller() {
                 gnssTestView?.progress?.close()
             }
 
+        }
         }
 
     }
@@ -253,7 +255,7 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
         caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
         caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
-        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
+//        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
         caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))
         caselist.add(Case(GnssType.LORAREC.id, GnssType.LORAREC.testName))
         caselist.add(Case(GnssType.LORASEED.id, GnssType.LORASEED.testName))
@@ -280,7 +282,7 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
         caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
         caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
-        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
+//        caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
         caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))
         caselist.add(Case(GnssType.LORAREC.id, GnssType.LORAREC.testName))
         caselist.add(Case(GnssType.LORASEED.id, GnssType.LORASEED.testName))
