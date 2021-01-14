@@ -9,25 +9,24 @@ import com.example.demo.utils.*
 import com.example.demo.utils.cmd.*
 import com.example.demo.utils.cmd.Command.DISCONNECT
 import com.example.demo.view.test.*
+import com.example.demo.view.test.UdpUtlis.updateReleasePath
 import com.example.demo.view.test.gnss.*
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_ip
 import com.example.demo.view.test.gnss.GnssConfig.wifi_test_pwd
 import com.google.gson.JsonArray
 import javafx.application.Platform
+import javafx.scene.control.Alert
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.TextInputDialog
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import tornadofx.booleanProperty
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.*
-import javafx.scene.control.Alert.AlertType
-
-import javafx.scene.control.Alert
-import tornadofx.booleanProperty
 import java.lang.Thread.sleep
+import java.util.*
 
 
 enum class GnssType(val id: Int, val testName: String) {
@@ -51,7 +50,8 @@ enum class GnssType(val id: Int, val testName: String) {
     POWR(18, "掉电保护"),
     IMSI1(19, "4G1（IMSI）"),
     IMSI2(20, "4G2（IMSI）"),
-    UPDATA(21, "升级正式版本")
+    UPDATA(21, "升级正式版本"),
+
 }
 
 //手动终止任务
@@ -161,12 +161,12 @@ open class GnssCase(centerController: CenterController) {
                 FileUtilsJava.writeToFile(Connector.PROFILE_TEMP_PATH + "1234567890.xml", profileContent)
                 //        genProfile("hdwork");
                 check("${GnssTestData.bid.value}", wifi_test_pwd.value)
-                var task = PingUtils.ping(wifi_test_ip.value,1,3)
+                var task = PingUtils.ping(wifi_test_ip.value, 1, 3)
                 val startTime = System.currentTimeMillis()
                 while (!task) {//如果ping不通
                     check("${GnssTestData.bid.value}", wifi_test_pwd.value)
                     delay(1000)
-                    task = PingUtils.ping(wifi_test_ip.value,1,1)
+                    task = PingUtils.ping(wifi_test_ip.value, 1, 1)
                     if (System.currentTimeMillis() - startTime > case.timeOut) {//超时跳出循环
                         case.result = false
                         break
@@ -214,13 +214,13 @@ open class GnssCase(centerController: CenterController) {
             }
             GnssType.RSSI.id -> {//测试rssi
                 UdpUtlis.clearLoar()
-                case.result =true
+                case.result = true
                 for (i in 1..GnssConfig.lora_test_count.value) {
                     sleep((1000 * GnssConfig.lora_test_Intervals.value).toLong())
                     case.result = UdpUtlis.testLoraRssi(GnssTestData.serialPort2!!, case)
                     if (!case.result) {//如果有一次测试不通过就返回结果
                         println("测试rssi不通过")
-                        case.result =false
+                        case.result = false
                     }
                     if (StopTest.value) {
                         break
@@ -242,7 +242,7 @@ open class GnssCase(centerController: CenterController) {
                 case.putTestInfo("合格卫星数量:$num")
             }
             GnssType.ETH.id -> {//测试eth
-                case.result = PingUtils.ping("192.168.1.252",1,1)
+                case.result = PingUtils.ping("192.168.1.252", 1, 1)
             }
             GnssType.KEY.id -> {//测试key
                 var isNext = false
@@ -446,16 +446,52 @@ open class GnssCase(centerController: CenterController) {
 
             }
             GnssType.UPDATA.id -> {//升级正式版本
-                var isNext = false
+                val releasVer = UdpUtlis.getGnssVer(updateReleasePath)
+                controller.putLogInfo("当前软件版本:${GnssTestData.versionS.value}")
+                controller.putLogInfo("将要升级版本:${releasVer}")
+                if (GnssTestData.versionS.value != releasVer) {//需要升级
+                    controller.putLogInfo("版本不匹配升级中!")
+                    UdpUtlis.update(controller, case, updateReleasePath)
+                }
+                val startTime = System.currentTimeMillis()
+                var ping = PingUtils.ping("192.168.1.252", 1, 1)
+                while (!ping) {
+                    sleep(1000)
+                    ping = PingUtils.ping("192.168.1.252", 1, 1)
 
-                //定时检测是否收到下一步的消息
-                while (!isNext) {
-                    delay(1000)
+                    if (System.currentTimeMillis() - startTime > case.timeOut) {//超时跳出循环
+                        case.result = false
+                        break
+                    }
                     if (StopTest.value) {
                         break
                     }
                 }
+                Api.getConfig1() {
+                    var statistic601 = it
+                    statistic601.isResult.apply {
+                        case.result = this
+                        if (this) {
+                            val deviceVersion = it.`object`.deviceVersion
+                            if (releasVer == deviceVersion) {
+                                case.result = true
+                                controller.putLogInfo("正式版本更换完成!")
+                                controller.putLogInfo("当前软件版本:$deviceVersion")
+                                //获取新的版本号后去完成打印上送操作
+                                controller.fire(ToastEvent(it.`object`.deviceVersion))
+                            } else {
+                                case.result = false
+                                controller.putLogInfo("正式版本更换完成!")
+                                controller.putLogInfo("当前软件版本:$deviceVersion")
+                            }
+
+                        }
+
+                    }
+                }
             }
+
+
         }
     }
 

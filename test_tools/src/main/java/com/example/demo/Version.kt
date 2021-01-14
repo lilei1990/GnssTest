@@ -7,5 +7,10 @@ object Version {
      * 增加rssi测试
      * bid大小写转换为小写
      */
-    val name = "v1.0.2"
+//    val name = "v1.0.2"
+
+    /**
+     *整机测试隐藏
+     */
+    val name = "v1.0.3"
 }

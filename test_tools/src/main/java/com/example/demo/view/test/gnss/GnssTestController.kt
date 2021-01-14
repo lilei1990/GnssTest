@@ -114,23 +114,6 @@ class CenterController : Controller() {
 
 
     /**
-     * 获取DeviceVersion
-     */
-    fun getDeviceVersion() {
-
-        Api.getConfig1() {
-            var statistic601 = it
-            statistic601.isResult.apply {
-                if (this) {
-                    //获取新的版本号后去完成打印上送操作
-                    fire(DeviceVersionEvent(it.`object`.deviceVersion))
-                }
-
-            }
-        }
-    }
-
-    /**
      * 升级软件版本
      */
     fun update() {
@@ -218,14 +201,20 @@ class CenterController : Controller() {
      * 开始测试
      */
     suspend fun test() {
-        if (GnssTestData.testStatus == TestStatus.TEST_STATUS_PRO) {//单板测试
-            ready_PRO()
-        } else if (GnssTestData.testStatus == TestStatus.TEST_STATUS_TOTAL) {//整机
-            ready_TOTAL()
-        } else {
-           fire(ToastEvent("没有检测到测试类型!终止测试!"))
+        when (GnssTestData.testStatus) {
+            TestStatus.TEST_STATUS_PRO -> {//单板测试
+                ready_PRO()
+            }
+            TestStatus.TEST_STATUS_TOTAL -> {//整机
+                ready_TOTAL()
+            }
+            TestStatus.TEST_STATUS_PACKAGE -> {//打包
+                ready_PACKAGE()
+            }
+            else -> {
+                fire(ToastEvent("没有检测到测试类型!终止测试!"))
+            }
         }
-
     }
 
     /**
@@ -290,7 +279,6 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.VHW.id, GnssType.VHW.testName))
         caselist.add(Case(GnssType.VBSP.id, GnssType.VBSP.testName))
         caselist.add(Case(GnssType.VSW.id, GnssType.VSW.testName))
-        caselist.add(Case(GnssType.ID.id, GnssType.ID.testName))
         caselist.add(Case(GnssType.SIM1.id, GnssType.SIM1.testName))
         caselist.add(Case(GnssType.SIM2.id, GnssType.SIM2.testName))
         caselist.add(Case(GnssType.WIFI.id, GnssType.WIFI.testName, timeOut = 25000))
@@ -304,7 +292,7 @@ class CenterController : Controller() {
         caselist.add(Case(GnssType.IMSI1.id, GnssType.IMSI1.testName))
         caselist.add(Case(GnssType.IMSI2.id, GnssType.IMSI2.testName))
         caselist.add(Case(GnssType.GPS.id, GnssType.GPS.testName))
-        caselist.add(Case(GnssType.UPDATA.id, GnssType.UPDATA.testName))
+        caselist.add(Case(GnssType.UPDATA.id, GnssType.UPDATA.testName, timeOut = 60000))
         val asflow = caselist.asFlow()
         GnssCase(this).run(asflow)
         udpStaus.value = GREEN

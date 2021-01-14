@@ -1,15 +1,18 @@
 package com.example.demo.view.test
 
 import com.alibaba.fastjson.JSON
+import com.example.demo.net.Api
 import com.example.demo.rxtx.SerialPortUtil
 import com.example.demo.utils.ByteUtils
 import com.example.demo.utils.HexUtil
 import com.example.demo.utils.LoggerUtil
 import com.example.demo.view.test.bean.Case
+import com.example.demo.view.test.gnss.CenterController
 import com.example.demo.view.test.gnss.GnssConfig
 import com.example.demo.view.test.gnss.GnssTestData
 import gnu.io.SerialPort
 import gnu.io.SerialPortEvent
+import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.lang.Thread.sleep
@@ -402,6 +405,80 @@ object UdpUtlis {
             return true
         }
         return retureFlag
+    }
+
+
+    //升级文件路径
+    val updateReleasePath = System.getProperty("user.dir") + "\\gnss_update\\gnss_release_1.0.2"
+    val updateTestPath = System.getProperty("user.dir") + "\\gnss_update\\gnss_Test_1.0.1.fty11"
+    /**
+     * 升级软件版本
+     */
+    fun update(controller: CenterController,case:Case,updatePath:String) {
+        Api.upgrade(updatePath) {
+            LoggerUtil.LOGGER.debug("升级结果!$it")
+            if (it) {
+                controller.putLogInfo("升级成功,重启设备")
+                //升级成功,重启设备
+                resystem(controller,case)
+            } else {
+                controller.putLogInfo("升级失败")
+            }
+        }
+
+    }
+    /**
+     * 升级软件版本
+     */
+    fun resystem(controller: CenterController,case:Case) {
+        Api.resystem {
+            if (it.isResult) {
+//                isResystem.value = it.isResult
+                controller.putLogInfo("重启完成")
+                case.result = !GnssTestData.versionBsp.value.isNullOrEmpty()
+                case.putTestInfo(GnssTestData.versionBsp.value)
+//                showSnackbar("升级成功!正在重启设备")
+//                SnackbarUtils.show(root,"重启成功${it.isResult}")
+            }
+
+        }
+
+    }
+
+
+    /**
+     * 获取基站版本文件的版本号
+     *
+     * @param filePath 文件路径
+     * @return 版本号
+     */
+    fun getGnssVer(filePath: String): String? {
+        var version: String? = null
+        var inStream: InputStream? = null
+        try {
+            inStream = FileInputStream(filePath)
+            val fileLen: Int = inStream.available()
+            val data = ByteArray(32)
+            inStream.skip((fileLen - data.size).toLong())
+            inStream.read(data)
+            val tempVer = String(data).trim(' ')
+            val markIndex = tempVer.lastIndexOf('$')
+            if (markIndex != -1) {
+                version = tempVer.substring(markIndex + 1)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (inStream != null) {
+                try {
+                    inStream.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        inStream?.close()
+        return version?.replace("\n", "")
     }
 
 }

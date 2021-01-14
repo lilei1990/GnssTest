@@ -18,7 +18,7 @@
                             <Insets left="10" right="10"/>
                         </padding>
                         <Button fx:id="btRefresh" onAction="#btRefreshAction" text="刷新串口列表"/>
-                        <VBox alignment="CENTER_LEFT" style="-fx-background-color: #33eeee">
+                        <VBox fx:id="vbPort1" alignment="CENTER_LEFT" style="-fx-background-color: #33eeee">
                             <padding>
                                 <Insets bottom="20" left="10" right="10"/>
                             </padding>

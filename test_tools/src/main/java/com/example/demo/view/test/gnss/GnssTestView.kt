@@ -16,6 +16,7 @@ import javafx.scene.control.*
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 import javafx.scene.text.Text
@@ -44,6 +45,7 @@ class GnssTestView : View() {
 
     val udpStaus: Circle by fxid("udpStaus")
     val btRefresh: Button by fxid("btRefresh")
+    val vbPort1: VBox by fxid("vbPort1")
     val btOpenPort1: Button by fxid("btOpenPort1")
     val btOpenPort2: Button by fxid("btOpenPort2")
 
@@ -126,7 +128,17 @@ class GnssTestView : View() {
 
         btJobNum.text = "工号:   ${userId.value}"
         controller.bind(this)
-
+        //所有检查项都通过就开始测试
+        when (GnssTestData.testStatus) {
+            TestStatus.TEST_STATUS_TOTAL -> {
+                vbPort1.isVisible = false
+            }
+            TestStatus.TEST_STATUS_PACKAGE -> {
+                vbPort1.isVisible = false
+            }
+            else -> {
+            }
+        }
     }
 
 
@@ -194,16 +206,7 @@ class GnssTestView : View() {
                 return@runAsync
             }
 
-            //检查串口1
-            if (GnssTestData.serialPort1 == null) {
-                fire(ToastEvent("检查串口1是否打开"))
-                return@runAsync
-            }
-            //检查串口2
-            if (GnssTestData.serialPort2 == null) {
-                fire(ToastEvent("检查串口2是否打开"))
-                return@runAsync
-            }
+
             //检信道是否匹配
             if (GnssConfig.lora_test_chen.value != GnssTestData.chan.value) {
                 fire(ToastEvent("信道不匹配,已经重新配置,稍后重试"))
@@ -241,6 +244,16 @@ class GnssTestView : View() {
                             showSnackbar("请录入正确的ID(8位)")
                             return@ifPresent
                         }
+                        //检查串口1
+                        if (GnssTestData.serialPort1 == null) {
+                            fire(ToastEvent("检查串口1是否打开"))
+                            return@ifPresent
+                        }
+                        //检查串口2
+                        if (GnssTestData.serialPort2 == null) {
+                            fire(ToastEvent("检查串口2是否打开"))
+                            return@ifPresent
+                        }
                         checkBid(bid.toLowerCase())
                     }
 
@@ -264,12 +277,23 @@ class GnssTestView : View() {
                             showSnackbar("请录入正确的ID(8位)")
                             return@ifPresent
                         }
+
+                        //检查串口2
+                        if (GnssTestData.serialPort2 == null) {
+                            fire(ToastEvent("检查串口2是否打开"))
+                            return@ifPresent
+                        }
                         checkid(bid.toLowerCase())
                     }
 
                 }
                 TestStatus.TEST_STATUS_PACKAGE -> {//打包测试
-                    checkPack()
+                    //检查串口2
+                    if (GnssTestData.serialPort2 == null) {
+                        fire(ToastEvent("检查串口2是否打开"))
+                    } else {
+                        checkPack()
+                    }
                 }
             }
         }
@@ -471,7 +495,7 @@ class GnssTestView : View() {
         }
         //检查网络
         if (GnssTestData.bid.value.isNullOrEmpty()) {
-            val ping = PingUtils.ping(GnssConfig.eth_test_ip.value,1,1)
+            val ping = PingUtils.ping(GnssConfig.eth_test_ip.value, 1, 1)
             if (!ping) {
                 fire(ToastEvent("网络不通"))
             }
