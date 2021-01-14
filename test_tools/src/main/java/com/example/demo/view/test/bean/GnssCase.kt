@@ -475,16 +475,16 @@ open class GnssCase(centerController: CenterController) {
                             val deviceVersion = it.`object`.deviceVersion
                             if (releasVer == deviceVersion) {
                                 case.result = true
-                                controller.putLogInfo("正式版本更换完成!")
-                                controller.putLogInfo("当前软件版本:$deviceVersion")
+                                controller.putLogInfo("正式版本更换完成!当前软件版本:$deviceVersion")
                                 //获取新的版本号后去完成打印上送操作
                                 controller.fire(ToastEvent(it.`object`.deviceVersion))
                             } else {
                                 case.result = false
-                                controller.putLogInfo("正式版本更换完成!")
-                                controller.putLogInfo("当前软件版本:$deviceVersion")
+                                controller.putLogInfo("正式版本更换完成!当前软件版本:$deviceVersion")
                             }
 
+                        } else {
+                            controller.putLogInfo("版本更换失败!")
                         }
 
                     }

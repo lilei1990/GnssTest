@@ -2,17 +2,22 @@ package com.example.demo.view
 
 import com.example.demo.ToastEvent
 import com.example.demo.net.Api
+import com.example.demo.utils.LoggerUtil
 import com.example.demo.utils.PingUtils
+import com.example.demo.utils.showProgressStage
 import com.example.demo.view.test.UdpUtlis
 import com.example.demo.view.test.bean.Case
 import com.example.demo.view.test.bean.GnssCase
 import com.example.demo.view.test.gnss.*
 import kfoenix.jfxbutton
+import kfoenix.jfxtextarea
 import kotlinx.coroutines.delay
 import tornadofx.*
 import java.lang.Thread.sleep
 
-class DebugTestView : View("My View") {
+class DebugTestView : View("Debug") {
+
+    val controller: DebugController by inject()
     override val root = vbox {
         spacing = 10.0
         jfxbutton("测试loar接受") {
@@ -31,17 +36,12 @@ class DebugTestView : View("My View") {
 
         jfxbutton("升级正式版本") {
             action {
-                try {
-                    val releasVer = UdpUtlis.getGnssVer(UdpUtlis.updateReleasePath)
-                    var controller = GnssTestView.gnssTestView.controller
-                    controller.putLogInfo("测试软件版本:${GnssTestData.versionS.value}")
-                    controller.putLogInfo("正式软件版本:${releasVer}")
-                    if (GnssTestData.versionS.value != releasVer) {//需要升级
-                        controller.putLogInfo("版本不匹配升级中!")
-                        UdpUtlis.update(controller, Case(),UdpUtlis.updateReleasePath)
-                    }
-                } catch (e: Exception) {
-
+                val showProgressStage = showProgressStage("升级中....")
+                showProgressStage.show()
+                runAsync {
+                    controller.upgradeRelease()
+                } ui {
+                    showProgressStage.close()
                 }
 
             }
@@ -56,7 +56,7 @@ class DebugTestView : View("My View") {
                     controller.putLogInfo("要升级的版本:${testVer}")
                     if (GnssTestData.versionS.value != testVer) {//需要升级
                         controller.putLogInfo("版本不匹配升级中!")
-                        UdpUtlis.update(controller, Case(),UdpUtlis.updateTestPath)
+                        UdpUtlis.update(controller, Case(), UdpUtlis.updateTestPath)
                     }
 
                     var ping = PingUtils.ping("192.168.1.252", 1, 1)
@@ -89,6 +89,9 @@ class DebugTestView : View("My View") {
 
 
             }
+        }
+        jfxtextarea(controller.taLog) {
+
         }
     }
 
