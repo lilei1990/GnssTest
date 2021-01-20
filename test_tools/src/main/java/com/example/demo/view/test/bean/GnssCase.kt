@@ -50,7 +50,8 @@ enum class GnssType(val id: Int, val testName: String) {
     POWR(18, "掉电保护"),
     IMSI1(19, "4G1（IMSI）"),
     IMSI2(20, "4G2（IMSI）"),
-    UPDATA(21, "升级正式版本"),
+    PRINT(21, "打印标签"),
+    UPDATA(22, "升级正式版本"),
 
 }
 
@@ -221,6 +222,7 @@ open class GnssCase(centerController: CenterController) {
                     if (!case.result) {//如果有一次测试不通过就返回结果
                         println("测试rssi不通过")
                         case.result = false
+                        break
                     }
                     if (StopTest.value) {
                         break
@@ -456,7 +458,7 @@ open class GnssCase(centerController: CenterController) {
                 val startTime = System.currentTimeMillis()
                 var ping = PingUtils.ping("192.168.1.252", 1, 1)
                 while (!ping) {
-                    sleep(1000)
+                    delay(1000)
                     ping = PingUtils.ping("192.168.1.252", 1, 1)
 
                     if (System.currentTimeMillis() - startTime > case.timeOut) {//超时跳出循环
@@ -467,6 +469,7 @@ open class GnssCase(centerController: CenterController) {
                         break
                     }
                 }
+                delay(30000)
                 Api.getConfig1() {
                     var statistic601 = it
                     statistic601.isResult.apply {
@@ -491,7 +494,9 @@ open class GnssCase(centerController: CenterController) {
                 }
             }
 
+            GnssType.PRINT.id ->{
 
+            }
         }
     }
 

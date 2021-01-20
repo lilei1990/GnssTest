@@ -1,8 +1,14 @@
 package com.example.demo.view.test.print;
 
+import com.example.demo.utils.BarcodeUtil;
+
+import javax.imageio.ImageIO;
 import javax.print.PrintService;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.print.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * 1）整机测试时，需要写入整机ID。
@@ -29,7 +35,7 @@ public class PrinterTest implements Printable {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setPaint(new Color(0,0,0));
         centerText("软件",mainWidth,yStart,120,g2d);
-        centerText("软件",mainWidth,240,120,g2d);
+//        centerText("软件",mainWidth,240,120,g2d);
 
 
 
@@ -37,12 +43,33 @@ public class PrinterTest implements Printable {
         return PAGE_EXISTS;
     }
     public static void centerText(String text,int mainWidth,int y,int size ,Graphics2D g2d) {
-        Font font = new Font("Default", Font.PLAIN, size);
-        g2d.setFont(font);
-        // 计算文字长度，计算居中的x点坐标
-        FontMetrics fm = g2d.getFontMetrics(font);
-        int textWidth = fm.stringWidth(text);
-        g2d.drawString(text,  (mainWidth - textWidth) / 2, y);
+        int yStart=15;
+        g2d.setPaint(new Color(0,0,0));
+        g2d.setFont(new Font("Default", Font.BOLD, 9));
+        g2d.drawString("设备型号:HD106A100", 15, yStart);
+        yStart+=12;
+        g2d.setFont(new Font("Default", Font.BOLD, 9));
+        g2d.drawString("设备编号:HD106A100", 15, yStart);
+        yStart+=12;
+        g2d.setFont(new Font("Default", Font.BOLD, 9));
+        g2d.drawString("生产日期:2020年03月04日", 15, yStart);
+        yStart+=12;
+        g2d.setFont(new Font("Default", Font.BOLD, 9));
+        g2d.drawString("SIM卡号:460047950405011", 15, yStart);
+        yStart+=5;
+
+
+        BufferedImage bufferedImageSim = BarcodeUtil.generateM("460047950405102");
+        g2d.drawImage(bufferedImageSim,19,yStart,130,20,null);
+
+
+        g2d.dispose();
+//        //输出图片
+//        try {
+//            ImageIO.write(bufferedImageIn, "png", new FileOutputStream("totaltest.png"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void main(String[] args) {
