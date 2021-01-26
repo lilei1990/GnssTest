@@ -183,6 +183,7 @@ object UdpUtlis {
                             val string = String(bytes)
 //                            controller.putLogInfo(string)
                             var recv = ByteUtils.bytesToHexString(bytes)
+                            LoggerUtil.LOGGER.debug(string);
                             //超过30秒任务失败
                             if (System.currentTimeMillis() - currentTimeMillis > 30000) {
                                 LoggerUtil.LOGGER.debug("usb口检测不通过")
@@ -199,11 +200,9 @@ object UdpUtlis {
                                 sleep(1000)
                                 SerialPortUtil.sendData(serialPort, readfile)
                             }
-                            if (string.contains("hello")) {
-                                LoggerUtil.LOGGER.debug(string);
+                            if (string.contains("hello /")) {
 //                                taLog.value = "${taLog.value}${TimeUtil.getSimpleDateTime()}:${string}\n"
                                 SerialPortUtil.sendData(serialPort, logout)
-                                serialPort.removeEventListener()
                                 retureFlag = true
 //                                putTestInfo("/: directory 检测通过$retureFlag")
                                 //                                fire(ToastEvent("usb读写验证通过"))
@@ -316,7 +315,7 @@ object UdpUtlis {
                 return false
             }
             //减去rssi的校验位,因为超过240拆包两个
-            if (count-GnssConfig.lora_test_count.value*2 == GnssTestData.udp_msg0101!!.loraCounter_send) {
+            if (count - GnssConfig.lora_test_count.value * 2 == GnssTestData.udp_msg0101!!.loraCounter_send) {
                 return true
             }
 
@@ -343,7 +342,7 @@ object UdpUtlis {
                 if (event.eventType == SerialPortEvent.DATA_AVAILABLE) {
                     sleep(1000)
                     val bytes = SerialPortUtil.readData(serialPort)
-                    if (bytes.size==51) {
+                    if (bytes.size == 51) {
                         //                    val bytes = SerialPortUtil.readData(serialPort)
                         //无线信号中db值射端一般是正值，数bai值越大发射功率越大越好；接收端一般是负值，数值越小代表灵敏度越高越好。
                         val rssi = -(256 - (bytes[bytes.size - 1].toInt() and 0xFF))
@@ -380,7 +379,7 @@ object UdpUtlis {
             SerialPortUtil.setListenerToSerialPort(serialPort) {
 
             }
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             LoggerUtil.LOGGER.debug("测试Lora发生异常")
         }
 
@@ -419,26 +418,28 @@ object UdpUtlis {
     //升级文件路径
     val updateReleasePath = System.getProperty("user.dir") + "\\gnss_update\\gnss_release_1.0.2"
     val updateTestPath = System.getProperty("user.dir") + "\\gnss_update\\gnss_Test_1.0.1.fty11"
+
     /**
      * 升级软件版本
      */
-    fun update(controller: CenterController,case:Case,updatePath:String) {
+    fun update(controller: CenterController, case: Case, updatePath: String) {
         Api.upgrade(updatePath) {
             LoggerUtil.LOGGER.debug("升级结果!$it")
             if (it) {
                 controller.putLogInfo("升级成功,重启设备")
                 //升级成功,重启设备
-                resystem(controller,case)
+                resystem(controller, case)
             } else {
                 controller.putLogInfo("升级失败")
             }
         }
 
     }
+
     /**
      * 升级软件版本
      */
-    fun resystem(controller: CenterController,case:Case) {
+    fun resystem(controller: CenterController, case: Case) {
         Api.resystem {
             if (it.isResult) {
 //                isResystem.value = it.isResult

@@ -14,5 +14,9 @@ object Version {
      */
 //    val name = "v1.0.3"
 
-    val name = "v1.0.5"
+//    val name = "v1.0.5"
+    //串口测试bug
+//    val name = "v1.0.7"
+    //第二次usb测试数据会缓存
+    val name = "v1.0.8"
 }

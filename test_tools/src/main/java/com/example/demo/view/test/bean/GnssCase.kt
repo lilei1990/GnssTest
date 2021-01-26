@@ -140,9 +140,7 @@ open class GnssCase(centerController: CenterController) {
                 if (!case.result) {//测试不通过再来一次
                     case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!, case)
                 }
-                if (!case.result) {
-                    case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!, case)
-                }
+
                 if (!case.result) {
                     case.result = UdpUtlis.testSerialPort(GnssTestData.serialPort1!!, case)
                 }
